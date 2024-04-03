@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PC;
+use App\Models\Pc;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePCRequest;
-use App\Http\Requests\UpdatePCRequest;
+use App\Http\Requests\StorePcRequest;
+use App\Http\Requests\UpdatePcRequest;
 
-class PCController extends Controller
+class PcController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -36,7 +36,7 @@ class PCController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PC $pC)
+    public function show(PC $pc)
     {
         //
     }
@@ -44,7 +44,7 @@ class PCController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PC $pC)
+    public function edit(PC $pc)
     {
         //
     }
@@ -52,7 +52,7 @@ class PCController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePCRequest $request, PC $pC)
+    public function update(UpdatePCRequest $request, PC $pc)
     {
         //
     }
@@ -60,7 +60,7 @@ class PCController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PC $pC)
+    public function destroy(PC $pc)
     {
         //
     }
