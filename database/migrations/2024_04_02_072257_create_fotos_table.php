@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('fotos', function (Blueprint $table) {
             $table->id();
             $table->foreignId("articulo_id")->constrained();
-            $table->bool("principal");
+            $table->boolean("principal");
             $table->timestamps();
             $table->unique(["articulo_id", "principal"]);
         });
