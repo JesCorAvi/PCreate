@@ -6,15 +6,20 @@ use App\Models\Articulo;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreArticuloRequest;
 use App\Http\Requests\UpdateArticuloRequest;
-
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
+use Inertia\Response;
 class ArticuloController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function Tienda()
     {
-        //
+        return Inertia::render('Articulo/Tienda');
     }
 
     /**
