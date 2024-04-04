@@ -55,7 +55,8 @@ Route::middleware('auth')->group(function () {
 
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
-    Route::post('avatar', [AvatarController::class, 'update'])->name('avatar.update');
+    Route::post('/avatar', [AvatarController::class, 'update'])->name('avatar.update')->middleware('auth');
+
 
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
