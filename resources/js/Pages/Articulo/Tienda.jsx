@@ -16,6 +16,8 @@ export default function Dashboard({ auth }) {
             </LayoutLogueado>
             <Filtro></Filtro>
             <Footer></Footer>
+            <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+
         </>
     );
 }

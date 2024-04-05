@@ -2,7 +2,7 @@
 export default function Footer() {
 
     return (
-        <div className="min-h-16 bg-black text-center p-5" >
+        <div className="min-h-16 bg-black text-center p-5 z-50 " >
             <h2 className="text-white text-2xl pb-4 font-semibold">PCreate</h2>
             <div className="min-h-16 bg-black flex justify-around">
                 <ul className="text-left">
