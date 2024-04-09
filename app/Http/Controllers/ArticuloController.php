@@ -6,6 +6,8 @@ use App\Models\Articulo;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreArticuloRequest;
 use App\Http\Requests\UpdateArticuloRequest;
+use App\Models\Categoria;
+use App\Models\Marca;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -19,7 +21,7 @@ class ArticuloController extends Controller
      */
     public function Tienda()
     {
-        return Inertia::render('Articulo/Tienda');
+        return Inertia::render('Articulo/Tienda', ["categorias" => Categoria::all(), "marcas" => Marca::all()]);
     }
 
     /**
@@ -27,7 +29,7 @@ class ArticuloController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Articulo/Crear', ["categorias" => Categoria::all(), "marcas" => Marca::all()]);
     }
 
     /**

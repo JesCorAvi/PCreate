@@ -7,22 +7,22 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 
-export default function Authenticated({ user, header, children }) {
+export default function Layout({ user, header, children, categorias }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     return (
-        <div className="min-h-screen bg-white >">
-            <nav className="bg-black sticky top-0 z-50">
+        <div className=" bg-white >">
+            <nav className="bg-black fixed w-screen top-0 z-50">
                 <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
-                        <div className="flex">
+                        <div className="flex w-">
                             <div className="shrink-0 flex items-center pr-5">
                                 <Link href="/">
                                     <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800 " />
                                 </Link>
                             </div>
                             <div className="hidden xl:block">
-                                <Busqueda></Busqueda>
+                                <Busqueda categorias = {categorias}></Busqueda>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex hover:bg-gray-800">
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
@@ -161,14 +161,14 @@ export default function Authenticated({ user, header, children }) {
                     }
                 </div>
             </nav>
-            <div className="xl:hidden pb-1 pt-1">
-                <Busqueda></Busqueda>
+            <div className="xl:hidden pt-20">
+                <Busqueda categorias = {categorias}></Busqueda>
             </div>
 
 
             {header && (
                 <header className="bg-white shadow">
-                    <div className="max-w-screen-2xl mx-auto py-6 px-4 sm:px-6 lg:px-8" >{header}</div>
+                    <div className="max-w-screen-2xl xl:pt-20  mx-auto py-6 px-4 sm:px-6 lg:px-8" >{header}</div>
                 </header>
             )}
 

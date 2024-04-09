@@ -1,11 +1,11 @@
 import LayoutLogueado from '@/Layouts/LayoutLogueado';
 import Footer from '@/Layouts/Footer';
-import Productos from '@/Components/Productos';
+import CrearProducto from '@/Components/CrearProducto';
 
 
 import { Head } from '@inertiajs/react';
 
-export default function Tienda({ auth, categorias, marcas }) {
+export default function Crear({ auth, categorias, marcas }) {
     return (
         <>
             <LayoutLogueado
@@ -15,10 +15,10 @@ export default function Tienda({ auth, categorias, marcas }) {
             >
                 <Head title="Tienda" />
             </LayoutLogueado>
-            <Productos
+            <CrearProducto
                 categorias = {categorias}
                 marcas = {marcas}>
-            </Productos>
+            </CrearProducto>
             <Footer></Footer>
             <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
 
