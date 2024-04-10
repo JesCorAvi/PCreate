@@ -5,7 +5,7 @@ import Productos from '@/Components/Productos';
 
 import { Head } from '@inertiajs/react';
 
-export default function Tienda({ auth, categorias, marcas }) {
+export default function Index({ auth, categorias, marcas, articulos }) {
     return (
         <>
             <LayoutLogueado
@@ -17,7 +17,10 @@ export default function Tienda({ auth, categorias, marcas }) {
             </LayoutLogueado>
             <Productos
                 categorias = {categorias}
-                marcas = {marcas}>
+                marcas = {marcas}
+                articulos = {articulos}
+                >
+
             </Productos>
             <Footer></Footer>
             <script src="../path/to/flowbite/dist/flowbite.min.js"></script>

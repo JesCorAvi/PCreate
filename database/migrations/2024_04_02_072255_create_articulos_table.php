@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string("nombre");
             $table->decimal("precio");
-            $table->string("descripcion");
-            $table->integer("multitarea")->nullable();
-            $table->integer("proc_grafico")->nullable();
+            $table->text("descripcion");
+            $table->integer("gaming")->nullable();
+            $table->integer("servidor")->nullable();
+            $table->integer("escritorio")->nullable();
             $table->timestamps();
         });
     }

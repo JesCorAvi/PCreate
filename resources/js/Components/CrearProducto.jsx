@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import Boton from './Boton';
 
-export default function CrearProducto({ categorias, marcas, active = false, classNameName = '', children, ...props }) {
+export default function CrearProducto({categorias, marcas, active = false, classNameName = '', children, ...props }) {
     const [imagenPrincipal, setImagenPrincipal] = useState(null);
     const [imagenSec1, setImagenSec1] = useState(null);
     const [imagenSec2, setImagenSec2] = useState(null);
@@ -29,6 +30,49 @@ export default function CrearProducto({ categorias, marcas, active = false, clas
                     <input type="text" id="nombre" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Introduzca el nombre del componente" required />
                 </div>
                 <div className="mb-5">
+                    <label htmlFor="precio" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
+                    <input type="number" id="precio" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Introduzca el nombre del componente" required />
+                </div>
+                <div className="mb-5">
+                    <label htmlFor="descripcion" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción del producto</label>
+                    <textarea id="descripcion" className="h-72 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Introduzca el nombre del componente" required />
+                </div>
+                <div className="flex">
+                    <div className="flex-initial mr-2 mb-5 w-1/2">
+                        <label htmlFor="categoria" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Categoria del producto</label>
+                        <select id="categoria" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="">Categorias</option>
+                            {categorias.map((cat) => (
+                                <option key={cat.id} value={cat.id}> {cat.nombre} </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="flex-initial mb-5 w-1/2">
+                        <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
+                        <select id="marca" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="">Marca</option>
+                            {marcas.map((mar) => (
+                                <option key={mar.id} value={mar.id}> {mar.nombre} </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+                <div className="flex">
+                    <div className="flex-initial mr-2 mb-5 w-1/3">
+                        <label htmlFor="puntuacion_gaming" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Puntuación en Gaming (si aplica)</label>
+                        <input type="number" id="puntuacion_gaming" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Introduzca un valor del 0 al 100" min="0" max="100" />
+                    </div>
+                    <div className="flex-initial mr-2 mb-5 w-1/3">
+                        <label htmlFor="puntuacion_servidor" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Puntuación en Servidor (si aplica)</label>
+                        <input type="number" id="puntuacion_servidor" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Introduzca un valor del 0 al 100" min="0" max="100" />
+                    </div>
+                    <div className="flex-initial mb-5 w-1/3">
+                        <label htmlFor="puntuacion_escritorio" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Puntuación en Escritorio (si aplica)</label>
+                        <input type="number" id="puntuacion_escritorio" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Introduzca un valor del 0 al 100" min="0" max="100" />
+                    </div>
+                </div>
+
+                <div className="mb-5">
                     <div className="flex">
                         <div className="mr-2 w-52 h-52">
                             <label htmlFor="imagen_pr" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen principal</label>
@@ -53,23 +97,8 @@ export default function CrearProducto({ categorias, marcas, active = false, clas
                         </div>
                     </div>
                 </div>
-                <div className="flex">
-                    <select name="categoria" id="categoria">
-                        <option value="">Categorias</option>
-                        {categorias.map((cat) => (
-                            <option key={cat.id} value={cat.id}> {cat.nombre} </option>
-                        ))}
-                    </select>
-                    <select name="marca" id="marca">
-                        <option value="">Marca</option>
-                        {marcas.map((mar) => (
-                            <option key={mar.id} value={mar.id}> {mar.nombre} </option>
-                        ))}
-                    </select>
-                </div>
-                <button type="submit" className="text-white bg-black hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Crear artículo</button>
+                <Boton tipo="submit" texto="Crear Artículo"></Boton>
             </form>
-
         </div>
     );
 }

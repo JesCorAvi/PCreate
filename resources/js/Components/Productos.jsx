@@ -2,65 +2,28 @@ import { Link } from '@inertiajs/react';
 import Filtro from '@/Components/Filtro';
 import Pieza from '@/Components/Pieza';
 
-export default function Productos({categorias,marcas, active = false, classNameName = '', children, ...props }) {
+export default function Productos({articulos, categorias,marcas, active = false, classNameName = '', children, ...props }) {
+    function acortar(cadena, longitud) {
+        if (cadena.length <= longitud) {
+            return cadena; // Devuelve la cadena original si es igual o menor que la longitud especificada
+        } else {
+            return cadena.substring(0, longitud) + '...'; // Acorta la cadena y añade puntos suspensivos
+        }
+    }
     return (
         <div className="flex min-h-screen">
             <Filtro categorias={categorias} marcas = {marcas}></Filtro>
             <div className="flex justify-center w-full pb-10">
                 <section className='px-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-16'>
-                    <Pieza
-                        nombre="Corsair Vengeance RGB Pro 32 GB (2 x 16 GB) DDR4 3600 MHz "
-                        imagen = "http://127.0.0.1:8000/storage/uploads/piezas/grafica.png"
-                        precio = "299.99"
-                        ruta=""
-                    >
-                    </Pieza>
-                    <Pieza
-                        nombre="Corsair Vengeance RGB Pro 32 GB (2 x 16 GB) DDR4 3600 MHz "
-                        imagen = "http://127.0.0.1:8000/storage/uploads/piezas/grafica.png"
-                        precio = "299.99"
-                        ruta=""
-                    >
-                    </Pieza>
-                    <Pieza
-                        nombre="Corsair Vengeance RGB Pro 32 GB (2 x 16 GB) DDR4 3600 MHz "
-                        imagen = "http://127.0.0.1:8000/storage/uploads/piezas/grafica.png"
-                        precio = "299.99"
-                        ruta=""
-                    >
-                    </Pieza>
-                    <Pieza
-                        nombre="Corsair Vengeance RGB Pro 32 GB (2 x 16 GB) DDR4 3600 MHz "
-                        imagen = "http://127.0.0.1:8000/storage/uploads/piezas/grafica.png"
-                        precio = "299.99"
-                        ruta=""
-
-                    >
-                    </Pieza>
-                    <Pieza
-                        nombre="Corsair Vengeance RGB Pro 32 GB (2 x 16 GB) DDR4 3600 MHz "
-                        imagen = "http://127.0.0.1:8000/storage/uploads/piezas/grafica.png"
-                        precio = "299.99"
-                        ruta=""
-
-                    >
-                    </Pieza>
-                    <Pieza
-                        nombre="Corsair Vengeance RGB Pro 32 GB (2 x 16 GB) DDR4 3600 MHz "
-                        imagen = "http://127.0.0.1:8000/storage/uploads/piezas/grafica.png"
-                        precio = "299.99"
-                        ruta=""
-
-                    >
-                    </Pieza>
-                    <Pieza
-                        nombre="Corsair Vengeance RGB Pro 32 GB (2 x 16 GB) DDR4 3600 MHz "
-                        imagen = "http://127.0.0.1:8000/storage/uploads/piezas/grafica.png"
-                        precio = "299.99"
-                        ruta=""
-
-                    >
-                    </Pieza>
+                {articulos.map((art) => (
+                <Pieza
+                    nombre={acortar(art.nombre, 50)}
+                    imagen = {"http://127.0.0.1:8000/storage/uploads/piezas/ram1.webp"}
+                    precio = {art.precio}
+                    ruta = {route("articulos.show", {id : art.id})}
+                >
+                </Pieza>
+                ))}
                 </section>
             </div>
         </div>

@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Articulo;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreArticuloRequest;
-use App\Http\Requests\UpdateArticuloRequest;
 use App\Models\Categoria;
 use App\Models\Marca;
 use Illuminate\Http\RedirectResponse;
@@ -21,7 +19,7 @@ class ArticuloController extends Controller
      */
     public function Tienda()
     {
-        return Inertia::render('Articulo/Tienda', ["categorias" => Categoria::all(), "marcas" => Marca::all()]);
+        return Inertia::render('Articulo/Index', ["articulos" => Articulo::all(),"categorias" => Categoria::all(), "marcas" => Marca::all()]);
     }
 
     /**
@@ -35,7 +33,7 @@ class ArticuloController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreArticuloRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -43,9 +41,10 @@ class ArticuloController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Articulo $articulo)
+    public function show(Request $request)
     {
-        //
+        $articulo = Articulo::find($request->id);
+        return Inertia::render('Articulo/Show', ["articulo" => $articulo, "categorias" => Categoria::all()]);
     }
 
     /**
@@ -59,7 +58,7 @@ class ArticuloController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateArticuloRequest $request, Articulo $articulo)
+    public function update(Request $request, Articulo $articulo)
     {
         //
     }

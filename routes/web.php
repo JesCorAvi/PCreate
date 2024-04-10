@@ -29,4 +29,6 @@ Route::get('/tienda/crear', [ArticuloController::class, 'create'])->name('articu
 
 Route::get('/tienda', [ArticuloController::class, 'Tienda'])->name('articulo.index');
 
+Route::get('/tienda/{id}',[ArticuloController::class, 'show'])->name('articulos.show');
+
 require __DIR__.'/auth.php';
