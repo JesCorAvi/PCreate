@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('articulo_factura', function (Blueprint $table) {
-            $table->foreignId("articulo_id")->constrained();
-            $table->foreignId("factura_id")->constrained();
-            $table->integer("cantidad");
-            $table->unique(["articulo_id", "factura_id"]);
+        Schema::create('sockets', function (Blueprint $table) {
+            $table->id();
+            $table->string("nombre");
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('articulo_factura');
+        Schema::dropIfExists('sockets');
     }
 };

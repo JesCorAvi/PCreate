@@ -10,7 +10,7 @@ export default function Crear({ auth, categorias, marcas }) {
         <>
             <LayoutLogueado
                 user={auth.user}
-                header={<h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Tienda</h2>}
+                header={<h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Crear componente</h2>}
                 categorias = {categorias}
             >
                 <Head title="Tienda" />

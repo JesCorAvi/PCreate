@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('articulos', function (Blueprint $table) {
+        Schema::create('discos', function (Blueprint $table) {
             $table->id();
             $table->string("nombre");
-            $table->decimal("precio");
             $table->text("descripcion");
-            $table->integer("gaming")->nullable();
-            $table->integer("servidor")->nullable();
-            $table->integer("escritorio")->nullable();
+            $table->integer("memoria");
+            $table->boolean("ssd");
+            $table->decimal("precio");
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('articulos');
+        Schema::dropIfExists('discos');
     }
 };

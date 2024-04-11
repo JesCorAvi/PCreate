@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Foto extends Model
 {
@@ -16,8 +17,9 @@ class Foto extends Model
         'principal',
 
     ];
-        public function articulo(): BelongsTo
+    public function fotografiable(): MorphTo
     {
-        return $this->belongsTo(Articulo::class);
+        return $this->morphTo();
     }
+
 }

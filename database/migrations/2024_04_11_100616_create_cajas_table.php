@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('articulo_pc', function (Blueprint $table) {
-            $table->foreignId("articulo_id")->constrained();
-            $table->foreignId("pc_id")->constrained();
+        Schema::create('cajas', function (Blueprint $table) {
+            $table->id();
+            $table->string("nombre");
+            $table->text("descripcion");
+            $table->decimal("precio");
             $table->timestamps();
-            $table->unique(["articulo_id", "pc_id"]);
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('articulo_pc');
+        Schema::dropIfExists('cajas');
     }
 };

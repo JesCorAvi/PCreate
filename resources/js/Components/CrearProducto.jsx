@@ -1,104 +1,72 @@
 import { useState } from 'react';
-import Boton from './Boton';
+import FormularioSocket from './FormularioSocket';
+import FormularioPlaca from './FormularioPlaca';
+import FormularioCpu from './FormularioCpu';
+import FormularioRam from './FormularioRam';
+import FormularioGrafica from './FormularioGrafica';
+import FormularioDisipador from './FormularioDisipador';
+import FormularioAlmacenamiento from './FormularioAlmacenamiento';
+import FormularioFuente from './FormularioFuente';
+import FormularioCaja from './FormularioCaja';
+import FormularioVentilador from './FormularioVentilador';
 
-export default function CrearProducto({categorias, marcas, active = false, classNameName = '', children, ...props }) {
-    const [imagenPrincipal, setImagenPrincipal] = useState(null);
-    const [imagenSec1, setImagenSec1] = useState(null);
-    const [imagenSec2, setImagenSec2] = useState(null);
+export default function CrearProducto({ marcas, sockets }) {
+    const [formularioActual, setFormularioActual] = useState('placa'); // Estado inicializado con 'placa' para que el formulario de Placa Base se abra por defecto
 
-    const handleImagenPrincipalChange = (event) => {
-        const file = event.target.files[0];
-        setImagenPrincipal(URL.createObjectURL(file));
-    };
+    const estilo_boton_normal = "font-bold flex justify-center items-center w-40 h-150 border border-solid border-black rounded-lg hover:bg-gray-300";
+    const estilo_boton_seleccionado = "font-bold flex justify-center items-center w-40 h-150 border border-solid border-black rounded-lg bg-black text-white";
 
-    const handleImagenSec1Change = (event) => {
-        const file = event.target.files[0];
-        setImagenSec1(URL.createObjectURL(file));
-    };
-
-    const handleImagenSec2Change = (event) => {
-        const file = event.target.files[0];
-        setImagenSec2(URL.createObjectURL(file));
+    const handleBotonClick = (formulario) => {
+        setFormularioActual(formulario); // Cambia el estado para mostrar el formulario seleccionado
     };
 
     return (
-        <div className="min-h-screen">
+        <>
+            <div className='flex flex-wrap justify-between lg:px-52 lg:pb-20'>
+                <button className={formularioActual === 'socket' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('socket')}>
+                    Socket
+                </button>
+                <button className={formularioActual === 'placa' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('placa')}>
+                    Placa Base
+                </button>
+                <button className={formularioActual === 'cpu' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('cpu')}>
+                    CPU
+                </button>
+                <button className={formularioActual === 'ram' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('ram')}>
+                    RAM
+                </button>
+                <button className={formularioActual === 'grafica' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('grafica')}>
+                    Gráfica
+                </button>
+                <button className={formularioActual === 'disipador' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('disipador')}>
+                    Disipador
+                </button>
+                <button className={formularioActual === 'almacenamiento' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('almacenamiento')}>
+                    Almacenamiento
+                </button>
+                <button className={formularioActual === 'fuente' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('fuente')}>
+                    Fuente
+                </button>
+                <button className={formularioActual === 'caja' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('caja')}>
+                    Caja
+                </button>
+                <button className={formularioActual === 'ventiladores' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('ventiladores')}>
+                    Ventiladores
+                </button>
+            </div>
 
-            <form className="max-w-2xl mx-auto">
-                <div className="mb-5">
-                    <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre del componente</label>
-                    <input type="text" id="nombre" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Introduzca el nombre del componente" required />
-                </div>
-                <div className="mb-5">
-                    <label htmlFor="precio" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
-                    <input type="number" id="precio" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Introduzca el nombre del componente" required />
-                </div>
-                <div className="mb-5">
-                    <label htmlFor="descripcion" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción del producto</label>
-                    <textarea id="descripcion" className="h-72 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Introduzca el nombre del componente" required />
-                </div>
-                <div className="flex">
-                    <div className="flex-initial mr-2 mb-5 w-1/2">
-                        <label htmlFor="categoria" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Categoria del producto</label>
-                        <select id="categoria" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option value="">Categorias</option>
-                            {categorias.map((cat) => (
-                                <option key={cat.id} value={cat.id}> {cat.nombre} </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="flex-initial mb-5 w-1/2">
-                        <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
-                        <select id="marca" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option value="">Marca</option>
-                            {marcas.map((mar) => (
-                                <option key={mar.id} value={mar.id}> {mar.nombre} </option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-                <div className="flex">
-                    <div className="flex-initial mr-2 mb-5 w-1/3">
-                        <label htmlFor="puntuacion_gaming" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Puntuación en Gaming (si aplica)</label>
-                        <input type="number" id="puntuacion_gaming" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Introduzca un valor del 0 al 100" min="0" max="100" />
-                    </div>
-                    <div className="flex-initial mr-2 mb-5 w-1/3">
-                        <label htmlFor="puntuacion_servidor" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Puntuación en Servidor (si aplica)</label>
-                        <input type="number" id="puntuacion_servidor" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Introduzca un valor del 0 al 100" min="0" max="100" />
-                    </div>
-                    <div className="flex-initial mb-5 w-1/3">
-                        <label htmlFor="puntuacion_escritorio" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Puntuación en Escritorio (si aplica)</label>
-                        <input type="number" id="puntuacion_escritorio" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Introduzca un valor del 0 al 100" min="0" max="100" />
-                    </div>
-                </div>
+            {formularioActual === 'socket' && <FormularioSocket />}
+            {formularioActual === 'placa' && <FormularioPlaca marcas={marcas} sockets={sockets} />}
+            {formularioActual === 'cpu' && <FormularioCpu marcas={marcas} sockets={sockets} />}
+            {formularioActual === 'ram' && <FormularioRam marcas={marcas} />}
+            {formularioActual === 'grafica' && <FormularioGrafica marcas={marcas} />}
+            {formularioActual === 'disipador' && <FormularioDisipador marcas={marcas} sockets={sockets} />}
+            {formularioActual === 'almacenamiento' && <FormularioAlmacenamiento marcas={marcas} />}
+            {formularioActual === 'fuente' && <FormularioFuente marcas={marcas} />}
+            {formularioActual === 'caja' && <FormularioCaja marcas={marcas} />}
+            {formularioActual === 'ventiladores' && <FormularioVentilador marcas={marcas} />}
 
-                <div className="mb-5">
-                    <div className="flex">
-                        <div className="mr-2 w-52 h-52">
-                            <label htmlFor="imagen_pr" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen principal</label>
-                            <input type="file" id="imagen_pr" onChange={handleImagenPrincipalChange} className="hidden" />
-                            <label htmlFor="imagen_pr" className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                {imagenPrincipal ? <img src={imagenPrincipal} alt="Imagen Principal" className="w-full h-auto" /> : "Seleccionar imagen"}
-                            </label>
-                        </div>
-                        <div className="mr-2 w-52 h-52">
-                            <label htmlFor="imagen_sec_1" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen secundaria 1</label>
-                            <input type="file" id="imagen_sec_1" onChange={handleImagenSec1Change} className="hidden" />
-                            <label htmlFor="imagen_sec_1" className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                {imagenSec1 ? <img src={imagenSec1} alt="Imagen Secundaria 1" className="w-full h-auto" /> : "Seleccionar imagen"}
-                            </label>
-                        </div>
-                        <div className="mr-2 w-52 h-52">
-                            <label htmlFor="imagen_sec_2" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen secundaria 2</label>
-                            <input type="file" id="imagen_sec_2" onChange={handleImagenSec2Change} className="hidden" />
-                            <label htmlFor="imagen_sec_2" className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                {imagenSec2 ? <img src={imagenSec2} alt="Imagen Secundaria 2" className="w-full h-auto" /> : "Seleccionar imagen"}
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <Boton tipo="submit" texto="Crear Artículo"></Boton>
-            </form>
-        </div>
+            {/* Otros formularios aquí */}
+        </>
     );
 }

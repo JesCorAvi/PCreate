@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fotos', function (Blueprint $table) {
+        Schema::create('disipadorcpus', function (Blueprint $table) {
             $table->id();
-            $table->integer("orden");
-            $table->string("imagen");
+            $table->foreignId("socket_id")->constrained();
+            $table->string("nombre");
+            $table->text("descripcion");
+            $table->boolean("liquida");
+            $table->decimal("precio");
             $table->timestamps();
-            $table->integer("fotografiable_id");
-            $table->string("fotografiable_type");
-            $table->unique(["fotografiable_id","fotografiable_type", "orden"]);
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fotos');
+        Schema::dropIfExists('disipadorcpus');
     }
 };

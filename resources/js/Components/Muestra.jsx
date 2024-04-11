@@ -17,7 +17,6 @@ export default function Pieza({ active = false, classNameName = '', children, ar
 
     function handleClickImagenPrincipal(url) {
         setImagenPrincipal(url);
-        // Solo abrir el lightbox si se hace clic en la imagen principal
         if (url === imagenPrincipal) {
             setLightboxVisible(true);
         }
