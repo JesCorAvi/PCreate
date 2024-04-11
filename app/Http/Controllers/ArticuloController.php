@@ -4,14 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Articulo;
 use App\Http\Controllers\Controller;
+use App\Models\Caja;
 use App\Models\Categoria;
+use App\Models\Cpu;
+use App\Models\Disco;
+use App\Models\Disipadorcpu;
+use App\Models\Foto;
+use App\Models\Fuente;
 use App\Models\Marca;
+use App\Models\Placa;
+use App\Models\Ram;
+use App\Models\Tarjeta;
+use App\Models\Ventiladore;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Socket;
+
 class ArticuloController extends Controller
 {
     /**
@@ -19,7 +31,23 @@ class ArticuloController extends Controller
      */
     public function Tienda()
     {
-        return Inertia::render('Articulo/Index', ["articulos" => Articulo::all(),"categorias" => Categoria::all(), "marcas" => Marca::all()]);
+        $articulos = [
+            'placas' => Placa::all(),
+            'cpus' => Cpu::all(),
+            'disipadorcpus' => Disipadorcpu::all(),
+            'rams' => Ram::all(),
+            'tarjetas' => Tarjeta::all(),
+            'discos' => Disco::all(),
+            'fuentes' => Fuente::all(),
+            'cajas' => Caja::all(),
+            'ventiladores' => Ventiladore::all(),
+        ];
+
+        return Inertia::render('Articulo/Index', [
+            "articulos" => $articulos,
+            "categorias" => Categoria::all(),
+            "marcas" => Marca::all()
+        ]);
     }
 
     /**
@@ -35,7 +63,105 @@ class ArticuloController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+
+        if($request->tipo == "socket"){
+            $articulo = Socket::create([
+                "nombre" => $request->nombre,
+            ]);
+
+        }else if($request->tipo == "placa"){
+            $articulo = Placa::create([
+                "nombre" => $request->nombre,
+                "descripcion" => $request->descripcion,
+                "precio" => $request->precio,
+                "m2" => $request->m2,
+                "ram_slots" =>$request->ram_slots,
+                "ram_mhz" => $request->ram_mhz,
+            ]);
+
+        }else if($request->tipo == "cpu"){
+            $articulo = Cpu::create([
+                "nombre" => $request->nombre,
+                "descripcion" => $request->descripcion,
+                "precio" => $request->precio,
+                "nucleos" => $request->nucleos,
+                "frecuancia" => $request->frecuencia,
+                "consumo" => $request->consumo
+            ]);
+
+        }else if($request->tipo == "ram"){
+            $articulo = Ram::create([
+                "nombre" => $request->nombre,
+                "descripcion" => $request->descripcion,
+                "precio" => $request->precio,
+                "cantidad" =>$request->cantidad,
+                "memoria" =>$request->memoria,
+                "frecuencia" =>$request->frecuencia,
+                "tipo" =>$request->tipo,
+            ]);
+
+        }else if($request->tipo == "disipador"){
+            $articulo = Disipadorcpu::create([
+                "nombre" => $request->nombre,
+                "descripcion" => $request->descripcion,
+                "precio" => $request->precio,
+                "liquida" => $request->liquida,
+            ]);
+
+        }else if($request->tipo == "grafica"){
+            $articulo = Tarjeta::create([
+                "nombre" => $request->nombre,
+                "descripcion" => $request->descripcion,
+                "precio" => $request->precio,
+                "memoria" => $request->memoria,
+                "tipo" => $request->tipo,
+                "consumo" => $request->consumo,
+            ]);
+
+        }else if($request->tipo == "almacenamiento"){
+            $articulo = Disco::create([
+                "nombre" => $request->nombre,
+                "descripcion" => $request->descripcion,
+                "precio" => $request->precio,
+                "memoria" => $request->memoria,
+                "ssd" => $request->ssd,
+            ]);
+
+        }else if($request->tipo == "fuente"){
+            $articulo = Fuente::create([
+                "nombre" => $request->nombre,
+                "descripcion" => $request->descripcion,
+                "precio" => $request->precio,
+                "poder" => $request->poder
+            ]);
+
+        }else if($request->tipo == "caja"){
+            $articulo = Caja::create([
+                "nombre" => $request->nombre,
+                "descripcion" => $request->descripcion,
+                "precio" => $request->precio
+            ]);
+
+        }else if($request->tipo == "ventiladores"){
+            $articulo = Ventiladore::create([
+                "nombre" => $request->nombre,
+                "descripcion" => $request->descripcion,
+                "precio" => $request->precio
+            ]);
+        }
+        Foto::create([
+
+        ]);
+        Foto::create([
+
+        ]);
+        Foto::create([
+
+        ]);
+        Foto::create([
+
+        ]);
     }
 
     /**
@@ -44,6 +170,9 @@ class ArticuloController extends Controller
     public function show(Request $request)
     {
         $articulo = Articulo::find($request->id);
+
+
+
         return Inertia::render('Articulo/Show', ["articulo" => $articulo, "categorias" => Categoria::all()]);
     }
 
