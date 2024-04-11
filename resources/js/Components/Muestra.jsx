@@ -60,10 +60,34 @@ export default function Pieza({ active = false, classNameName = '', children, ar
                         <h2 class="font-bold text-2xl pt-10 ">Comentarios</h2>
                         <Link href="" class="font-semibold text-lg pt-10 xl:pr-10 underline">Añadir comentario</Link>
                     </div>
-                    <Comentario></Comentario>
-                    <Comentario></Comentario>
-                    <Comentario></Comentario>
-                    <Comentario></Comentario>
+                    <Comentario
+                        usuario="Jesus. C"
+                        avatar='http://127.0.0.1:8000/assets/avatar.jpg'
+                        nota="4.5"
+                        comentario="Muy buena placa base, me la compré más que nada por e4stética, ya que las luces que tiene me gustan bastante, pero en términos de conectividad y rendimiento está genial. Tiene bastantes puertosa usb, compatibilidad con conectores tipo C que pueda tener tu caja y 2 puertos M.2 para las SSD. Muy contento con la compra."
+                        fecha="22 de Septiembre de 2024"
+                        />
+                   <Comentario
+                        usuario="Jesus. C"
+                        avatar='http://127.0.0.1:8000/assets/avatar.jpg'
+                        nota="4.5"
+                        comentario="Muy buena placa base, me la compré más que nada por e4stética, ya que las luces que tiene me gustan bastante, pero en términos de conectividad y rendimiento está genial. Tiene bastantes puertosa usb, compatibilidad con conectores tipo C que pueda tener tu caja y 2 puertos M.2 para las SSD. Muy contento con la compra."
+                        fecha="22 de Septiembre de 2024"
+                        />
+                   <Comentario
+                        usuario="Jesus. C"
+                        avatar='http://127.0.0.1:8000/assets/avatar.jpg'
+                        nota="4.5"
+                        comentario="Muy buena placa base, me la compré más que nada por e4stética, ya que las luces que tiene me gustan bastante, pero en términos de conectividad y rendimiento está genial. Tiene bastantes puertosa usb, compatibilidad con conectores tipo C que pueda tener tu caja y 2 puertos M.2 para las SSD. Muy contento con la compra."
+                        fecha="22 de Septiembre de 2024"
+                        />
+                   <Comentario
+                        usuario="Jesus. C"
+                        avatar='http://127.0.0.1:8000/assets/avatar.jpg'
+                        nota="4.5"
+                        comentario="Muy buena placa base, me la compré más que nada por e4stética, ya que las luces que tiene me gustan bastante, pero en términos de conectividad y rendimiento está genial. Tiene bastantes puertosa usb, compatibilidad con conectores tipo C que pueda tener tu caja y 2 puertos M.2 para las SSD. Muy contento con la compra."
+                        fecha="22 de Septiembre de 2024"
+                        />
                 </section>
             </article>
             {lightboxVisible && (
