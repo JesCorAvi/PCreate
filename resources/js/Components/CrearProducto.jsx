@@ -11,6 +11,9 @@ import FormularioVentilador from './FormularioVentilador';
 import { usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 
@@ -18,6 +21,7 @@ export default function CrearProducto({ marcas, sockets }) {
     const [formularioActual, setFormularioActual] = useState('placa');
     const { messages } = usePage().props;
     const [mensajeActual, setMensajeActual] = useState(null);
+    const [open, setOpen] = useState(true);
 
     const estilo_boton_normal = "font-bold flex justify-center items-center w-40 h-150 border border-solid border-black rounded-lg hover:bg-gray-300";
     const estilo_boton_seleccionado = "font-bold flex justify-center items-center w-40 h-150 border border-solid border-black rounded-lg bg-black text-white";
@@ -27,9 +31,9 @@ export default function CrearProducto({ marcas, sockets }) {
     };
 
     useEffect(() => {
-        console.log("Messages:", messages);
-        console.log("Mensaje actual:", mensajeActual);
         setMensajeActual(messages[formularioActual]);
+        // Cerrar el collapse cuando se cambia el mensaje
+        setOpen(true);
     }, [messages, formularioActual]);
 
     return (
@@ -67,12 +71,52 @@ export default function CrearProducto({ marcas, sockets }) {
                     Ventiladores
                 </button>
             </div>
-            {console.log(messages)}
+{            console.log(messages)
+}
+            <Collapse in={open}>
+                {messages.success && (
+                    <Alert
+                        severity='success'
+                        action={
+                            <IconButton
+                                aria-label="close"
+                                color="inherit"
+                                size="small"
+                                onClick={() => {
+                                    setOpen(false); // Cambia el estado de open cuando se hace clic
+                                }}
+                            >
+                                <CloseIcon fontSize="inherit" />
+                            </IconButton>
+                        }
+                        sx={{ mb: 2 }}
+                    >
+                        {messages.success}
+                    </Alert>
 
-            <div>
-                {messages.error}<br></br>
-                {messages.success}<br></br>
-            </div>
+                )}
+                {messages.error && (
+                    <Alert
+                        severity='error'
+                        action={
+                            <IconButton
+                                aria-label="close"
+                                color="inherit"
+                                size="small"
+                                onClick={() => {
+                                    setOpen(false); // Cambia el estado de open cuando se hace clic
+                                }}
+                            >
+                                <CloseIcon fontSize="inherit" />
+                            </IconButton>
+                        }
+                        sx={{ mb: 2 }}
+                    >
+                        {messages.error}
+                    </Alert>
+
+                )}
+            </Collapse>
             {formularioActual === 'socket' && <FormularioSocket />}
             {formularioActual === 'placa' && <FormularioPlaca marcas={marcas} sockets={sockets} />}
             {formularioActual === 'cpu' && <FormularioCpu marcas={marcas} sockets={sockets} />}

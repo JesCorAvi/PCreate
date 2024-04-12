@@ -5,7 +5,7 @@ import CrearProducto from '@/Components/CrearProducto';
 
 import { Head } from '@inertiajs/react';
 
-export default function Crear({ auth, categorias, marcas }) {
+export default function Crear({ auth, categorias, marcas, sockets }) {
     return (
         <>
             <LayoutLogueado
@@ -17,7 +17,9 @@ export default function Crear({ auth, categorias, marcas }) {
             </LayoutLogueado>
             <CrearProducto
                 categorias = {categorias}
-                marcas = {marcas}>
+                marcas = {marcas}
+                sockets = {sockets}>
+
             </CrearProducto>
             <Footer></Footer>
             <script src="../path/to/flowbite/dist/flowbite.min.js"></script>

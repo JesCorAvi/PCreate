@@ -35,7 +35,8 @@ class ArticuloController extends Controller
         return Inertia::render('Articulo/Index', [
             "articulos" => Articulo::all(),
             "categorias" => Categoria::all(),
-            "marcas" => Marca::all()
+            "marcas" => Marca::all(),
+            "sockets" => Socket::all()
         ]);
     }
 
@@ -44,7 +45,11 @@ class ArticuloController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Articulo/Crear', ["categorias" => Categoria::all(), "marcas" => Marca::all()]);
+        return Inertia::render('Articulo/Crear', [
+            "categorias" => Categoria::all(),
+            "marcas" => Marca::all(),
+            "sockets" => Socket::all()
+        ]);
     }
 
     /**
@@ -52,28 +57,33 @@ class ArticuloController extends Controller
      */
     public function store(Request $request)
     {
-
         if($request->tipo == "socket"){
+
+            $request->validate([
+                "socket" => "required"
+            ]);
+
             $articulo = Socket::create([
                 "nombre" => $request->socket,
             ]);
 
-        }else if($request->tipo == "placa"){
+        }else if($request->tipo == "Placa base"){
             $articulo = Articulo::create([
                 "nombre" => $request->nombre,
-                "categoria" => Categoria::where("nombre" == $request->tipo)->id,
+                "socket_id" => $request->socket_id,
+                "categoria_id" => $request->categoria_id,
+                "marca_id" => $request->marca_id,
                 "descripcion" => $request->descripcion,
                 "precio" => $request->precio,
-                "datos" => [
-                    "socket" => $request->socket,
-                    "m2" => $request->m2,
-                    "ram_slots" =>$request->ram_slots,
-                    "ram_mhz" => $request->ram_mhz,
-                ]
-
+                "datos" => json_encode([
+                    "slotsm2" => $request->slotsm2,
+                    "slotsram" => $request->slotsram,
+                    "ddrmax" =>$request->ddrmax,
+                    "mhzmax" => $request->mhzmax,
+                ])
             ]);
 
-        }else if($request->tipo == "cpu"){
+        }else if($request->tipo == "Tarjeta gráfica"){
             $articulo = Articulo::create([
                 "nombre" => $request->nombre,
                 "categoria" => Categoria::where("nombre" == $request->tipo)->id,
@@ -85,10 +95,9 @@ class ArticuloController extends Controller
                     "frecuancia" => $request->frecuencia,
                     "consumo" => $request->consumo
                 ]
-
             ]);
 
-        }else if($request->tipo == "ram"){
+        }else if($request->tipo == "RAM"){
             $articulo = Articulo::create([
                 "nombre" => $request->nombre,
                 "categoria" => Categoria::where("nombre" == $request->tipo)->id,
@@ -102,7 +111,7 @@ class ArticuloController extends Controller
                 ]
             ]);
 
-        }else if($request->tipo == "disipador"){
+        }else if($request->tipo == "Disipador de CPU"){
             $articulo = Articulo::create([
                 "nombre" => $request->nombre,
                 "categoria" => Categoria::where("nombre" == $request->tipo)->id,
@@ -114,7 +123,7 @@ class ArticuloController extends Controller
                 ]
             ]);
 
-        }else if($request->tipo == "grafica"){
+        }else if($request->tipo == "Tarjeta gráfica"){
             $articulo = Articulo::create([
                 "nombre" => $request->nombre,
                 "categoria" => Categoria::where("nombre" == $request->tipo)->id,
@@ -127,7 +136,7 @@ class ArticuloController extends Controller
                 ]
             ]);
 
-        }else if($request->tipo == "almacenamiento"){
+        }else if($request->tipo == "Almacenamiento"){
             $articulo = Articulo::create([
                 "nombre" => $request->nombre,
                 "categoria" => Categoria::where("nombre" == $request->tipo)->id,
@@ -150,7 +159,7 @@ class ArticuloController extends Controller
                 ]
             ]);
 
-        }else if($request->tipo == "caja"){
+        }else if($request->tipo == "Caja"){
             $articulo = Articulo::create([
                 "nombre" => $request->nombre,
                 "categoria" => Categoria::where("nombre" == $request->tipo)->id,
@@ -158,7 +167,7 @@ class ArticuloController extends Controller
                 "precio" => $request->precio
             ]);
 
-        }else if($request->tipo == "ventiladores"){
+        }else if($request->tipo == "Ventilador"){
             $articulo = Articulo::create([
                 "nombre" => $request->nombre,
                 "categoria" => Categoria::where("nombre" == $request->tipo)->id,

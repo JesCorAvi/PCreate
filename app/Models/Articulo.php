@@ -13,7 +13,7 @@ class Articulo extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["nombre", "descripcion", "precio", "datos"];
+    protected $fillable = ["nombre","categoria_id", "descripcion", "precio", "datos", "marca_id", "socket_id"];
 
     public function facturas(): BelongsToMany
     {

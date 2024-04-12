@@ -21,6 +21,7 @@ class CategoriaSeeder extends Seeder
             'Disipador de CPU',
             'Caja',
             'Ventilador',
+            'Almacenamiento',
         ];
 
         foreach ($categorias as $categoria) {
