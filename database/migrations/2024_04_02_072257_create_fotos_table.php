@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('fotos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId("articulo_id")->constrained();
             $table->integer("orden");
             $table->string("imagen");
             $table->timestamps();
-            $table->integer("fotografiable_id");
-            $table->string("fotografiable_type");
-            $table->unique(["fotografiable_id","fotografiable_type", "orden"]);
+            $table->unique(["articulo_id", "orden"]);
         });
     }
 

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import FormularioSocket from './FormularioSocket';
 import FormularioPlaca from './FormularioPlaca';
 import FormularioCpu from './FormularioCpu';
@@ -9,19 +8,33 @@ import FormularioAlmacenamiento from './FormularioAlmacenamiento';
 import FormularioFuente from './FormularioFuente';
 import FormularioCaja from './FormularioCaja';
 import FormularioVentilador from './FormularioVentilador';
+import { usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
+import Alert from '@mui/material/Alert';
+
+
 
 export default function CrearProducto({ marcas, sockets }) {
-    const [formularioActual, setFormularioActual] = useState('placa'); // Estado inicializado con 'placa' para que el formulario de Placa Base se abra por defecto
+    const [formularioActual, setFormularioActual] = useState('placa');
+    const { messages } = usePage().props;
+    const [mensajeActual, setMensajeActual] = useState(null);
 
     const estilo_boton_normal = "font-bold flex justify-center items-center w-40 h-150 border border-solid border-black rounded-lg hover:bg-gray-300";
     const estilo_boton_seleccionado = "font-bold flex justify-center items-center w-40 h-150 border border-solid border-black rounded-lg bg-black text-white";
 
     const handleBotonClick = (formulario) => {
-        setFormularioActual(formulario); // Cambia el estado para mostrar el formulario seleccionado
+        setFormularioActual(formulario);
     };
+
+    useEffect(() => {
+        console.log("Messages:", messages);
+        console.log("Mensaje actual:", mensajeActual);
+        setMensajeActual(messages[formularioActual]);
+    }, [messages, formularioActual]);
 
     return (
         <>
+
             <div className='flex flex-wrap justify-between lg:px-52 lg:pb-20'>
                 <button className={formularioActual === 'socket' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('socket')}>
                     Socket
@@ -54,7 +67,12 @@ export default function CrearProducto({ marcas, sockets }) {
                     Ventiladores
                 </button>
             </div>
+            {console.log(messages)}
 
+            <div>
+                {messages.error}<br></br>
+                {messages.success}<br></br>
+            </div>
             {formularioActual === 'socket' && <FormularioSocket />}
             {formularioActual === 'placa' && <FormularioPlaca marcas={marcas} sockets={sockets} />}
             {formularioActual === 'cpu' && <FormularioCpu marcas={marcas} sockets={sockets} />}

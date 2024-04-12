@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('discos', function (Blueprint $table) {
+        Schema::create('articulos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId("categoria_id")->constrained();
             $table->string("nombre");
-            $table->text("descripcion");
-            $table->integer("memoria");
-            $table->boolean("ssd");
             $table->decimal("precio");
+            $table->text("descripcion");
+            $table->json("datos");
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('discos');
+        Schema::dropIfExists('articulos');
     }
 };
