@@ -1,13 +1,13 @@
-import FormularioSocket from './FormularioSocket';
-import FormularioPlaca from './FormularioPlaca';
-import FormularioCpu from './FormularioCpu';
-import FormularioRam from './FormularioRam';
-import FormularioGrafica from './FormularioGrafica';
-import FormularioDisipador from './FormularioDisipador';
-import FormularioAlmacenamiento from './FormularioAlmacenamiento';
-import FormularioFuente from './FormularioFuente';
-import FormularioCaja from './FormularioCaja';
-import FormularioVentilador from './FormularioVentilador';
+import FormularioSocket from './Formularios/Crear/FormularioSocket';
+import FormularioPlaca from './Formularios/Crear/FormularioPlaca';
+import FormularioCpu from './Formularios/Crear/FormularioCpu';
+import FormularioRam from './Formularios/Crear/FormularioRam';
+import FormularioGrafica from './Formularios/Crear/FormularioGrafica';
+import FormularioDisipador from './Formularios/Crear/FormularioDisipador';
+import FormularioAlmacenamiento from './Formularios/Crear/FormularioAlmacenamiento';
+import FormularioFuente from './Formularios/Crear/FormularioFuente';
+import FormularioCaja from './Formularios/Crear/FormularioCaja';
+import FormularioVentilador from './Formularios/Crear/FormularioVentilador';
 import { usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
@@ -23,8 +23,8 @@ export default function CrearProducto({ marcas, sockets }) {
     const [mensajeActual, setMensajeActual] = useState(null);
     const [open, setOpen] = useState(true);
 
-    const estilo_boton_normal = "font-bold flex justify-center items-center w-40 h-150 border border-solid border-black rounded-lg hover:bg-gray-300";
-    const estilo_boton_seleccionado = "font-bold flex justify-center items-center w-40 h-150 border border-solid border-black rounded-lg bg-black text-white";
+    const estilo_boton_normal = "font-bold flex justify-center items-center w-36 h-150 border border-solid border-black rounded-lg hover:bg-gray-300";
+    const estilo_boton_seleccionado = "font-bold flex justify-center items-center w-36 h-150 border border-solid border-black rounded-lg bg-black text-white";
 
     const handleBotonClick = (formulario) => {
         setFormularioActual(formulario);

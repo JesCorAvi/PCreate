@@ -1,29 +1,51 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import Boton from './Boton';
+import Boton from '../../Boton';
+import { useEffect, useState } from 'react';
 
-export default function FormularioPlaca({ sockets, marcas }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        socket_id: '',
-        categoria_id: '1',
-        marca_id: '',
-        nombre: '',
-        descripcion: '',
-        precio: '',
-        slotsm2: '',
-        slotsram: '',
-        ddrmax: '',
-        mhzmax: '',
+export default function FormularioPlaca({ sockets, marcas, articulo }) {
+    const { data, setData, post } = useForm({
+        socket_id: JSON.parse(articulo.datos).socket_id,
+        marca_id: articulo.marca_id,
+        nombre: articulo.nombre,
+        descripcion: articulo.descripcion,
+        precio: articulo.precio,
+        slotsm2: JSON.parse(articulo.datos).slotsm2,
+        slotsram: JSON.parse(articulo.datos).slotsram,
+        ddrmax: JSON.parse(articulo.datos).ddrmax,
+        mhzmax: JSON.parse(articulo.datos).mhzmax,
+        clase: JSON.parse(articulo.datos).clase,
+        imagenpr: articulo.fotos[1].imagen,
+        imagensec1: articulo.fotos[2].imagen,
+        imagensec2: articulo.fotos[3].imagen,
+        tipo: "Placa base"    });
+
+    const [imagenes, setImagenes] = useState({
         imagenpr: null,
         imagensec1: null,
-        imagensec2: null,
-        tipo: "Placa base"
+        imagensec2: null
     });
 
+    useEffect(() => {
+        // Pre-cargar las imágenes existentes
+        setImagenes({
+            imagenpr: articulo.fotos[1].imagen ? `/storage/uploads/articulos/${articulo.fotos[1].imagen}` : null,
+            imagensec1: articulo.fotos[2].imagen ? `/storage/uploads/articulos/${articulo.fotos[2].imagen}` : null,
+            imagensec2: articulo.fotos[3].imagen ? `/storage/uploads/articulos/${articulo.fotos[3].imagen}` : null
+        });
+    }, []);
 
+    const handleImagenChange = (event, key) => {
+        const file = event.target.files[0];
+        setImagenes({
+            ...imagenes,
+            [key]: URL.createObjectURL(file)
+        });
+        setData(key, file);
+    };
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('articulo.store', data))
+        post(route('articulo.update', data));
     };
 
     return (
@@ -35,6 +57,8 @@ export default function FormularioPlaca({ sockets, marcas }) {
                     <select
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         name="socket_id"
+                        id="socket_id"
+                        value={data.socket_id}
                         onChange={(e) => setData('socket_id', e.target.value)}
                         required
                     >
@@ -92,6 +116,7 @@ export default function FormularioPlaca({ sockets, marcas }) {
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
                         <select
                             id="marca"
+                            value={data.marca_id}
                             onChange={(e) => setData('marca_id', e.target.value)}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
@@ -165,50 +190,46 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             onChange={(e) => setData('mhzmax', e.target.value)}
                         />
                     </div>
-                </div>
-                <div className="mb-5">
-                    <div className="flex">
-                        <div className="mr-2 w-52 h-52">
-                            <label htmlFor="imagenpr" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen principal</label>
-                            <input
-                                type="file"
-                                name="imagenpr"
-                                id="imagenpr"
-                                className="hidden" required
-                                onChange={(e) => setData('imagenpr', e.target.value)}
-                            />
-                            <label htmlFor="imagenpr" className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                {data.imagenpr ? <img src={data.imagenpr} alt="Imagen Principal" className="w-full h-auto" /> : "Seleccionar imagen"}
-                            </label>
-                        </div>
-                        <div className="mr-2 w-52 h-52">
-                            <label htmlFor="imagensec1" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen secundaria 1</label>
-                            <input
-                                type="file"
-                                name="imagensec1"
-                                id="imagensec1"
-                                className="hidden"
-                                required
-                                onChange={(e) => setData('imagensec1', e.target.value)}
 
-                            />
-                            <label htmlFor="imagensec1" className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                {data.imagenSec1 ? <img src={data.imagenSec1} alt="Imagen Secundaria 1" className="w-full h-auto" /> : "Seleccionar imagen"}
-                            </label>
-                        </div>
-                        <div className="mr-2 w-52 h-52">
-                            <label htmlFor="imagensec2" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen secundaria 2</label>
-                            <input
-                                type="file"
-                                name="imagensec2"
-                                id="imagensec2"
-                                className="hidden"
-                                required
-                                onChange={(e) => setData('imagensec2', e.target.value)}
-                            />
-                            <label htmlFor="imagensec2" className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                {data.imagenSec2 ? <img src={data.imagenSec2} alt="Imagen Secundaria 2" className="w-full h-auto" /> : "Seleccionar imagen"}
-                            </label>
+                </div>
+                <div className="flex">
+
+                    <div className="flex-initial mb-5 w-full">
+                    <label htmlFor="clase" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Formato de placa</label>
+                        <select
+                            value={data.clase}
+                            name="clase"
+                            id="clase" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            onChange={(e) => setData('clase', e.target.value)}
+                            >
+                            <option value="">Seleccione un tipo</option>
+                            <option value="ATX">ATX</option>
+                            <option value="Micro-ATX">Micro-ATX</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div className="mb-5">
+                    <div className="mb-5">
+                        <div className="flex">
+                            {['imagenpr', 'imagensec1', 'imagensec2'].map((key) => (
+                                <div key={key} className="mr-2 w-52 h-52">
+                                    <label htmlFor={key} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen {key === 'imagenpr' ? 'principal' : 'secundaria'}</label>
+                                    <input
+                                        type="file"
+                                        name={key}
+                                        id={key}
+                                        className="hidden"
+                                        required
+                                        onChange={(e) => handleImagenChange(e, key)}
+                                    />
+                                    <label htmlFor={key} className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        {imagenes[key] ? <img src={imagenes[key]} alt={`Imagen ${key === 'imagenpr' ? 'principal' : 'secundaria'}`} className="w-full h-auto" /> : "Seleccionar imagen"}
+                                    </label>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

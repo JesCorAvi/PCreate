@@ -4,18 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Articulo;
 use App\Http\Controllers\Controller;
-use App\Models\Caja;
 use App\Models\Categoria;
-use App\Models\Cpu;
-use App\Models\Disco;
-use App\Models\Disipadorcpu;
 use App\Models\Foto;
-use App\Models\Fuente;
 use App\Models\Marca;
-use App\Models\Placa;
-use App\Models\Ram;
-use App\Models\Tarjeta;
-use App\Models\Ventiladore;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -31,9 +22,12 @@ class ArticuloController extends Controller
      */
     public function Tienda()
     {
+        $articulos = Articulo::with(['fotos' => function ($query) {
+            $query->where('orden', 0);
+        }])->get();
 
         return Inertia::render('Articulo/Index', [
-            "articulos" => Articulo::all(),
+            "articulos" => $articulos,
             "categorias" => Categoria::all(),
             "marcas" => Marca::all(),
             "sockets" => Socket::all()
@@ -57,124 +51,138 @@ class ArticuloController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->tipo == "socket"){
 
-            $request->validate([
-                "socket" => "required"
-            ]);
+        $datosComunes = [
+            "nombre" => $request->nombre,
+            "categoria_id" => Categoria::where("nombre", $request->tipo)->first()->id,
+            "marca_id" => $request->marca_id,
+            "descripcion" => $request->descripcion,
+            "precio" => $request->precio,
+        ];
 
-            $articulo = Socket::create([
-                "nombre" => $request->socket,
-            ]);
+        switch ($request->tipo) {
+            case "Placa base":
+                $datosEspecificos = [
+                    "datos" => json_encode([
+                        "socket_id" => $request->socket_id,
+                        "socket" => Socket::find($request->socket_id)->nombre,
+                        "slotsm2" => $request->slotsm2,
+                        "slotsram" => $request->slotsram,
+                        "ddrmax" => $request->ddrmax,
+                        "mhzmax" => $request->mhzmax,
+                        "clase" =>$request->clase
+                    ]),
+                ];
+                break;
 
-        }else if($request->tipo == "Placa base"){
-            $articulo = Articulo::create([
-                "nombre" => $request->nombre,
-                "socket_id" => $request->socket_id,
-                "categoria_id" => $request->categoria_id,
-                "marca_id" => $request->marca_id,
-                "descripcion" => $request->descripcion,
-                "precio" => $request->precio,
-                "datos" => json_encode([
-                    "slotsm2" => $request->slotsm2,
-                    "slotsram" => $request->slotsram,
-                    "ddrmax" =>$request->ddrmax,
-                    "mhzmax" => $request->mhzmax,
-                ])
-            ]);
+            case "Tarjeta gráfica":
+                $datosEspecificos = [
+                    "datos" => json_encode([
+                        "memoria" => $request->memoria,
+                        "gddr" => $request->gddr,
+                        "consumo" => $request->consumo,
+                    ]),
+                ];
+                break;
+                case "CPU":
+                    $datosEspecificos = [
+                        "datos" => json_encode([
+                            "socket_id" => $request->socket_id,
+                            "socket" => Socket::find($request->socket_id)->nombre,
+                            "nucleos" => $request->nucleos,
+                            "frecuencia" => $request->frecuencia,
+                            "consumo" => $request->consumo,
+                        ]),
+                    ];
+                    break;
 
-        }else if($request->tipo == "Tarjeta gráfica"){
-            $articulo = Articulo::create([
-                "nombre" => $request->nombre,
-                "categoria" => Categoria::where("nombre" == $request->tipo)->id,
-                "descripcion" => $request->descripcion,
-                "precio" => $request->precio,
-                "datos"=>[
-                    "socket" => $request->socket,
-                    "nucleos" => $request->nucleos,
-                    "frecuancia" => $request->frecuencia,
-                    "consumo" => $request->consumo
-                ]
-            ]);
+            case "RAM":
+                $datosEspecificos = [
+                    "datos" => json_encode([
+                        "cantidad" => $request->cantidad,
+                        "memoria" => $request->memoria,
+                        "frecuencia" => $request->frecuencia,
+                        "ddr" => $request->ddr,
+                    ]),
+                ];
+                break;
 
-        }else if($request->tipo == "RAM"){
-            $articulo = Articulo::create([
-                "nombre" => $request->nombre,
-                "categoria" => Categoria::where("nombre" == $request->tipo)->id,
-                "descripcion" => $request->descripcion,
-                "precio" => $request->precio,
-                "datos" =>[
-                    "cantidad" =>$request->cantidad,
-                    "memoria" =>$request->memoria,
-                    "frecuencia" =>$request->frecuencia,
-                    "tipo" =>$request->tipo,
-                ]
-            ]);
+            case "Disipador de CPU":
+                $datosEspecificos = [
+                    "datos" => json_encode([
+                        "socket_id" => $request->socket_id,
+                        "socket" => Socket::find($request->socket_id)->nombre,
+                        "liquida" => $request->liquida,
+                    ]),
+                ];
+                break;
 
-        }else if($request->tipo == "Disipador de CPU"){
-            $articulo = Articulo::create([
-                "nombre" => $request->nombre,
-                "categoria" => Categoria::where("nombre" == $request->tipo)->id,
-                "descripcion" => $request->descripcion,
-                "precio" => $request->precio,
-                "datos" =>[
-                    "socket" => $request->socket,
-                    "liquida" => $request->liquida,
-                ]
-            ]);
+            case "Almacenamiento":
+                $datosEspecificos = [
+                    "datos" => json_encode([
+                        "memoria" => $request->memoria,
+                        "clase" => $request->ssd,
+                        "escritura" => $request->escritura,
+                        "lectura" => $request->lectura,
 
-        }else if($request->tipo == "Tarjeta gráfica"){
-            $articulo = Articulo::create([
-                "nombre" => $request->nombre,
-                "categoria" => Categoria::where("nombre" == $request->tipo)->id,
-                "descripcion" => $request->descripcion,
-                "precio" => $request->precio,
-                "datos" =>[
-                    "memoria" => $request->memoria,
-                    "tipo" => $request->tipo,
-                    "consumo" => $request->consumo,
-                ]
-            ]);
+                    ]),
+                ];
+                break;
 
-        }else if($request->tipo == "Almacenamiento"){
-            $articulo = Articulo::create([
-                "nombre" => $request->nombre,
-                "categoria" => Categoria::where("nombre" == $request->tipo)->id,
-                "descripcion" => $request->descripcion,
-                "precio" => $request->precio,
-                "datos" =>[
-                    "memoria" => $request->memoria,
-                    "ssd" => $request->ssd,
-                ]
-            ]);
+            case "Fuente de alimentación":
+                $datosEspecificos = [
+                    "datos" => json_encode([
+                        "poder" => $request->poder,
+                    ]),
+                ];
+                break;
 
-        }else if($request->tipo == "fuente"){
-            $articulo = Articulo::create([
-                "nombre" => $request->nombre,
-                "categoria" => Categoria::where("nombre" == $request->tipo)->id,
-                "descripcion" => $request->descripcion,
-                "precio" => $request->precio,
-                "datos" =>[
-                    "poder" => $request->poder
-                ]
-            ]);
+                case "Caja":
+                    $datosEspecificos = [
+                        "datos" => json_encode([
+                            "clase" => $request->clase,
+                            "ventiladores" => $request->ventiladores,
+                        ]),
+                    ];
+                    break;
+                case "Ventilador":
+                    $datosEspecificos = []; // No hay datos específicos
+                break;
 
-        }else if($request->tipo == "Caja"){
-            $articulo = Articulo::create([
-                "nombre" => $request->nombre,
-                "categoria" => Categoria::where("nombre" == $request->tipo)->id,
-                "descripcion" => $request->descripcion,
-                "precio" => $request->precio
-            ]);
-
-        }else if($request->tipo == "Ventilador"){
-            $articulo = Articulo::create([
-                "nombre" => $request->nombre,
-                "categoria" => Categoria::where("nombre" == $request->tipo)->id,
-                "descripcion" => $request->descripcion,
-                "precio" => $request->precio
-            ]);
+            default:
+                // Manejar caso no previsto
+                break;
         }
+
+        $articulo = Articulo::create(array_merge($datosComunes, $datosEspecificos));
+        // Validar y almacenar la imagen
+        $request->validate([
+            'imagenpr' => 'required|image|max:1024',
+            'imagensec1' => 'required|image|max:1024',
+            'imagensec2' => 'required|image|max:1024',
+        ]);
+
+        $miniatura = Foto::create([
+            "articulo_id" => $articulo->id,
+            "orden" => 0,
+            "imagen" => subirImagen($request->file('imagenpr'), 'uploads/articulos')
+        ]);
+        $imagenpr = Foto::create([
+            "articulo_id" => $articulo->id,
+            "orden" => 1,
+            "imagen" => subirImagen($request->imagenpr, 'uploads/articulos')
+        ]);
+        $imagensec1 = Foto::create([
+            "articulo_id" => $articulo->id,
+            "orden" => 2,
+            "imagen" => subirImagen($request->imagensec1, 'uploads/articulos')
+        ]);
+        $imagensec2 = Foto::create([
+            "articulo_id" => $articulo->id,
+            "orden" => 3,
+            "imagen" => subirImagen($request->imagensec2, 'uploads/articulos')
+        ]);
+
         if ($articulo) {
             return redirect()->back()->with('success', 'Articulo creado exitosamente.');
         } else {
@@ -187,7 +195,7 @@ class ArticuloController extends Controller
      */
     public function show(Request $request)
     {
-        $articulo = Articulo::find($request->id);
+        $articulo = Articulo::with('categoria', 'marca', 'fotos')->find($request->id);
 
         return Inertia::render('Articulo/Show', ["articulo" => $articulo, "categorias" => Categoria::all()]);
     }
@@ -195,9 +203,16 @@ class ArticuloController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Articulo $articulo)
+    public function edit(Request $request)
     {
-        //
+        $articulo = Articulo::with('categoria', 'marca', 'fotos')->find($request->id);
+
+        return Inertia::render('Articulo/Edit', [
+            "articulo" => $articulo,
+            "categorias" => Categoria::all(),
+            "marcas" => Marca::all(),
+            "sockets" => Socket::all()
+        ]);
     }
 
     /**
@@ -215,4 +230,25 @@ class ArticuloController extends Controller
     {
         //
     }
+}
+
+function subirImagen($image, $ruta)
+{
+    // Generar un nombre único para la imagen
+    $name = hash('sha256', time() . $image->getClientOriginalName()) . ".png";
+
+    // Guardar la imagen en el directorio especificado
+    $image->storeAs($ruta, $name, 'public');
+
+    // Procesar la imagen
+    /*
+    $manager = new ImageManager();
+    $imageR = $manager->make($image->getRealPath());
+    $imageR->scaleDown(400); // Ajusta esto según tus necesidades
+
+    // Guardar la imagen procesada
+    $imageR->save(public_path('storage/' . $name . '/' . $name));
+    */
+
+    return $name;
 }

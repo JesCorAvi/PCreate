@@ -13,7 +13,7 @@ class Articulo extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["nombre","categoria_id", "descripcion", "precio", "datos", "marca_id", "socket_id"];
+    protected $fillable = ["nombre","categoria_id", "descripcion", "precio", "datos", "marca_id"];
 
     public function facturas(): BelongsToMany
     {
@@ -35,5 +35,10 @@ class Articulo extends Model
     public function marca(): BelongsTo
     {
         return $this->belongsTo(Marca::class);
+    }
+
+    public function fotos(): HasMany
+    {
+        return $this->hasMany(Foto::class);
     }
 }

@@ -14,12 +14,12 @@ class Foto extends Model
     protected $fillable = [
         'id',
         'articulo_id',
-        'principal',
-
+        'orden',
+        'imagen',
     ];
-    public function fotografiable(): MorphTo
-    {
-        return $this->morphTo();
-    }
 
+    public function articulo(): BelongsTo
+    {
+        return $this->belongsTo(Articulo::class);
+    }
 }

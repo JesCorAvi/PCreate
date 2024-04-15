@@ -4,22 +4,16 @@ import BotonGrande from './BotonGrande';
 import Comentario from './Comentario';
 
 export default function Pieza({ active = false, classNameName = '', children, articulo }) {
-    const [imagenPrincipal, setImagenPrincipal] = useState("http://127.0.0.1:8000/storage/uploads/piezas/ram1.webp");
+    const [imagenPrincipal, setImagenPrincipal] = useState(`http://127.0.0.1:8000/storage/uploads/articulos/${articulo.fotos[1].imagen}`);
     const [lightboxVisible, setLightboxVisible] = useState(false);
+    const datos = JSON.parse(articulo.datos);
 
     function acortar(cadena, longitud) {
-        if (cadena.length <= longitud) {
-            return cadena;
-        } else {
-            return cadena.substring(0, longitud) + '...';
-        }
+        return cadena.length <= longitud ? cadena : cadena.substring(0, longitud) + '...';
     }
 
     function handleClickImagenPrincipal(url) {
         setImagenPrincipal(url);
-        if (url === imagenPrincipal) {
-            setLightboxVisible(true);
-        }
     }
 
     function handleCloseLightbox() {
@@ -33,60 +27,53 @@ export default function Pieza({ active = false, classNameName = '', children, ar
                 <section className="flex-1 flex flex-col items-center justify-center">
                     <img onClick={() => handleClickImagenPrincipal(imagenPrincipal)} src={imagenPrincipal} alt="Imagen principal" className='w-imagen h-imagen object-contain border-2 border-solid rounded-md cursor-pointer' />
                     <div className='flex max-w-full overflow-x-auto justify-center'>
-                        <img onClick={() => handleClickImagenPrincipal("http://127.0.0.1:8000/storage/uploads/piezas/ram1.webp")} className='max-w-44 mx-2 object-contain border-2 border-solid rounded-md cursor-pointer' src="http://127.0.0.1:8000/storage/uploads/piezas/ram1.webp" alt="Imagen 1" />
-                        <img onClick={() => handleClickImagenPrincipal("http://127.0.0.1:8000/storage/uploads/piezas/ram2.webp")} className='max-w-44 mx-2 object-contain border-2 border-solid rounded-md cursor-pointer' src="http://127.0.0.1:8000/storage/uploads/piezas/ram2.webp" alt="Imagen 2" />
-                        <img onClick={() => handleClickImagenPrincipal("http://127.0.0.1:8000/storage/uploads/piezas/ram3.webp")} className='max-w-44 mx-2 object-contain border-2 border-solid rounded-md cursor-pointer' src="http://127.0.0.1:8000/storage/uploads/piezas/ram3.webp" alt="Imagen 3" />
+                        {articulo.fotos.slice(1).map((foto, index) => (
+                            <img key={index} onClick={() => handleClickImagenPrincipal(`http://127.0.0.1:8000/storage/uploads/articulos/${foto.imagen}`)} className='max-w-44 mx-2 object-contain border-2 border-solid rounded-md cursor-pointer' src={`http://127.0.0.1:8000/storage/uploads/articulos/${foto.imagen}`} alt={`Imagen ${index + 1}`} />
+                        ))}
                     </div>
                 </section>
-
-                <section className="flex-1 text-justify xl:px-10 ">
+                <section className="flex-1 text-justify xl:px-10 flex flex-col justify-between">
                     <h1 className="font-bold text-4xl pt-10 ">{articulo.nombre}</h1>
                     <p className='py-20 xl:py-40 xl:px-10'>{acortar(articulo.descripcion, 400)}</p>
                     <div className="text-center">
                         <p className="font-bold text-4xl">{articulo.precio}€</p>
                     </div>
-                    <BotonGrande texto="AÑADIR AL CARRITO"></BotonGrande>
+                    <div className='text-center'>
+                        <BotonGrande texto="AÑADIR AL CARRITO" />
+                    </div>
                 </section>
+
             </article>
             <article className='block xl:flex px-5'>
                 <section className="flex-1 flex flex-col text-justify ">
                     <h2 className="font-bold text-2xl pt-10 xl:px-20">Sobre el producto</h2>
-                    <p className='py-10 xl:py-20 xl:px-20'>{articulo.descripcion}</p>
+                    <p className='py-10 xl:px-20'>{articulo.descripcion}</p>
+                    <ul>
+                        <li className='py-5 xl:px-20'> <strong>Marca:</strong> {articulo.marca.nombre}</li>
+                        <li className='py-5 xl:px-20'> <strong>Categoría:</strong> {articulo.categoria.nombre}</li>
+                        {Object.keys(datos).map((key, index) => (
+                            <li className='py-5 xl:px-20' key={index}>
+                                <strong>{key}:</strong> {datos[key]}
+                            </li>
+                        ))}
+                    </ul>
                 </section>
 
                 <section className="flex-1 flex flex-col text-justify ">
-                    <div class='flex justify-between'>
-                        <h2 class="font-bold text-2xl pt-10 ">Comentarios</h2>
-                        <Link href="" class="font-semibold text-lg pt-10 xl:pr-10 underline">Añadir comentario</Link>
+                    <div className='flex justify-between'>
+                        <h2 className="font-bold text-2xl pt-10 ">Comentarios</h2>
+                        <Link href="" className="font-semibold text-lg pt-10 xl:pr-10 underline">Añadir comentario</Link>
                     </div>
-                    <Comentario
-                        usuario="Jesus. C"
-                        avatar='http://127.0.0.1:8000/assets/avatar.jpg'
-                        nota="4.5"
-                        comentario="Muy buena placa base, me la compré más que nada por e4stética, ya que las luces que tiene me gustan bastante, pero en términos de conectividad y rendimiento está genial. Tiene bastantes puertosa usb, compatibilidad con conectores tipo C que pueda tener tu caja y 2 puertos M.2 para las SSD. Muy contento con la compra."
-                        fecha="22 de Septiembre de 2024"
+                    {[...Array(4)].map((_, index) => (
+                        <Comentario
+                            key={index}
+                            usuario="Jesus. C"
+                            avatar='http://127.0.0.1:8000/assets/avatar.jpg'
+                            nota="4.5"
+                            comentario="Muy buena placa base, me la compré más que nada por estética, ya que las luces que tiene me gustan bastante, pero en términos de conectividad y rendimiento está genial. Tiene bastantes puertos USB, compatibilidad con conectores tipo C que pueda tener tu caja y 2 puertos M.2 para las SSD. Muy contento con la compra."
+                            fecha="22 de Septiembre de 2024"
                         />
-                   <Comentario
-                        usuario="Jesus. C"
-                        avatar='http://127.0.0.1:8000/assets/avatar.jpg'
-                        nota="4.5"
-                        comentario="Muy buena placa base, me la compré más que nada por e4stética, ya que las luces que tiene me gustan bastante, pero en términos de conectividad y rendimiento está genial. Tiene bastantes puertosa usb, compatibilidad con conectores tipo C que pueda tener tu caja y 2 puertos M.2 para las SSD. Muy contento con la compra."
-                        fecha="22 de Septiembre de 2024"
-                        />
-                   <Comentario
-                        usuario="Jesus. C"
-                        avatar='http://127.0.0.1:8000/assets/avatar.jpg'
-                        nota="4.5"
-                        comentario="Muy buena placa base, me la compré más que nada por e4stética, ya que las luces que tiene me gustan bastante, pero en términos de conectividad y rendimiento está genial. Tiene bastantes puertosa usb, compatibilidad con conectores tipo C que pueda tener tu caja y 2 puertos M.2 para las SSD. Muy contento con la compra."
-                        fecha="22 de Septiembre de 2024"
-                        />
-                   <Comentario
-                        usuario="Jesus. C"
-                        avatar='http://127.0.0.1:8000/assets/avatar.jpg'
-                        nota="4.5"
-                        comentario="Muy buena placa base, me la compré más que nada por e4stética, ya que las luces que tiene me gustan bastante, pero en términos de conectividad y rendimiento está genial. Tiene bastantes puertosa usb, compatibilidad con conectores tipo C que pueda tener tu caja y 2 puertos M.2 para las SSD. Muy contento con la compra."
-                        fecha="22 de Septiembre de 2024"
-                        />
+                    ))}
                 </section>
             </article>
             {lightboxVisible && (

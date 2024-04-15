@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticuloController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SocketController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,8 +30,16 @@ Route::get('/tienda/crear', [ArticuloController::class, 'create'])->name('articu
 
 Route::post('/tienda/creado', [ArticuloController::class, 'store'])->name('articulo.store');
 
+Route::post('/socket/creado', [SocketController::class, 'store'])->name('socket.store');
+
+
 Route::get('/tienda', [ArticuloController::class, 'Tienda'])->name('articulo.index');
 
 Route::get('/tienda/{id}',[ArticuloController::class, 'show'])->name('articulos.show');
+
+Route::get('/tienda/editar/{id}',[ArticuloController::class, 'edit'])->name('articulos.edit');
+
+Route::post('/socket/editado/{id}', [SocketController::class, 'update'])->name('socket.update');
+
 
 require __DIR__.'/auth.php';
