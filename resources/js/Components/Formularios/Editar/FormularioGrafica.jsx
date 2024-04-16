@@ -3,16 +3,16 @@ import Boton from '../../Boton';
 import { useEffect, useState } from 'react';
 
 
-export default function FormularioGrafica({marcas }) {
+export default function FormularioGrafica({ marcas, articulo  }) {
     const { data, setData, post } = useForm({
-        categoria_id: '1',
-        marca_id: '',
-        nombre: '',
-        descripcion: '',
-        precio: '',
-        memoria: '',
-        gddr: '',
-        consumo: '',
+        id: articulo.id,
+        marca_id: articulo.marca_id,
+        nombre: articulo.nombre,
+        descripcion: articulo.descripcion,
+        precio: articulo.precio,
+        memoria: JSON.parse(articulo.datos).memoria,
+        gddr: JSON.parse(articulo.datos).gddr,
+        consumo: JSON.parse(articulo.datos).consumo,
         imagenpr: null,
         imagensec1: null,
         imagensec2: null,
@@ -25,6 +25,15 @@ export default function FormularioGrafica({marcas }) {
         imagensec2: null
     });
 
+    useEffect(() => {
+        // Pre-cargar las imágenes existentes
+        setImagenes({
+            imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen ? `/storage/uploads/articulos/${articulo.fotos.find(foto => foto.orden === 1)?.imagen}` : null,
+            imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen ? `/storage/uploads/articulos/${articulo.fotos.find(foto => foto.orden === 2)?.imagen}` : null,
+            imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen ? `/storage/uploads/articulos/${articulo.fotos.find(foto => foto.orden === 3)?.imagen}` : null
+        });
+    }, []);
+
     const handleImagenChange = (event, key) => {
         const file = event.target.files[0];
         setImagenes({
@@ -34,12 +43,10 @@ export default function FormularioGrafica({marcas }) {
         setData(key, file);
     };
 
-
     const submit = (e) => {
         e.preventDefault();
-        post(route('articulo.store', data))
+        post(route('articulo.update', articulo.id, data));
     };
-
     return (
 
         <div name="placa base" className="min-h-screen">
@@ -121,11 +128,10 @@ export default function FormularioGrafica({marcas }) {
                         <label htmlFor="slotsram" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Memoria GDDR</label>
                         <input
                             value={data.gddr}
-                            type="decimal"
+                            type="text"
                             name="gddr"
                             id="gddr" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Introduzca un valor numerico"
-                            min="1" max="8"
+                            placeholder="Introduzca un valor"
                             required
                             onChange={(e) => setData('gddr', e.target.value)}
                         />

@@ -19,7 +19,7 @@ export default function Index({ auth, categorias, marcas, articulos }) {
                 categorias = {categorias}
                 marcas = {marcas}
                 articulos = {articulos}
-                >
+            >
 
             </Productos>
             <Footer></Footer>

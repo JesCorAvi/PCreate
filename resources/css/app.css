@@ -48,9 +48,13 @@
       margin: 0;
     }
   }
-  .w-imagen {
-    width: 35rem;
-}
-.h-imagen {
-    width: 35rem;
+    .w-imagen {
+        width: 35rem;
+    }
+    .h-imagen {
+        width: 35rem;
+    }
+
+.h-comp {
+    height: 28rem
 }

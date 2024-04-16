@@ -3,16 +3,17 @@ import Boton from '../../Boton';
 import { useEffect, useState } from 'react';
 
 
-export default function FormularioCpu({ sockets, marcas }) {
+export default function FormularioCpu({  sockets, marcas, articulo }) {
     const { data, setData, post } = useForm({
-        socket_id: '',
-        marca_id: '',
-        nombre: '',
-        descripcion: '',
-        precio: '',
-        nucleos: '',
-        frecuencia: '',
-        consumo: '',
+        id: articulo.id,
+        socket_id: JSON.parse(articulo.datos).socket_id,
+        marca_id: articulo.marca_id,
+        nombre: articulo.nombre,
+        descripcion: articulo.descripcion,
+        precio: articulo.precio,
+        nucleos:JSON.parse(articulo.datos).nucleos,
+        frecuencia: JSON.parse(articulo.datos).frecuencia,
+        consumo: JSON.parse(articulo.datos).consumo,
         imagenpr: null,
         imagensec1: null,
         imagensec2: null,
@@ -25,6 +26,15 @@ export default function FormularioCpu({ sockets, marcas }) {
         imagensec2: null
     });
 
+    useEffect(() => {
+        // Pre-cargar las imágenes existentes
+        setImagenes({
+            imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen ? `/storage/uploads/articulos/${articulo.fotos.find(foto => foto.orden === 1)?.imagen}` : null,
+            imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen ? `/storage/uploads/articulos/${articulo.fotos.find(foto => foto.orden === 2)?.imagen}` : null,
+            imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen ? `/storage/uploads/articulos/${articulo.fotos.find(foto => foto.orden === 3)?.imagen}` : null
+        });
+    }, []);
+
     const handleImagenChange = (event, key) => {
         const file = event.target.files[0];
         setImagenes({
@@ -34,12 +44,10 @@ export default function FormularioCpu({ sockets, marcas }) {
         setData(key, file);
     };
 
-
     const submit = (e) => {
         e.preventDefault();
-        post(route('articulo.store', data))
+        post(route('articulo.update', articulo.id, data));
     };
-
     return (
 
         <div name="placa base" className="min-h-screen">

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 export default function FormularioPlaca({ sockets, marcas, articulo }) {
     const { data, setData, post } = useForm({
+        id: articulo.id,
         socket_id: JSON.parse(articulo.datos).socket_id,
         marca_id: articulo.marca_id,
         nombre: articulo.nombre,
@@ -14,10 +15,11 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
         ddrmax: JSON.parse(articulo.datos).ddrmax,
         mhzmax: JSON.parse(articulo.datos).mhzmax,
         clase: JSON.parse(articulo.datos).clase,
-        imagenpr: articulo.fotos[1].imagen,
-        imagensec1: articulo.fotos[2].imagen,
-        imagensec2: articulo.fotos[3].imagen,
-        tipo: "Placa base"    });
+        imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen,
+        imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen,
+        imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen,
+        tipo: "Placa base"
+    });
 
     const [imagenes, setImagenes] = useState({
         imagenpr: null,
@@ -28,9 +30,9 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
     useEffect(() => {
         // Pre-cargar las imágenes existentes
         setImagenes({
-            imagenpr: articulo.fotos[1].imagen ? `/storage/uploads/articulos/${articulo.fotos[1].imagen}` : null,
-            imagensec1: articulo.fotos[2].imagen ? `/storage/uploads/articulos/${articulo.fotos[2].imagen}` : null,
-            imagensec2: articulo.fotos[3].imagen ? `/storage/uploads/articulos/${articulo.fotos[3].imagen}` : null
+            imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen ? `/storage/uploads/articulos/${articulo.fotos.find(foto => foto.orden === 1)?.imagen}` : null,
+            imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen ? `/storage/uploads/articulos/${articulo.fotos.find(foto => foto.orden === 2)?.imagen}` : null,
+            imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen ? `/storage/uploads/articulos/${articulo.fotos.find(foto => foto.orden === 3)?.imagen}` : null
         });
     }, []);
 
@@ -45,7 +47,7 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('articulo.update', data));
+        post(route('articulo.update', articulo.id, data));
     };
 
     return (
@@ -222,7 +224,6 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                                         name={key}
                                         id={key}
                                         className="hidden"
-                                        required
                                         onChange={(e) => handleImagenChange(e, key)}
                                     />
                                     <label htmlFor={key} className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -233,7 +234,7 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                         </div>
                     </div>
                 </div>
-                <Boton tipo="submit" texto="Crear Artículo"></Boton>
+                <Boton tipo="submit" texto="Editar Artículo"></Boton>
             </form>
         </div>
     );

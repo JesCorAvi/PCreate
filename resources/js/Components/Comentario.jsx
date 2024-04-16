@@ -5,9 +5,9 @@ export default function Comentario({usuario,nota,fecha,comentario, avatar}) {
         <div className="border-4 border-solid rounded-md w-200 h-42 py-3 flex flex-col  ">
             <div className='flex justify-between'>
                 <div className='flex'>
-                    <p className='px-6 font-semibold'>{usuario}.</p>
+                    <p className='px-6 text-xl font-semibold'>{usuario}.</p>
                     <div className='flex'>
-                        <p className='font-semibold'>{nota} / 5</p>
+                        <p className='font-semibold bg-black text-white px-1 rounded-md'>{nota} / 5</p>
                     </div>
                 </div>
                 <p className='font-semibold px-6'>{fecha}</p>
