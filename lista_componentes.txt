@@ -1,0 +1,10 @@
+Socket: id, nombre
+Placa base: id,socket_id,nombre, descripcion, m2, ram_slots, ram_mhz, precio
+Procesador:id, socket_id, nombre,descripcion, nucleos, frecuencia, consumo, pecio
+Disipador CPU: id,nombre,descripcion, socket, liquida, precio
+RAM: id,nombre,descripcion, cantidad, memoria, frecuencia, preico
+Tarjeta gr fica: id,nombre,descripcion, memoria, consumo, precio
+Almacenamiento: id,nombre,descripcion, memoria, ssd, precio
+Fuente: id, nombre, descripcion, poder, precio
+Cajas: id,,nombre,descripcion, precio
+Ventiladores:id,nombre,descripcion, precio

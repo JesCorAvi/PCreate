@@ -1,3 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*{
+    font-family: "rajdhani";
+}
+
+.rajdhani-light {
+    font-family: "Rajdhani", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+  }
+
+  .rajdhani-regular {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 20;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .rajdhani-medium {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 1.125rem/* 18px */;
+    line-height: 1.75rem/* 28px */;
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  .rajdhani-semibold {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 1.125rem/* 18px */;
+    line-height: 1.75rem/* 28px */;
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  .rajdhani-bold {
+    font-family: "Rajdhani", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+  @layer base {
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+    .w-imagen {
+        width: 35rem;
+    }
+    .h-imagen {
+        width: 35rem;
+    }
+
+.h-comp {
+    height: 28rem
+}

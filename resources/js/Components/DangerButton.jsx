@@ -9,7 +9,7 @@ export default function DangerButton({ className = '', disabled, children, ...pr
             }
             disabled={disabled}
         >
-            {children}
+            {text}
         </button>
     );
 }
