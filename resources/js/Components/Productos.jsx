@@ -1,16 +1,20 @@
-import { Link } from '@inertiajs/react';
-import Filtro from '@/Components/Filtro';
-import Pieza from '@/Components/Pieza';
+import React, { useState, useEffect } from 'react';
+import { useMediaQuery } from 'react-responsive';
 
+export default function Productos({ articulos }) {
+    const isSmallScreen = useMediaQuery({ query: '(max-width: 600px)' });
+    const [visibleLinks, setVisibleLinks] = useState([]);
 
-export default function Productos({ articulos, categorias, marcas, active = false, classNameName = '', children, ...props }) {
-    function acortar(cadena, longitud) {
-        if (cadena.length <= longitud) {
-            return cadena; // Devuelve la cadena original si es igual o menor que la longitud especificada
+    useEffect(() => {
+        const links = articulos.links;
+        if (isSmallScreen) {
+            // Show fewer links on small screens
+            setVisibleLinks(links.slice(0, 5));
         } else {
-            return cadena.substring(0, longitud) + '...'; // Acorta la cadena y añade puntos suspensivos
+            setVisibleLinks(links);
         }
-    }
+    }, [isSmallScreen, articulos.links]);
+
     return (
         <>
             <div className="flex min-h-screen">
@@ -32,18 +36,23 @@ export default function Productos({ articulos, categorias, marcas, active = fals
                 </div>
 
             </div>
-            <nav className="flex items-center justify-between pt-4 max-w-60">
-                {articulos.prev_page_url && (
-                    <Link className="px-3 py-2 rounded bg-black text-white" href={articulos.prev_page_url} > Anterior</Link>
-                )}
+            <nav className="flex items-center justify-center py-4">
                 <div>
-                    {articulos.links.map((link, index) => (
-                        <Link key={index} className={`mx-1 px-3 py-2 rounded ${link.active ? 'bg-black text-white' : 'text-black'}`} href={link.url}>{link.label}</Link>
+                {visibleLinks.map((link, index) => (
+                        <Link
+                            key={index}
+                            className={`
+                                px-3 py-2 border border-solid border-black
+                                ${link.active ? 'bg-black text-white' : 'text-black'}
+                                ${index === 0 ? 'rounded-l' : ''}
+                                ${index === articulos.links.length - 1 ? 'rounded-r' : ''}
+                            `}
+                            href={link.url}
+                        >
+                            {link.label}
+                        </Link>
                     ))}
                 </div>
-                {articulos.next_page_url && (
-                    <Link className="px-3 py-2 rounded bg-black text-white" href={articulos.next_page_url}>Siguiente </Link>
-                )}
             </nav>
         </>
     );
