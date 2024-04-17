@@ -33,9 +33,9 @@ export default function Productos({ articulos, categorias, marcas, active = fals
         }
     }, [isSmallScreen, articulosFiltrados.links]);
 
-    async function filtrar(nuevaCategoria, nuevaMarca, nuevoPrecioMinimo, nuevopPrecioMaximo){
+    async function filtrar(nuevaCategoria, nuevaMarca, nuevoPrecioMinimo, nuevoPrecioMaximo){
         // Actualizar el estado de filtroCategoria y filtroMarca
-        console.log(nuevaCategoria, nuevaMarca, nuevoPrecioMinimo, nuevopPrecioMaximo)
+        console.log(nuevaCategoria, nuevaMarca, nuevoPrecioMinimo, nuevoPrecioMaximo)
         if (nuevaCategoria !== null) {
             setFiltroCategoria(nuevaCategoria);
         }
@@ -45,8 +45,8 @@ export default function Productos({ articulos, categorias, marcas, active = fals
         if (nuevoPrecioMinimo !== null) {
             setPrecioMinimo(nuevoPrecioMinimo);
         }
-        if (nuevopPrecioMaximo !== null ) {
-            setPrecioMaximo(nuevopPrecioMaximo);
+        if (nuevoPrecioMaximo !== null ) {
+            setPrecioMaximo(nuevoPrecioMaximo);
         }
 
         // Crear los parámetros de la URL
@@ -54,7 +54,7 @@ export default function Productos({ articulos, categorias, marcas, active = fals
             marca: nuevaMarca || filtroMarca,
             categoria: nuevaCategoria || filtroCategoria,
             precioMinimo: nuevoPrecioMinimo || precioMinimo,
-            precioMaximo: nuevopPrecioMaximo || precioMaximo
+            precioMaximo: nuevoPrecioMaximo || precioMaximo
         });
         // Realizar la solicitud de filtrado
         const response = await fetch(`/tienda/filtrar?${params.toString()}`, {
@@ -70,7 +70,12 @@ export default function Productos({ articulos, categorias, marcas, active = fals
         } else {
             const data = await response.json();
             setArticulosFiltrados(data);
-            console.log(nuevaCategoria || filtroCategoria, nuevaMarca || filtroMarca, nuevoPrecioMinimo || precioMinimo, nuevopPrecioMaximo || precioMaximo,)
+            console.log(
+                nuevaCategoria || filtroCategoria,
+                nuevaMarca || filtroMarca,
+                nuevoPrecioMinimo || precioMinimo,
+                nuevoPrecioMaximo || precioMaximo,
+            )
         }
     }
     return (

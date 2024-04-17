@@ -44,7 +44,6 @@ class ArticuloController extends Controller
         $marca = $request->input('marca');
         $precioMinimo = $request->input('precioMinimo');
         $precioMaximo = $request->input('precioMaximo');
-
         // Realizar el filtrado de acuerdo a los parámetros recibidos
         $query = Articulo::with(['fotos' => function ($query) {
             $query->where('orden', 0);
@@ -58,11 +57,11 @@ class ArticuloController extends Controller
             $query->where('marca_id', $marca);
         }
 
-        if ($precioMinimo && $precioMinimo == "") {
+        if ($precioMinimo) {
             $query->where('precio', '>=', $precioMinimo);
         }
 
-        if ($precioMaximo && $precioMaximo !== "") {
+        if ($precioMaximo) {
             $query->where('precio', '<=', $precioMaximo);
         }
 
@@ -89,6 +88,12 @@ class ArticuloController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'imagenpr' => 'required|image',
+            'imagensec1' => 'required|image',
+            'imagensec2' => 'required|image',
+        ]);
+
 
         $datosComunes = [
             "nombre" => $request->nombre,
@@ -194,11 +199,6 @@ class ArticuloController extends Controller
 
         $articulo = Articulo::create(array_merge($datosComunes, $datosEspecificos));
         // Validar y almacenar la imagen
-        $request->validate([
-            'imagenpr' => 'required|image',
-            'imagensec1' => 'required|image',
-            'imagensec2' => 'required|image',
-        ]);
 
         $miniatura = Foto::create([
             "articulo_id" => $articulo->id,

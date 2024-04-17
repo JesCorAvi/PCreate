@@ -14,9 +14,9 @@ export default function FormularioCpu({  sockets, marcas, articulo }) {
         nucleos:JSON.parse(articulo.datos).nucleos,
         frecuencia: JSON.parse(articulo.datos).frecuencia,
         consumo: JSON.parse(articulo.datos).consumo,
-        imagenpr: null,
-        imagensec1: null,
-        imagensec2: null,
+        imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen,
+        imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen,
+        imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen,
         tipo: "CPU"
     });
 
@@ -48,6 +48,7 @@ export default function FormularioCpu({  sockets, marcas, articulo }) {
         e.preventDefault();
         post(route('articulo.update', articulo.id, data));
     };
+
     return (
 
         <div name="placa base" className="min-h-screen">
@@ -176,7 +177,7 @@ export default function FormularioCpu({  sockets, marcas, articulo }) {
                 </div>
                 <div className="mb-5">
                     <div className="mb-5">
-                        <div className="flex">
+                    <div className="flex">
                             {['imagenpr', 'imagensec1', 'imagensec2'].map((key) => (
                                 <div key={key} className="mr-2 w-52 h-52">
                                     <label htmlFor={key} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen {key === 'imagenpr' ? 'principal' : 'secundaria'}</label>
@@ -185,7 +186,6 @@ export default function FormularioCpu({  sockets, marcas, articulo }) {
                                         name={key}
                                         id={key}
                                         className="hidden"
-                                        required
                                         onChange={(e) => handleImagenChange(e, key)}
                                     />
                                     <label htmlFor={key} className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -196,7 +196,7 @@ export default function FormularioCpu({  sockets, marcas, articulo }) {
                         </div>
                     </div>
                 </div>
-                <Boton tipo="submit" texto="Crear Artículo"></Boton>
+                <Boton tipo="submit" texto="Aditar Artículo"></Boton>
             </form>
         </div>
     );
