@@ -27,7 +27,7 @@ class ArticuloController extends Controller
     {
         $articulos = Articulo::with(['fotos' => function ($query) {
             $query->where('orden', 0);
-        }])->get();
+        }])->paginate(12);
 
         return Inertia::render('Articulo/Index', [
             "articulos" => $articulos,
