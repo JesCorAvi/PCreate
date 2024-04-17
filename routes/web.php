@@ -35,6 +35,9 @@ Route::post('/socket/creado', [SocketController::class, 'store'])->name('socket.
 
 Route::get('/tienda', [ArticuloController::class, 'Tienda'])->name('articulo.index');
 
+Route::get('/tienda/filtrar', [ArticuloController::class, 'filtrar'])->name('articulo.filtrar');
+
+
 Route::get('/tienda/{id}',[ArticuloController::class, 'show'])->name('articulos.show');
 
 Route::get('/tienda/editar/{id}',[ArticuloController::class, 'edit'])->name('articulo.edit');
@@ -43,7 +46,6 @@ Route::post('/tienda/editado/{id}', [ArticuloController::class, 'update'])->name
 
 Route::delete('/tienda/destruir/{id}', [ArticuloController::class, 'destroy'])->name('articulo.destroy');
 
-Route::get('/tienda/filtrar/{categoria}', [ArticuloController::class, 'filterByCategory'])->name('articulo.filterByCategory');
 
 
 require __DIR__.'/auth.php';

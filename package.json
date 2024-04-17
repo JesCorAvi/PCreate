@@ -25,6 +25,7 @@
         "@emotion/styled": "^11.11.5",
         "@mui/icons-material": "^5.15.15",
         "@mui/material": "^5.15.15",
-        "flowbite-react": "^0.8.0"
+        "flowbite-react": "^0.8.0",
+        "react-responsive": "^10.0.0"
     }
 }

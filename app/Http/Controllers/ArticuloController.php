@@ -23,7 +23,7 @@ class ArticuloController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function Tienda()
+    public function Tienda(Request $request)
     {
         $articulos = Articulo::with(['fotos' => function ($query) {
             $query->where('orden', 0);
@@ -37,6 +37,41 @@ class ArticuloController extends Controller
         ]);
     }
 
+    public function filtrar(Request $request)
+    {
+        // Obtener los parámetros de filtrado desde la solicitud
+        $categoria = $request->input('categoria');
+        $marca = $request->input('marca');
+        $precioMinimo = $request->input('precioMinimo');
+        $precioMaximo = $request->input('precioMaximo');
+
+        // Realizar el filtrado de acuerdo a los parámetros recibidos
+        $query = Articulo::with(['fotos' => function ($query) {
+            $query->where('orden', 0);
+        }]);
+
+        if ($categoria && $categoria !== '') {
+            $query->where('categoria_id', $categoria);
+        }
+
+        if ($marca && $marca !== '') {
+            $query->where('marca_id', $marca);
+        }
+
+        if ($precioMinimo && $precioMinimo == "") {
+            $query->where('precio', '>=', $precioMinimo);
+        }
+
+        if ($precioMaximo && $precioMaximo !== "") {
+            $query->where('precio', '<=', $precioMaximo);
+        }
+
+        // Obtener los resultados filtrados
+        $articulosFiltrados = $query->paginate(12);
+
+        // Devolver los resultados filtrados
+        return response()->json($articulosFiltrados);
+    }
     /**
      * Show the form for creating a new resource.
      */
