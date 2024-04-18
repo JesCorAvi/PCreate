@@ -37,7 +37,6 @@ Route::get('/tienda', [ArticuloController::class, 'Tienda'])->name('articulo.ind
 
 Route::get('/tienda/filtrar', [ArticuloController::class, 'filtrar'])->name('articulo.filtrar');
 
-
 Route::get('/tienda/{id}',[ArticuloController::class, 'show'])->name('articulos.show');
 
 Route::get('/tienda/editar/{id}',[ArticuloController::class, 'edit'])->name('articulo.edit');

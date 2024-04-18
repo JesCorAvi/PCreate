@@ -13,13 +13,16 @@ export default function Productos({ articulos, categorias, marcas, active = fals
             return cadena.substring(0, longitud) + '...'; // Acorta la cadena y añade puntos suspensivos
         }
     }
-    const [filtroMarca, setFiltroMarca] = useState("");
-    const [filtroCategoria, setFiltroCategoria] = useState("");
-    const [precioMinimo, setPrecioMinimo] = useState("");
-    const [precioMaximo, setPrecioMaximo] = useState("");
+    const [articulosFiltrados, setArticulos] = useState(articulos);
+    const filtrar = (categoria, marca, precioMinimo, precioMaximo) => {
+            const formData = new FormData();
+            formData.append('categoria', categoria);
+            formData.append('marca', marca);
+            formData.append('precioMinimo', precioMinimo);
+            formData.append('precioMaximo', precioMaximo);
+            router.get(route('articulo.filtrar'), formData)
 
-    const [articulosFiltrados, setArticulosFiltrados] = useState(articulos);
-
+        };
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
     const [visibleLinks, setVisibleLinks] = useState(articulosFiltrados.links);
     useEffect(() => {
@@ -34,72 +37,12 @@ export default function Productos({ articulos, categorias, marcas, active = fals
     }, [isSmallScreen, articulosFiltrados.links]);
 
 
-    function resetear(){
-        setFiltroMarca("");
-        setFiltroCategoria("");
-        setPrecioMinimo("");
-        setPrecioMaximo("");
-        filtrar(null, null, null, null);
-    }
-    async function filtrar(nuevaCategoria, nuevaMarca, nuevoPrecioMinimo, nuevoPrecioMaximo){
-        if (nuevaCategoria !== null) {
-            setFiltroCategoria(nuevaCategoria);
-        }
-        if (nuevaMarca !== null) {
-            setFiltroMarca(nuevaMarca);
-        }
-        if (nuevoPrecioMinimo === '') {
-            nuevoPrecioMinimo = null;
-        } else {
-            setPrecioMinimo(nuevoPrecioMinimo);
-        }
-        if (nuevoPrecioMaximo === '') {
-            nuevoPrecioMaximo = null;
-        } else {
-            setPrecioMaximo(nuevoPrecioMaximo);
-        }
-
-        // Crear los parámetros de la URL
-        const params = new URLSearchParams({
-            marca: nuevaMarca || filtroMarca,
-            categoria: nuevaCategoria || filtroCategoria,
-        });
-
-        if (nuevoPrecioMinimo !== null) {
-            params.append('precioMinimo', nuevoPrecioMinimo);
-        }
-
-        if (nuevoPrecioMaximo !== null) {
-            params.append('precioMaximo', nuevoPrecioMaximo);
-        }
-        console.log(nuevaCategoria, nuevaMarca, nuevoPrecioMinimo, nuevoPrecioMaximo)
-        console.log(filtroCategoria, filtroMarca, precioMinimo, precioMaximo)
-
-        // Realizar la solicitud de filtrado
-        const response = await fetch(`/tienda/filtrar?${params.toString()}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        // Manejar la respuesta
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        } else {
-            const data = await response.json();
-            setArticulosFiltrados(data);
-        }
-    }
     return (
         <>
             <div className="flex min-h-screen">
                 <Filtro
                     categorias={categorias} marcas={marcas}
-                    setFiltroMarca={setFiltroMarca}
-                    setFiltroCategoria={setFiltroCategoria}
                     filtrar={filtrar}
-                    resetear={resetear}
                 >
                 </Filtro>
                 <div className="flex justify-center items-center w-full pb-10">

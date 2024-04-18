@@ -70,7 +70,12 @@ class ArticuloController extends Controller
 
         // Devolver los resultados filtrados
 
-        return response()->json($articulosFiltrados);
+        return Inertia::render('Articulo/Index', [
+            "articulos" => $articulosFiltrados,
+            "categorias" => Categoria::all(),
+            "marcas" => Marca::all(),
+            "sockets" => Socket::all()
+        ]);
     }
     /**
      * Show the form for creating a new resource.
