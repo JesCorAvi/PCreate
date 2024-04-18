@@ -96,9 +96,10 @@ export default function Filtro({ categorias, marcas, filtrar }) {
                 </ul>
                 </fieldset>
             </div>
+                <div className='flex'>
                 <Boton tipo="submit" texto="Filtrar"></Boton>
                 <Boton onClick={borrarFiltros} texto="Borrar Filtros"></Boton>
-
+                </div>
                 </form>
             </aside>
     );
