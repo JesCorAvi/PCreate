@@ -25,21 +25,6 @@ class ArticuloController extends Controller
      */
     public function Tienda(Request $request)
     {
-        $articulos = Articulo::with(['fotos' => function ($query) {
-            $query->where('orden', 0);
-        }])->paginate(12);
-
-        return Inertia::render('Articulo/Index', [
-            "articulos" => $articulos,
-            "categorias" => Categoria::all(),
-            "marcas" => Marca::all(),
-            "sockets" => Socket::all()
-        ]);
-    }
-
-    public function filtrar(Request $request)
-    {
-        // Obtener los parámetros de filtrado desde la solicitud
         $categoria = $request->input('categoria');
         $marca = $request->input('marca');
         $precioMinimo = $request->input('precioMinimo');
@@ -49,25 +34,29 @@ class ArticuloController extends Controller
             $query->where('orden', 0);
         }]);
 
-        if ($categoria && $categoria !== '') {
+        if ($categoria !== "null" && $categoria !== '' && $categoria !== null) {
             $query->where('categoria_id', $categoria);
         }
 
-        if ($marca && $marca !== '') {
+        if ($marca !== "null" && $marca !== '' && $marca !== null) {
             $query->where('marca_id', $marca);
         }
 
-        if ($precioMinimo) {
+        if ($precioMinimo !== "null" && $precioMinimo !== null) {
             $query->where('precio', '>=', $precioMinimo);
         }
 
-        if ($precioMaximo) {
+        if ($precioMaximo !== "null" && $precioMaximo !== null) {
             $query->where('precio', '<=', $precioMaximo);
         }
 
         // Obtener los resultados filtrados
-        $articulosFiltrados = $query->paginate(12);
-
+        $articulosFiltrados = $query->paginate(12)->appends([
+            'categoria' => $categoria,
+            'marca' => $marca,
+            'precioMinimo' => $precioMinimo,
+            'precioMaximo' => $precioMaximo,
+        ]);
         // Devolver los resultados filtrados
 
         return Inertia::render('Articulo/Index', [
@@ -76,7 +65,10 @@ class ArticuloController extends Controller
             "marcas" => Marca::all(),
             "sockets" => Socket::all()
         ]);
+
     }
+
+
     /**
      * Show the form for creating a new resource.
      */

@@ -32,10 +32,10 @@ Route::post('/tienda/creado', [ArticuloController::class, 'store'])->name('artic
 
 Route::post('/socket/creado', [SocketController::class, 'store'])->name('socket.store');
 
+Route::post('/tienda/filtrar', [ArticuloController::class, 'filtrar'])->name('articulo.filtrar');
 
 Route::get('/tienda', [ArticuloController::class, 'Tienda'])->name('articulo.index');
 
-Route::get('/tienda/filtrar', [ArticuloController::class, 'filtrar'])->name('articulo.filtrar');
 
 Route::get('/tienda/{id}',[ArticuloController::class, 'show'])->name('articulos.show');
 

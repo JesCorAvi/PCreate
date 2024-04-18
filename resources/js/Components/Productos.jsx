@@ -20,7 +20,12 @@ export default function Productos({ articulos, categorias, marcas, active = fals
             formData.append('marca', marca);
             formData.append('precioMinimo', precioMinimo);
             formData.append('precioMaximo', precioMaximo);
-            router.get(route('articulo.filtrar'), formData)
+            router.get(route('articulo.index', {
+                categoria: categoria,
+                marca: marca,
+                precioMinimo: precioMinimo,
+                precioMaximo: precioMaximo
+            }), formData)
 
         };
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
