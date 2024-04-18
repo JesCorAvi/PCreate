@@ -76,7 +76,7 @@ export default function Pieza({ active = false, classNameName = '', children, ar
                                     <td><strong>Categoría:</strong></td>
                                     <td>{articulo.categoria.nombre}</td>
                                 </tr>
-                                {Object.keys(datos).map((key, index) => (
+                                {datos && Object.keys(datos).map((key, index) => (
                                     key === 'socket_id' ? null : (
                                         <tr className="border-2 border-solid border-black" key={index}>
                                             <td><strong>{key}:</strong></td>

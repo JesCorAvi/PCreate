@@ -33,19 +33,29 @@ export default function Productos({ articulos, categorias, marcas, active = fals
         }
     }, [isSmallScreen, articulosFiltrados.links]);
 
+
+    function resetear(){
+        setFiltroMarca("");
+        setFiltroCategoria("");
+        setPrecioMinimo("");
+        setPrecioMaximo("");
+        filtrar(null, null, null, null);
+    }
     async function filtrar(nuevaCategoria, nuevaMarca, nuevoPrecioMinimo, nuevoPrecioMaximo){
-        // Actualizar el estado de filtroCategoria y filtroMarca
-        console.log(nuevaCategoria, nuevaMarca, nuevoPrecioMinimo, nuevoPrecioMaximo)
         if (nuevaCategoria !== null) {
             setFiltroCategoria(nuevaCategoria);
         }
         if (nuevaMarca !== null) {
             setFiltroMarca(nuevaMarca);
         }
-        if (nuevoPrecioMinimo !== null) {
+        if (nuevoPrecioMinimo === '') {
+            nuevoPrecioMinimo = null;
+        } else {
             setPrecioMinimo(nuevoPrecioMinimo);
         }
-        if (nuevoPrecioMaximo !== null ) {
+        if (nuevoPrecioMaximo === '') {
+            nuevoPrecioMaximo = null;
+        } else {
             setPrecioMaximo(nuevoPrecioMaximo);
         }
 
@@ -53,9 +63,18 @@ export default function Productos({ articulos, categorias, marcas, active = fals
         const params = new URLSearchParams({
             marca: nuevaMarca || filtroMarca,
             categoria: nuevaCategoria || filtroCategoria,
-            precioMinimo: nuevoPrecioMinimo || precioMinimo,
-            precioMaximo: nuevoPrecioMaximo || precioMaximo
         });
+
+        if (nuevoPrecioMinimo !== null) {
+            params.append('precioMinimo', nuevoPrecioMinimo);
+        }
+
+        if (nuevoPrecioMaximo !== null) {
+            params.append('precioMaximo', nuevoPrecioMaximo);
+        }
+        console.log(nuevaCategoria, nuevaMarca, nuevoPrecioMinimo, nuevoPrecioMaximo)
+        console.log(filtroCategoria, filtroMarca, precioMinimo, precioMaximo)
+
         // Realizar la solicitud de filtrado
         const response = await fetch(`/tienda/filtrar?${params.toString()}`, {
             method: 'GET',
@@ -70,12 +89,6 @@ export default function Productos({ articulos, categorias, marcas, active = fals
         } else {
             const data = await response.json();
             setArticulosFiltrados(data);
-            console.log(
-                nuevaCategoria || filtroCategoria,
-                nuevaMarca || filtroMarca,
-                nuevoPrecioMinimo || precioMinimo,
-                nuevoPrecioMaximo || precioMaximo,
-            )
         }
     }
     return (
@@ -86,6 +99,7 @@ export default function Productos({ articulos, categorias, marcas, active = fals
                     setFiltroMarca={setFiltroMarca}
                     setFiltroCategoria={setFiltroCategoria}
                     filtrar={filtrar}
+                    resetear={resetear}
                 >
                 </Filtro>
                 <div className="flex justify-center items-center w-full pb-10">

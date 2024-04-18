@@ -129,7 +129,7 @@ export default function FormularioDisipador({ sockets, marcas }) {
                             placeholder="Introduzca un valor numerico"
                             min="1"
                             required
-                            onChange={(e) => setData('liquida', e.target.value)}
+                            onChange={(e) => setData('liquida', e.target.checked)}
                         />
                     </div>
                 </div>

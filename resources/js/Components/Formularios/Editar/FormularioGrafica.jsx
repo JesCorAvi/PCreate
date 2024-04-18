@@ -13,9 +13,9 @@ export default function FormularioGrafica({ marcas, articulo  }) {
         memoria: JSON.parse(articulo.datos).memoria,
         gddr: JSON.parse(articulo.datos).gddr,
         consumo: JSON.parse(articulo.datos).consumo,
-        imagenpr: null,
-        imagensec1: null,
-        imagensec2: null,
+        imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen,
+        imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen,
+        imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen,
         tipo: "Tarjeta gráfica"
     });
 
@@ -96,6 +96,7 @@ export default function FormularioGrafica({ marcas, articulo  }) {
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
                         <select
                             id="marca"
+                            value={data.marca_id}
                             onChange={(e) => setData('marca_id', e.target.value)}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
@@ -157,7 +158,7 @@ export default function FormularioGrafica({ marcas, articulo  }) {
                 </div>
                 <div className="mb-5">
                     <div className="mb-5">
-                        <div className="flex">
+                    <div className="flex">
                             {['imagenpr', 'imagensec1', 'imagensec2'].map((key) => (
                                 <div key={key} className="mr-2 w-52 h-52">
                                     <label htmlFor={key} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen {key === 'imagenpr' ? 'principal' : 'secundaria'}</label>
@@ -166,7 +167,6 @@ export default function FormularioGrafica({ marcas, articulo  }) {
                                         name={key}
                                         id={key}
                                         className="hidden"
-
                                         onChange={(e) => handleImagenChange(e, key)}
                                     />
                                     <label htmlFor={key} className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">

@@ -14,7 +14,7 @@ export default function FormularioCaja({ marcas }) {
         imagenpr: null,
         imagensec1: null,
         imagensec2: null,
-        tipo: "Fuente de alimentación"
+        tipo: "Caja"
     });
 
     const [imagenes, setImagenes] = useState({

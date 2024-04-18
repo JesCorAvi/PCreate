@@ -155,7 +155,7 @@ class ArticuloController extends Controller
                     "datos" => json_encode([
                         "socket_id" => $request->socket_id,
                         "socket" => Socket::find($request->socket_id)->nombre,
-                        "liquida" => $request->liquida,
+                        "liquida" => $request->boolean('liquida'),
                     ]),
                 ];
                 break;
@@ -164,7 +164,7 @@ class ArticuloController extends Controller
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "memoria" => $request->memoria,
-                        "clase" => $request->ssd,
+                        "clase" => $request->clase,
                         "escritura" => $request->escritura,
                         "lectura" => $request->lectura,
 
@@ -328,7 +328,7 @@ class ArticuloController extends Controller
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "memoria" => $request->memoria,
-                        "clase" => $request->ssd,
+                        "clase" => $request->clase,
                         "escritura" => $request->escritura,
                         "lectura" => $request->lectura,
 
