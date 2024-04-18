@@ -69,6 +69,7 @@ class ArticuloController extends Controller
         $articulosFiltrados = $query->paginate(12);
 
         // Devolver los resultados filtrados
+
         return response()->json($articulosFiltrados);
     }
     /**
@@ -113,7 +114,7 @@ class ArticuloController extends Controller
                         "slotsram" => $request->slotsram,
                         "ddrmax" => $request->ddrmax,
                         "mhzmax" => $request->mhzmax,
-                        "clase" =>$request->clase
+                        "clase" => $request->clase
                     ]),
                 ];
                 break;
@@ -127,17 +128,17 @@ class ArticuloController extends Controller
                     ]),
                 ];
                 break;
-                case "CPU":
-                    $datosEspecificos = [
-                        "datos" => json_encode([
-                            "socket_id" => $request->socket_id,
-                            "socket" => Socket::find($request->socket_id)->nombre,
-                            "nucleos" => $request->nucleos,
-                            "frecuencia" => $request->frecuencia,
-                            "consumo" => $request->consumo,
-                        ]),
-                    ];
-                    break;
+            case "CPU":
+                $datosEspecificos = [
+                    "datos" => json_encode([
+                        "socket_id" => $request->socket_id,
+                        "socket" => Socket::find($request->socket_id)->nombre,
+                        "nucleos" => $request->nucleos,
+                        "frecuencia" => $request->frecuencia,
+                        "consumo" => $request->consumo,
+                    ]),
+                ];
+                break;
 
             case "RAM":
                 $datosEspecificos = [
@@ -180,16 +181,16 @@ class ArticuloController extends Controller
                 ];
                 break;
 
-                case "Caja":
-                    $datosEspecificos = [
-                        "datos" => json_encode([
-                            "clase" => $request->clase,
-                            "ventiladores" => $request->ventiladores,
-                        ]),
-                    ];
-                    break;
-                case "Ventilador":
-                    $datosEspecificos = []; // No hay datos específicos
+            case "Caja":
+                $datosEspecificos = [
+                    "datos" => json_encode([
+                        "clase" => $request->clase,
+                        "ventiladores" => $request->ventiladores,
+                    ]),
+                ];
+                break;
+            case "Ventilador":
+                $datosEspecificos = []; // No hay datos específicos
                 break;
 
             default:
@@ -277,7 +278,7 @@ class ArticuloController extends Controller
                         "slotsram" => $request->slotsram,
                         "ddrmax" => $request->ddrmax,
                         "mhzmax" => $request->mhzmax,
-                        "clase" =>$request->clase
+                        "clase" => $request->clase
                     ]),
                 ];
                 break;
@@ -291,17 +292,17 @@ class ArticuloController extends Controller
                     ]),
                 ];
                 break;
-                case "CPU":
-                    $datosEspecificos = [
-                        "datos" => json_encode([
-                            "socket_id" => $request->socket_id,
-                            "socket" => Socket::find($request->socket_id)->nombre,
-                            "nucleos" => $request->nucleos,
-                            "frecuencia" => $request->frecuencia,
-                            "consumo" => $request->consumo,
-                        ]),
-                    ];
-                    break;
+            case "CPU":
+                $datosEspecificos = [
+                    "datos" => json_encode([
+                        "socket_id" => $request->socket_id,
+                        "socket" => Socket::find($request->socket_id)->nombre,
+                        "nucleos" => $request->nucleos,
+                        "frecuencia" => $request->frecuencia,
+                        "consumo" => $request->consumo,
+                    ]),
+                ];
+                break;
 
             case "RAM":
                 $datosEspecificos = [
@@ -344,16 +345,16 @@ class ArticuloController extends Controller
                 ];
                 break;
 
-                case "Caja":
-                    $datosEspecificos = [
-                        "datos" => json_encode([
-                            "clase" => $request->clase,
-                            "ventiladores" => $request->ventiladores,
-                        ]),
-                    ];
-                    break;
-                case "Ventilador":
-                    $datosEspecificos = []; // No hay datos específicos
+            case "Caja":
+                $datosEspecificos = [
+                    "datos" => json_encode([
+                        "clase" => $request->clase,
+                        "ventiladores" => $request->ventiladores,
+                    ]),
+                ];
+                break;
+            case "Ventilador":
+                $datosEspecificos = []; // No hay datos específicos
                 break;
 
             default:
@@ -369,10 +370,10 @@ class ArticuloController extends Controller
         $imagensec2 = $articulo->fotos->where("orden", 3)->first();
 
 
-        if($request->imagenpr != $imagenpr->imagen){
+        if ($request->imagenpr != $imagenpr->imagen) {
             Storage::delete("public/uploads/articulos/" . $miniatura->imagen);
             $miniatura->delete();
-            Storage::delete("public/uploads/articulos/".$imagenpr->imagen);
+            Storage::delete("public/uploads/articulos/" . $imagenpr->imagen);
             $imagenpr->delete();
 
             Foto::create([
@@ -387,7 +388,7 @@ class ArticuloController extends Controller
                 "imagen" => subirImagen($request->file("imagenpr"), 'uploads/articulos')
             ]);
         }
-        if($request->imagensec1 != $imagensec1->imagen){
+        if ($request->imagensec1 != $imagensec1->imagen) {
             Storage::delete("public/uploads/articulos/" . $imagensec1->imagen);
             $imagensec1->delete();
 
@@ -397,7 +398,7 @@ class ArticuloController extends Controller
                 "imagen" => subirImagen($request->file("imagensec1"), 'uploads/articulos')
             ]);
         }
-        if($request->imagensec2 != $imagensec2->imagen){
+        if ($request->imagensec2 != $imagensec2->imagen) {
             Storage::delete("public/uploads/articulos/" . $imagensec2->imagen);
             $imagensec2->delete();
 
@@ -423,7 +424,7 @@ class ArticuloController extends Controller
     {
         $articulo = Articulo::find($id);
 
-        foreach($articulo->fotos()->get() as $foto){
+        foreach ($articulo->fotos()->get() as $foto) {
             Storage::delete("public/uploads/articulos/" . $foto->imagen);
         }
 
