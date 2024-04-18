@@ -3,7 +3,7 @@ import Boton from '../../Boton';
 import { useEffect, useState } from 'react';
 
 
-export default function FormularioCaja({ marcas, articulo  }) {
+export default function FormularioCaja({ marcas, articulo }) {
     const { data, setData, post } = useForm({
         id: articulo.id,
         marca_id: articulo.marca_id,
@@ -12,9 +12,9 @@ export default function FormularioCaja({ marcas, articulo  }) {
         precio: articulo.precio,
         ventiladores: JSON.parse(articulo.datos).ventiladores,
         clase: JSON.parse(articulo.datos).clase,
-        imagenpr: null,
-        imagensec1: null,
-        imagensec2: null,
+        imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen,
+        imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen,
+        imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen,
         tipo: "Fuente de alimentación"
     });
 
@@ -48,7 +48,7 @@ export default function FormularioCaja({ marcas, articulo  }) {
     };
     return (
 
-        <div  className="min-h-screen">
+        <div className="min-h-screen">
             <form className="max-w-2xl mx-auto" onSubmit={submit}>
                 <div className="mb-5">
                     <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modelo</label>
@@ -94,6 +94,7 @@ export default function FormularioCaja({ marcas, articulo  }) {
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
                         <select
                             id="marca"
+                            value={data.marca_id}
                             onChange={(e) => setData('marca_id', e.target.value)}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
@@ -109,7 +110,7 @@ export default function FormularioCaja({ marcas, articulo  }) {
                     </div>
                 </div>
                 <div className='flex'>
-                <div className="flex-initial mr-2 mb-5 w-1/2">
+                    <div className="flex-initial mr-2 mb-5 w-1/2">
                         <label htmlFor="ventiladores" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Max de ventiladores</label>
                         <input
                             value={data.ventiladores}
@@ -118,7 +119,7 @@ export default function FormularioCaja({ marcas, articulo  }) {
                             id="ventiladores"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Introduzca un valor numerico"
-                            min="0"  required
+                            min="0" required
                             onChange={(e) => setData('ventiladores', e.target.value)}
                         />
                     </div>
@@ -129,14 +130,14 @@ export default function FormularioCaja({ marcas, articulo  }) {
                             name="clase"
                             id="clase" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             onChange={(e) => setData('clase', e.target.value)}
-                            >
+                        >
                             <option value="">Seleccione un tipo</option>
                             <option value="ATX">ATX</option>
                             <option value="Micro-ATX">Micro-ATX</option>
                         </select>
 
                     </div>
-                    </div>
+                </div>
                 <div className="mb-5">
                     <div className="mb-5">
                         <div className="flex">
@@ -148,7 +149,6 @@ export default function FormularioCaja({ marcas, articulo  }) {
                                         name={key}
                                         id={key}
                                         className="hidden"
-                                        required
                                         onChange={(e) => handleImagenChange(e, key)}
                                     />
                                     <label htmlFor={key} className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">

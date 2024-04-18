@@ -3,7 +3,7 @@ import Boton from '../../Boton';
 import { useEffect, useState } from 'react';
 
 
-export default function FormularioAlmacenamiento({ marcas, articulo  }) {
+export default function FormularioAlmacenamiento({ marcas, articulo }) {
     const { data, setData, post } = useForm({
         id: articulo.id,
         marca_id: articulo.marca_id,
@@ -12,9 +12,11 @@ export default function FormularioAlmacenamiento({ marcas, articulo  }) {
         precio: articulo.precio,
         memoria: JSON.parse(articulo.datos).memoria,
         clase: JSON.parse(articulo.datos).clase,
-        imagenpr: null,
-        imagensec1: null,
-        imagensec2: null,
+        lectura: JSON.parse(articulo.datos).lectura,
+        escritura: JSON.parse(articulo.datos).escritura,
+        imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen,
+        imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen,
+        imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen,
         tipo: "Almacenamiento"
     });
 
@@ -95,6 +97,7 @@ export default function FormularioAlmacenamiento({ marcas, articulo  }) {
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
                         <select
                             id="marca"
+                            value={data.marca_id}
                             onChange={(e) => setData('marca_id', e.target.value)}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
@@ -119,7 +122,7 @@ export default function FormularioAlmacenamiento({ marcas, articulo  }) {
                             id="memoria"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Introduzca un valor numerico"
-                            min="0"  required
+                            min="0" required
                             onChange={(e) => setData('memoria', e.target.value)}
                         />
                     </div>
@@ -130,7 +133,7 @@ export default function FormularioAlmacenamiento({ marcas, articulo  }) {
                             name="clase"
                             id="clase" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             onChange={(e) => setData('clase', e.target.value)}
-                            >
+                        >
                             <option value="">Seleccione un tipo</option>
                             <option value="Mecánico">Mecánico</option>
                             <option value="SSD Sata">SSD Sata</option>
@@ -182,7 +185,6 @@ export default function FormularioAlmacenamiento({ marcas, articulo  }) {
                                         name={key}
                                         id={key}
                                         className="hidden"
-                                        required
                                         onChange={(e) => handleImagenChange(e, key)}
                                     />
                                     <label htmlFor={key} className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">

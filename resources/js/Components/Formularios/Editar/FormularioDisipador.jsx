@@ -12,9 +12,9 @@ export default function FormularioDisipador({  sockets, marcas, articulo  }) {
         descripcion: articulo.descripcion,
         precio: articulo.precio,
         liquida: JSON.parse(articulo.datos).liquida,
-        imagenpr: null,
-        imagensec1: null,
-        imagensec2: null,
+        imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen,
+        imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen,
+        imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen,
         tipo: "Disipador de CPU"
     });
 
@@ -112,6 +112,7 @@ export default function FormularioDisipador({  sockets, marcas, articulo  }) {
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
                         <select
                             id="marca"
+                            value={data.marca_id}
                             onChange={(e) => setData('marca_id', e.target.value)}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
@@ -129,21 +130,19 @@ export default function FormularioDisipador({  sockets, marcas, articulo  }) {
                         <label htmlFor="liquida" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">¿Es líquida?</label>
                         <input
                             value={data.liquida}
+                            checked={data.liquida}
                             type="checkbox"
                             name="liquida"
                             id="liquida"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Introduzca un valor numerico"
-                            min="1"
-                            required
-                            onChange={(e) => setData('liquida', e.target.value)}
+                            onChange={(e) => setData('liquida', e.target.checked)}
                         />
                     </div>
                 </div>
 
                 <div className="mb-5">
                     <div className="mb-5">
-                        <div className="flex">
+                    <div className="flex">
                             {['imagenpr', 'imagensec1', 'imagensec2'].map((key) => (
                                 <div key={key} className="mr-2 w-52 h-52">
                                     <label htmlFor={key} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen {key === 'imagenpr' ? 'principal' : 'secundaria'}</label>
@@ -152,7 +151,6 @@ export default function FormularioDisipador({  sockets, marcas, articulo  }) {
                                         name={key}
                                         id={key}
                                         className="hidden"
-                                        required
                                         onChange={(e) => handleImagenChange(e, key)}
                                     />
                                     <label htmlFor={key} className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
