@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 
 export default function FormularioPlaca({ sockets, marcas }) {
-    const { data, setData, post } = useForm({
+    const { data, setData, post, errors } = useForm({
         socket_id: '',
         categoria_id: '1',
         marca_id: '',
@@ -36,6 +36,7 @@ export default function FormularioPlaca({ sockets, marcas }) {
         });
         setData(key, file);
     };
+
 
     const submit = (e) => {
         e.preventDefault();
@@ -213,7 +214,7 @@ export default function FormularioPlaca({ sockets, marcas }) {
                                         name={key}
                                         id={key}
                                         className="hidden"
-                                        required
+
                                         onChange={(e) => handleImagenChange(e, key)}
                                     />
                                     <label htmlFor={key} className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -221,6 +222,11 @@ export default function FormularioPlaca({ sockets, marcas }) {
                                     </label>
                                 </div>
                             ))}
+                        </div>
+                        <div className="flex">
+                            <p className="text-red-800 py-2">{errors.imagenpr && <div>{errors.imagenpr}</div>}</p>
+                            <p className="text-red-800 py-2">{errors.imagensec1 && <div>{errors.imagensec1}</div>}</p>
+                            <p className="text-red-800 py-2">{errors.imagensec2 && <div>{errors.imagensec2}</div>}</p>
                         </div>
                     </div>
                 </div>
