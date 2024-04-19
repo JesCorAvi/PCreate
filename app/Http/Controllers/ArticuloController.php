@@ -51,13 +51,19 @@ class ArticuloController extends Controller
         }
 
         // Obtener los resultados filtrados
-        $articulosFiltrados = $query->paginate(12)->appends([
-            'categoria' => $categoria,
-            'marca' => $marca,
-            'precioMinimo' => $precioMinimo,
-            'precioMaximo' => $precioMaximo,
-        ]);
-        // Devolver los resultados filtrados
+        $articulosFiltrados = $query->paginate(12);
+        if ($categoria !== "null" && $categoria !== '' && $categoria !== null) {
+            $articulosFiltrados->appends('categoria', $categoria);
+        }
+        if ($marca !== "null" && $marca !== '' && $marca !== null) {
+            $articulosFiltrados->appends('marca', $marca);
+        }
+        if ($precioMinimo !== "null" && $precioMinimo !== null) {
+            $articulosFiltrados->appends('precioMinimo', $precioMinimo);
+        }
+        if ($precioMaximo !== "null" && $precioMaximo !== null) {
+            $articulosFiltrados->appends('precioMaximo', $precioMaximo);
+        }
 
         return Inertia::render('Articulo/Index', [
             "articulos" => $articulosFiltrados,

@@ -37,7 +37,6 @@ export default function FormularioPlaca({ sockets, marcas }) {
         setData(key, file);
     };
 
-
     const submit = (e) => {
         e.preventDefault();
         post(route('articulo.store', data))

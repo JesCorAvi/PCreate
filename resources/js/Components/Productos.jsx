@@ -15,17 +15,20 @@ export default function Productos({ articulos, categorias, marcas, active = fals
     }
     const [articulosFiltrados, setArticulos] = useState(articulos);
     const filtrar = (categoria, marca, precioMinimo, precioMaximo) => {
-            const formData = new FormData();
-            formData.append('categoria', categoria);
-            formData.append('marca', marca);
-            formData.append('precioMinimo', precioMinimo);
-            formData.append('precioMaximo', precioMaximo);
-            router.get(route('articulo.index', {
-                categoria: categoria,
-                marca: marca,
-                precioMinimo: precioMinimo,
-                precioMaximo: precioMaximo
-            }), formData)
+            const params = {};
+            if (categoria != "") {
+                params.categoria = categoria;
+            }
+            if (marca != "") {
+                params.marca = marca;
+            }
+            if (precioMinimo != "") {
+                params.precioMinimo = precioMinimo;
+            }
+            if (precioMaximo != "") {
+                params.precioMaximo = precioMaximo;
+            }
+            router.get(route('articulo.index', params));
 
         };
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
