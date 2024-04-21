@@ -1,6 +1,8 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import Boton from '../../Boton';
 import { useEffect, useState } from 'react';
+import validation from '../../../validation.json';
+
 
 
 export default function FormularioDisipador({ sockets, marcas }) {
@@ -51,7 +53,7 @@ export default function FormularioDisipador({ sockets, marcas }) {
                         onChange={(e) => setData('socket_id', e.target.value)}
                         required
                     >
-                        <option> Seleccione un Socket</option>
+                        <option disabled selected value=""> Seleccione un Socket</option>
                         {sockets.map((soc) => (
                             <option
                                 key={soc.id}
@@ -65,6 +67,7 @@ export default function FormularioDisipador({ sockets, marcas }) {
                     <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modelo</label>
                     <input
                         value={data.nombre}
+                        pattern={validation.nombre}
                         type="text"
                         name="nombre"
                         id="nombre"
@@ -80,6 +83,7 @@ export default function FormularioDisipador({ sockets, marcas }) {
                         value={data.descripcion}
                         id="descripcion"
                         name="descripcion"
+                        pattern={validation.descripcion}
                         className="h-72 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Introduzca la descripcion del producto"
                         required
@@ -91,6 +95,7 @@ export default function FormularioDisipador({ sockets, marcas }) {
                         <label htmlFor="precio" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio del producto</label>
                         <input
                             value={data.precio}
+                            pattern={validation.precio}
                             type="decimal"
                             name="precio"
                             id="precio"
@@ -105,10 +110,11 @@ export default function FormularioDisipador({ sockets, marcas }) {
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
                         <select
                             id="marca"
+                            required
                             onChange={(e) => setData('marca_id', e.target.value)}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
-                            <option > Seleccione una marca</option>
+                            <option disabled selected value=""> Seleccione una marca</option>
                             {marcas.map((mar) => (
                                 <option
                                     key={mar.id}
@@ -128,7 +134,6 @@ export default function FormularioDisipador({ sockets, marcas }) {
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Introduzca un valor numerico"
                             min="1"
-                            required
                             onChange={(e) => setData('liquida', e.target.checked)}
                         />
                     </div>

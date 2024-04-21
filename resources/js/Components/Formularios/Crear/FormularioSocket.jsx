@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { router } from '@inertiajs/react'
 import Boton from '../../Boton';
+import validation from '../../../validation.json';
+
 
 export default function FormularioSocket({}) {
     const [imagenPrincipal, setImagenPrincipal] = useState(null);
@@ -26,7 +28,15 @@ export default function FormularioSocket({}) {
             <form className="max-w-2xl mx-auto" encType="multipart/form-data" onSubmit={handleSubmit}>
                 <div className="mb-5">
                     <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Socket</label>
-                    <input type="text" name="nombre" value={socket} onChange={(e) => setSocket(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                    <input
+                        type="text"
+                        name="nombre"
+                        pattern={validation.nombre}
+                        value={socket} onChange={(e) =>
+                        setSocket(e.target.value)}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                    />
                 </div>
 
                 <div name="imagen" className="flex justify-center items-center">

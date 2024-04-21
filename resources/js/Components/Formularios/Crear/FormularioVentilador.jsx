@@ -1,6 +1,8 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import Boton from '../../Boton';
 import { useEffect, useState } from 'react';
+import validation from '../../../validation.json';
+
 
 
 export default function FormularioFVentilador({ marcas }) {
@@ -44,6 +46,7 @@ export default function FormularioFVentilador({ marcas }) {
                     <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modelo</label>
                     <input
                         value={data.nombre}
+                        pattern={validation.nombre}
                         type="text"
                         name="nombre"
                         id="nombre"
@@ -57,6 +60,7 @@ export default function FormularioFVentilador({ marcas }) {
                     <label htmlFor="descripcion" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción del producto</label>
                     <textarea
                         value={data.descripcion}
+                        pattern={validation.descripcion}
                         id="descripcion"
                         name="descripcion"
                         className="h-72 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -70,6 +74,7 @@ export default function FormularioFVentilador({ marcas }) {
                         <label htmlFor="precio" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio del producto</label>
                         <input
                             value={data.precio}
+                            pattern={validation.precio}
                             type="decimal"
                             name="precio"
                             id="precio"
@@ -84,10 +89,11 @@ export default function FormularioFVentilador({ marcas }) {
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
                         <select
                             id="marca"
+                            required
                             onChange={(e) => setData('marca_id', e.target.value)}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
-                            <option > Seleccione una marca</option>
+                            <option disabled selected value=""> Seleccione una marca</option>
                             {marcas.map((mar) => (
                                 <option
                                     key={mar.id}

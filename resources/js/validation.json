@@ -1,0 +1,20 @@
+{
+    "nombre" : "^(?!.*\\b\\w{31,}\\b).*$",
+    "descripcion" : "^(?!.*\\b\\w{31,}\\b).*$",
+    "precio" : "^\\d*\\.?\\d*$",
+    "nucleos": "^\\d*\\.?\\d*$",
+    "frecuencia": "^\\d*\\.?\\d*$",
+    "consumo": "^\\d+$",
+    "slotsm2" :"^\\d+$",
+    "slotsram": "^\\d+$",
+    "ddrmax": "^\\d+$",
+    "mhzmax": "^\\d+$",
+    "memoria": "^\\d+$",
+    "gddr": "^[0-9]+[xX]?$",
+    "cantidad": "^\\d+$",
+    "ddr": "^\\d+$",
+    "escritura": "^\\d+$",
+    "lectura": "^\\d+$",
+    "poder": "^\\d+$",
+    "ventiladores": "^\\d+$"
+}
