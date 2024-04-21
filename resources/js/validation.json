@@ -10,7 +10,7 @@
     "ddrmax": "^\\d+$",
     "mhzmax": "^\\d+$",
     "memoria": "^\\d+$",
-    "gddr": "^[0-9]+[xX]?$",
+    "gddr": "^[0-9]+[xXl]?$",
     "cantidad": "^\\d+$",
     "ddr": "^\\d+$",
     "escritura": "^\\d+$",

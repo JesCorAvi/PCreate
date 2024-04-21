@@ -2,6 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import Boton from '../../Boton';
 import { useEffect, useState } from 'react';
 import validation from '../../../validation.json';
+import { handleImagenChange, submit, validar } from '../../../formFunciones.jsx';
 
 
 
@@ -33,19 +34,7 @@ export default function FormularioFVentilador({ marcas, articulo  }) {
         });
     }, []);
 
-    const handleImagenChange = (event, key) => {
-        const file = event.target.files[0];
-        setImagenes({
-            ...imagenes,
-            [key]: URL.createObjectURL(file)
-        });
-        setData(key, file);
-    };
 
-    const submit = (e) => {
-        e.preventDefault();
-        post(route('articulo.update', articulo.id, data));
-    };
 
     return (
 
@@ -64,6 +53,7 @@ export default function FormularioFVentilador({ marcas, articulo  }) {
                         placeholder="Introduzca el nombre del componente"
                         required
                         onChange={(e) => setData('nombre', e.target.value)}
+                        onBlur={(e) => validar(e.target)}
                     />
                 </div>
                 <div className="mb-5">
@@ -78,6 +68,7 @@ export default function FormularioFVentilador({ marcas, articulo  }) {
                         placeholder="Introduzca la descripcion del producto"
                         required
                         onChange={(e) => setData('descripcion', e.target.value)}
+                        onBlur={(e) => validar(e.target)}
                     />
                 </div>
                 <div className="flex">
@@ -94,6 +85,7 @@ export default function FormularioFVentilador({ marcas, articulo  }) {
                             placeholder="Introduzca un valor numerico"
                             min="1"
                             onChange={(e) => setData('precio', e.target.value)}
+                            onBlur={(e) => validar(e.target)}
                         />
 
                     </div>

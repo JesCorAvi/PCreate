@@ -2,6 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import Boton from '../../Boton';
 import { useEffect, useState } from 'react';
 import validation from '../../../validation.json';
+import { handleImagenChange, submit, validar } from '../../../formFunciones.jsx';
 
 
 
@@ -26,20 +27,7 @@ export default function FormularioDisipador({ sockets, marcas }) {
         imagensec2: null
     });
 
-    const handleImagenChange = (event, key) => {
-        const file = event.target.files[0];
-        setImagenes({
-            ...imagenes,
-            [key]: URL.createObjectURL(file)
-        });
-        setData(key, file);
-    };
 
-
-    const submit = (e) => {
-        e.preventDefault();
-        post(route('articulo.store', data))
-    };
 
     return (
 
@@ -48,12 +36,13 @@ export default function FormularioDisipador({ sockets, marcas }) {
                 <div className="mb-5">
                     <label htmlFor="socket" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Socket</label>
                     <select
+                        value={data.socket_id}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         name="socket_id"
                         onChange={(e) => setData('socket_id', e.target.value)}
                         required
                     >
-                        <option disabled selected value=""> Seleccione un Socket</option>
+                        <option disabled  value=""> Seleccione un Socket</option>
                         {sockets.map((soc) => (
                             <option
                                 key={soc.id}
@@ -75,6 +64,7 @@ export default function FormularioDisipador({ sockets, marcas }) {
                         placeholder="Introduzca el nombre del componente"
                         required
                         onChange={(e) => setData('nombre', e.target.value)}
+                        onBlur={(e) => validar(e.target)}
                     />
                 </div>
                 <div className="mb-5">
@@ -88,6 +78,7 @@ export default function FormularioDisipador({ sockets, marcas }) {
                         placeholder="Introduzca la descripcion del producto"
                         required
                         onChange={(e) => setData('descripcion', e.target.value)}
+                        onBlur={(e) => validar(e.target)}
                     />
                 </div>
                 <div className="flex">
@@ -103,18 +94,21 @@ export default function FormularioDisipador({ sockets, marcas }) {
                             placeholder="Introduzca un valor numerico"
                             min="1"
                             onChange={(e) => setData('precio', e.target.value)}
+                            onBlur={(e) => validar(e.target)}
                         />
 
                     </div>
                     <div className="flex-initial mb-5 w-1/3">
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
                         <select
+                            value={data.marca_id}
                             id="marca"
                             required
                             onChange={(e) => setData('marca_id', e.target.value)}
+
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
-                            <option disabled selected value=""> Seleccione una marca</option>
+                            <option disabled  value=""> Seleccione una marca</option>
                             {marcas.map((mar) => (
                                 <option
                                     key={mar.id}

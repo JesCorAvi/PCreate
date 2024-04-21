@@ -2,6 +2,8 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import Boton from '../../Boton';
 import { useEffect, useState } from 'react';
 import validation from '../../../validation.json';
+import { handleImagenChange, submit, validar } from '../../../formFunciones.jsx';
+
 
 
 export default function FormularioAlmacenamiento({ sockets, marcas }) {
@@ -25,20 +27,7 @@ export default function FormularioAlmacenamiento({ sockets, marcas }) {
         imagensec2: null
     });
 
-    const handleImagenChange = (event, key) => {
-        const file = event.target.files[0];
-        setImagenes({
-            ...imagenes,
-            [key]: URL.createObjectURL(file)
-        });
-        setData(key, file);
-    };
 
-
-    const submit = (e) => {
-        e.preventDefault();
-        post(route('articulo.store', data))
-    };
 
     return (
 
@@ -56,6 +45,7 @@ export default function FormularioAlmacenamiento({ sockets, marcas }) {
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Introduzca el nombre del componente"
                         required
+                        onBlur={(e) => validar(e.target)}
                         onChange={(e) => setData('nombre', e.target.value)}
                     />
                 </div>
@@ -70,6 +60,8 @@ export default function FormularioAlmacenamiento({ sockets, marcas }) {
                         placeholder="Introduzca la descripcion del producto"
                         required
                         onChange={(e) => setData('descripcion', e.target.value)}
+                        onBlur={(e) => validar(e.target)}
+
                     />
                 </div>
                 <div className="flex">
@@ -85,6 +77,7 @@ export default function FormularioAlmacenamiento({ sockets, marcas }) {
                             placeholder="Introduzca un valor numerico"
                             min="1"
                             onChange={(e) => setData('precio', e.target.value)}
+                            onBlur={(e) => validar(e.target)}
                         />
 
                     </div>
@@ -98,7 +91,7 @@ export default function FormularioAlmacenamiento({ sockets, marcas }) {
                             onChange={(e) => setData('marca_id', e.target.value)}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
-                            <option disabled selected value=""> Seleccione una marca</option>
+                            <option disabled  value=""> Seleccione una marca</option>
                             {marcas.map((mar) => (
                                 <option
                                     key={mar.id}
@@ -122,6 +115,7 @@ export default function FormularioAlmacenamiento({ sockets, marcas }) {
                             placeholder="Introduzca un valor numerico"
                             min="0"  required
                             onChange={(e) => setData('memoria', e.target.value)}
+                            onBlur={(e) => validar(e.target)}
                         />
                     </div>
                     <div className="flex-initial mr-2 mb-5 w-1/2">
@@ -133,7 +127,7 @@ export default function FormularioAlmacenamiento({ sockets, marcas }) {
                             id="clase" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             onChange={(e) => setData('clase', e.target.value)}
                             >
-                            <option disabled selected value="">Seleccione un tipo</option>
+                            <option disabled  value="">Seleccione un tipo</option>
                             <option value="Mecánico">Mecánico</option>
                             <option value="SSD Sata">SSD Sata</option>
                             <option value="SSD M.2">SSD M.2</option>
@@ -155,6 +149,7 @@ export default function FormularioAlmacenamiento({ sockets, marcas }) {
                             min="1"
                             required
                             onChange={(e) => setData('escritura', e.target.value)}
+                            onBlur={(e) => validar(e.target)}
                         />
                     </div>
                     <div className="flex-initial mb-5 w-1/2">
@@ -170,6 +165,7 @@ export default function FormularioAlmacenamiento({ sockets, marcas }) {
                             min="1"
                             required
                             onChange={(e) => setData('lectura', e.target.value)}
+                            onBlur={(e) => validar(e.target)}
                         />
                     </div>
                 </div>
