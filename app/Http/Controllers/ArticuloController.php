@@ -71,9 +71,7 @@ class ArticuloController extends Controller
             "marcas" => Marca::all(),
             "sockets" => Socket::all()
         ]);
-
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -83,7 +81,8 @@ class ArticuloController extends Controller
         return Inertia::render('Articulo/Crear', [
             "categorias" => Categoria::all(),
             "marcas" => Marca::all(),
-            "sockets" => Socket::all()
+            "sockets" => Socket::all(),
+
         ]);
     }
 
@@ -96,6 +95,24 @@ class ArticuloController extends Controller
             'imagenpr' => 'required|image',
             'imagensec1' => 'required|image',
             'imagensec2' => 'required|image',
+            "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
+            "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
+            "precio" => "required|regex:/^\d*\.?\d*$/",
+            "nucleos"=> "required|regex:/^\d*\.?\d*$/",
+            "frecuencia"=> "required|regex:/^\d*\.?\d*$/",
+            "consumo"=> "required|regex:/^\d+$/",
+            "slotsm2" =>"required|regex:/^\d+$/",
+            "slotsram"=> "required|regex:/^\d+$/",
+            "ddrmax"=> "required|regex:/^\d+$/",
+            "mhzmax"=> "required|regex:/^\d+$/",
+            "memoria"=> "required|regex:/^\d+$/",
+            "gddr"=> "required|regex:/^[0-9]+[xXl]?$/",
+            "cantidad"=> "required|regex:/^\d+$/",
+            "ddr"=> "required|regex:/^\d+$/",
+            "escritura"=> "required|regex:/^\d+$/",
+            "lectura"=> "required|regex:/^\d+$/",
+            "poder"=> "required|regex:/^\d+$/",
+            "ventiladores"=> "required|regex:/^\d+$/"
         ]);
 
 
