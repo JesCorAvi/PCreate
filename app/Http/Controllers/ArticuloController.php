@@ -95,24 +95,9 @@ class ArticuloController extends Controller
             'imagenpr' => 'required|image',
             'imagensec1' => 'required|image',
             'imagensec2' => 'required|image',
-            "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
+            "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:200",
             "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
             "precio" => "required|regex:/^\d*\.?\d*$/",
-            "nucleos"=> "required|regex:/^\d*\.?\d*$/",
-            "frecuencia"=> "required|regex:/^\d*\.?\d*$/",
-            "consumo"=> "required|regex:/^\d+$/",
-            "slotsm2" =>"required|regex:/^\d+$/",
-            "slotsram"=> "required|regex:/^\d+$/",
-            "ddrmax"=> "required|regex:/^\d+$/",
-            "mhzmax"=> "required|regex:/^\d+$/",
-            "memoria"=> "required|regex:/^\d+$/",
-            "gddr"=> "required|regex:/^[0-9]+[xXl]?$/",
-            "cantidad"=> "required|regex:/^\d+$/",
-            "ddr"=> "required|regex:/^\d+$/",
-            "escritura"=> "required|regex:/^\d+$/",
-            "lectura"=> "required|regex:/^\d+$/",
-            "poder"=> "required|regex:/^\d+$/",
-            "ventiladores"=> "required|regex:/^\d+$/"
         ]);
 
 
@@ -126,6 +111,14 @@ class ArticuloController extends Controller
 
         switch ($request->tipo) {
             case "Placa base":
+                $request->validate([
+                    "socket_id" => "required",
+                    "slotsm2" => "required|regex:/^\d+$/",
+                    "slotsram" => "required|regex:/^\d+$/",
+                    "ddrmax" => "required|regex:/^\d+$/",
+                    "mhzmax" => "required|regex:/^\d+$/",
+                    "clase" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "socket_id" => $request->socket_id,
@@ -140,6 +133,11 @@ class ArticuloController extends Controller
                 break;
 
             case "Tarjeta gráfica":
+                $request->validate([
+                    "memoria" => "required|regex:/^\d+$/",
+                    "gddr" => "required|regex:/^[0-9]+[xX]?$/",
+                    "consumo" => "required|regex:/^\d+$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "memoria" => $request->memoria,
@@ -149,6 +147,12 @@ class ArticuloController extends Controller
                 ];
                 break;
             case "CPU":
+                $request->validate([
+                    "socket_id" => "required",
+                    "nucleos" => "required|regex:/^\d+$/",
+                    "frecuencia" => "required|regex:/^\d+$/",
+                    "consumo" => "required|regex:/^\d+$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "socket_id" => $request->socket_id,
@@ -161,6 +165,12 @@ class ArticuloController extends Controller
                 break;
 
             case "RAM":
+                $request->validate([
+                    "cantidad" => "required|regex:/^\d+$/",
+                    "memoria" => "required|regex:/^\d+$/",
+                    "frecuencia" => "required|regex:/^\d+$/",
+                    "ddr" => "required|regex:/^\d+$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "cantidad" => $request->cantidad,
@@ -172,6 +182,10 @@ class ArticuloController extends Controller
                 break;
 
             case "Disipador de CPU":
+                $request->validate([
+                    "socket_id" => "required",
+                    "liquida" => "required",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "socket_id" => $request->socket_id,
@@ -182,6 +196,12 @@ class ArticuloController extends Controller
                 break;
 
             case "Almacenamiento":
+                $request->validate([
+                    "memoria" => "required|regex:/^\d+$/",
+                    "clase" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
+                    "escritura" => "required|regex:/^\d+$/",
+                    "lectura" => "required|regex:/^\d+$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "memoria" => $request->memoria,
@@ -194,6 +214,9 @@ class ArticuloController extends Controller
                 break;
 
             case "Fuente de alimentación":
+                $request->validate([
+                    "poder" => "required|regex:/^\d+$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "poder" => $request->poder,
@@ -202,6 +225,10 @@ class ArticuloController extends Controller
                 break;
 
             case "Caja":
+                $request->validate([
+                    "clase" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
+                    "ventiladores" => "required|regex:/^\d+$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "clase" => $request->clase,
@@ -279,6 +306,15 @@ class ArticuloController extends Controller
      */
     public function update(Request $request)
     {
+        $request->validate([
+            'imagenpr' => 'image',
+            'imagensec1' => 'image',
+            'imagensec2' => 'image',
+            "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:200",
+            "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
+            "precio" => "required|regex:/^\d*\.?\d*$/",
+        ]);
+
         $articulo = Articulo::find($request->id);
         $datosComunes = [
             "nombre" => $request->nombre,
@@ -290,6 +326,14 @@ class ArticuloController extends Controller
 
         switch ($request->tipo) {
             case "Placa base":
+                $request->validate([
+                    "socket_id" => "required",
+                    "slotsm2" => "required|regex:/^\d+$/",
+                    "slotsram" => "required|regex:/^\d+$/",
+                    "ddrmax" => "required|regex:/^\d+$/",
+                    "mhzmax" => "required|regex:/^\d+$/",
+                    "clase" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "socket_id" => $request->socket_id,
@@ -304,6 +348,11 @@ class ArticuloController extends Controller
                 break;
 
             case "Tarjeta gráfica":
+                $request->validate([
+                    "memoria" => "required|regex:/^\d+$/",
+                    "gddr" => "required|regex:/^[0-9]+[xX]?$/",
+                    "consumo" => "required|regex:/^\d+$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "memoria" => $request->memoria,
@@ -313,6 +362,12 @@ class ArticuloController extends Controller
                 ];
                 break;
             case "CPU":
+                $request->validate([
+                    "socket_id" => "required",
+                    "nucleos" => "required|regex:/^\d+$/",
+                    "frecuencia" => "required|regex:/^\d+$/",
+                    "consumo" => "required|regex:/^\d+$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "socket_id" => $request->socket_id,
@@ -325,6 +380,12 @@ class ArticuloController extends Controller
                 break;
 
             case "RAM":
+                $request->validate([
+                    "cantidad" => "required|regex:/^\d+$/",
+                    "memoria" => "required|regex:/^\d+$/",
+                    "frecuencia" => "required|regex:/^\d+$/",
+                    "ddr" => "required|regex:/^\d+$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "cantidad" => $request->cantidad,
@@ -336,6 +397,10 @@ class ArticuloController extends Controller
                 break;
 
             case "Disipador de CPU":
+                $request->validate([
+                    "socket_id" => "required",
+                    "liquida" => "required",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "socket_id" => $request->socket_id,
@@ -346,6 +411,12 @@ class ArticuloController extends Controller
                 break;
 
             case "Almacenamiento":
+                $request->validate([
+                    "memoria" => "required|regex:/^\d+$/",
+                    "clase" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
+                    "escritura" => "required|regex:/^\d+$/",
+                    "lectura" => "required|regex:/^\d+$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "memoria" => $request->memoria,
@@ -358,6 +429,9 @@ class ArticuloController extends Controller
                 break;
 
             case "Fuente de alimentación":
+                $request->validate([
+                    "poder" => "required|regex:/^\d+$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "poder" => $request->poder,
@@ -366,6 +440,10 @@ class ArticuloController extends Controller
                 break;
 
             case "Caja":
+                $request->validate([
+                    "clase" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
+                    "ventiladores" => "required|regex:/^\d+$/",
+                ]);
                 $datosEspecificos = [
                     "datos" => json_encode([
                         "clase" => $request->clase,

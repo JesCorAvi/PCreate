@@ -2,9 +2,6 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import Boton from '../../Boton';
 import { useEffect, useState } from 'react';
 import validation from '../../../validation.json';
-import { handleImagenChange, submit, validar } from '../../../formFunciones.jsx';
-
-
 
 export default function FormularioPlaca({ sockets, marcas }) {
     const { data, setData, post, errors } = useForm({
@@ -31,6 +28,27 @@ export default function FormularioPlaca({ sockets, marcas }) {
         imagensec2: null
     });
 
+    const handleImagenChange = (event, key) => {
+        const file = event.target.files[0];
+        setImagenes({
+            ...imagenes,
+            [key]: URL.createObjectURL(file)
+        });
+        setData(key, file);
+    };
+
+
+    const submit = (e) => {
+        e.preventDefault();
+        post(route('articulo.store', data))
+    };
+     function validar(target)    {
+        if (target.validity.valid) {
+            target.classList.remove('border-red-500');
+        } else {
+            target.classList.add('border-red-500');
+        }
+    }
 
     return (
 
@@ -181,7 +199,7 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             min="0" max="10000"
                             required
                             onChange={(e) => setData('mhzmax', e.target.value)}
-                            onBlur={(e) => validar(e.target)}
+
                         />
                     </div>
 

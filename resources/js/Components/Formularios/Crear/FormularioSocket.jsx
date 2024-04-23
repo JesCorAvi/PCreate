@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { router } from '@inertiajs/react'
 import Boton from '../../Boton';
 import validation from '../../../validation.json';
-import { handleImagenChange, submit, validar } from '../../../formFunciones.jsx';
 
 
 export default function FormularioSocket({}) {
@@ -22,6 +21,8 @@ export default function FormularioSocket({}) {
 
         router.post('/socket/creado', formData)
     };
+
+
 
     return (
         <div name="socket" className="min-h-screen" >
