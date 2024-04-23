@@ -1,6 +1,8 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import Boton from '../../Boton';
 import { useEffect, useState } from 'react';
+import validation from '../../../validation.json';
+
 
 export default function FormularioPlaca({ sockets, marcas, articulo }) {
     const { data, setData, post } = useForm({
@@ -45,39 +47,44 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
         setData(key, file);
     };
 
+
     const submit = (e) => {
         e.preventDefault();
-        post(route('articulo.update', articulo.id, data));
+        post(route('articulo.store', data))
     };
+     function validar(target)    {
+        if (target.validity.valid) {
+            target.classList.remove('border-red-500');
+        } else {
+            target.classList.add('border-red-500');
+        }
+    }
+
 
     return (
 
         <div name="placa base" className="min-h-screen">
             <form className="max-w-2xl mx-auto" onSubmit={submit}>
-                <div className="mb-5">
-                    <label htmlFor="socket" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Socket</label>
-                    <select
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        name="socket_id"
-                        id="socket_id"
-                        value={data.socket_id}
-                        onChange={(e) => setData('socket_id', e.target.value)}
+            <div className="mb-5">
+                    <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modelo</label>
+                    <input
+                        value={data.nombre}
+                        pattern={validation.nombre}
+                        type="text"
+                        name="nombre"
+                        id="nombre"
+                        className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${errors.nombre ? 'border-red-500' : ''}`}
+                        placeholder="Introduzca el nombre del componente"
                         required
-                    >
-                        <option> Seleccione un Socket</option>
-                        {sockets.map((soc) => (
-                            <option
-                                key={soc.id}
-                                value={soc.id}>
-                                {soc.nombre}
-                            </option>
-                        ))}
-                    </select>
+                        onChange={(e) => handleChange('nombre', e.target.value)}
+                        onBlur={(e) => validar(e.target)}                    />
                 </div>
                 <div className="mb-5">
                     <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modelo</label>
                     <input
                         value={data.nombre}
+                        pattern={validation.nombre}
+
                         type="text"
                         name="nombre"
                         id="nombre"
@@ -85,18 +92,22 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                         placeholder="Introduzca el nombre del componente"
                         required
                         onChange={(e) => setData('nombre', e.target.value)}
+                        onBlur={(e) => validar(e.target)}
                     />
                 </div>
                 <div className="mb-5">
                     <label htmlFor="descripcion" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción del producto</label>
                     <textarea
                         value={data.descripcion}
+                        pattern={validation.descripcion}
+
                         id="descripcion"
                         name="descripcion"
                         className="h-72 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Introduzca la descripcion del producto"
                         required
                         onChange={(e) => setData('descripcion', e.target.value)}
+                        onBlur={(e) => validar(e.target)}
                     />
                 </div>
                 <div className="flex">
@@ -104,6 +115,8 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                         <label htmlFor="precio" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio del producto</label>
                         <input
                             value={data.precio}
+                            pattern={validation.precio}
+
                             type="decimal"
                             name="precio"
                             id="precio"
@@ -111,6 +124,7 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                             placeholder="Introduzca un valor numerico"
                             min="1"
                             onChange={(e) => setData('precio', e.target.value)}
+                            onBlur={(e) => validar(e.target)}
                         />
 
                     </div>
@@ -138,6 +152,8 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                         <label htmlFor="slotsm2" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Slots para M.2</label>
                         <input
                             value={data.slotsm2}
+                            pattern={validation.slotsm2}
+
                             type="number"
                             name="slotsm2"
                             d="slotsm2"
@@ -145,12 +161,15 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                             placeholder="Introduzca un valor numerico"
                             min="0" max="8" required
                             onChange={(e) => setData('slotsm2', e.target.value)}
+                            onBlur={(e) => validar(e.target)}
                         />
                     </div>
                     <div className="flex-initial mr-2 mb-5 w-1/2">
                         <label htmlFor="slotsram" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Slots para RAM</label>
                         <input
                             value={data.slotsram}
+                            pattern={validation.slotsram}
+
                             type="number"
                             name="slotsram"
                             id="slotsram" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -158,6 +177,7 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                             min="0" max="8"
                             required
                             onChange={(e) => setData('slotsram', e.target.value)}
+                            onBlur={(e) => validar(e.target)}
                         />
                     </div>
 
@@ -168,6 +188,8 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                         <label htmlFor="ddrmax" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Soporta hasta DDR</label>
                         <input
                             value={data.ddrmax}
+                            pattern={validation.ddrmax}
+
                             type="number"
                             name="ddrmax"
                             id="ddrmax"
@@ -176,20 +198,24 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                             min="3" max="5"
                             required
                             onChange={(e) => setData('ddrmax', e.target.value)}
+                            onBlur={(e) => validar(e.target)}
                         />
                     </div>
                     <div className="flex-initial mb-5 w-1/2">
                         <label htmlFor="mhzmax" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Frecuencia max RAM(Mhz)</label>
                         <input
                             value={data.mhzmax}
+                            pattern={validation.mhzmax}
+
                             type="number"
                             name="mhzmax"
                             id="mhzmax"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Introduzca un valor numerico"
-                            min="0" max="10000"
+                            min="1"
                             required
                             onChange={(e) => setData('mhzmax', e.target.value)}
+                            onBlur={(e) => validar(e.target)}
                         />
                     </div>
 
