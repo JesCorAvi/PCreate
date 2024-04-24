@@ -82,18 +82,19 @@ export default function FormularioPlaca({ sockets, marcas }) {
                         type="text"
                         name="nombre"
                         id="nombre"
-                        required
+
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Introduzca el nombre del componente"
                         onChange={(e) => setData('nombre', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
+                    <p className="text-red-800 py-2">{errors.nombre && <div>{errors.nombre}</div>}</p>
                 </div>
                 <div className="mb-5">
                     <label htmlFor="descripcion" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción del producto</label>
                     <textarea
                         value={data.descripcion}
-                        pattern="^(?!.*\b\w{31,}\b).*$"
+                        pattern={validation.descripcion}
                         id="descripcion"
                         name="descripcion"
                         required
@@ -102,6 +103,7 @@ export default function FormularioPlaca({ sockets, marcas }) {
                         onChange={(e) => setData('descripcion', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
+                    <p className="text-red-800 py-2">{errors.descripcion && <div>{errors.descripcion}</div>}</p>
                 </div>
                 <div className="flex">
                     <div className="flex-initial mr-2 mb-5 w-1/2">
@@ -112,11 +114,13 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             type="decimal"
                             name="precio"
                             id="precio"
+                            required
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Introduzca un valor numerico"
                             onChange={(e) => setData('precio', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                    <p className="text-red-800 py-2">{errors.precio && <div>{errors.precio}</div>}</p>
 
                     </div>
                     <div className="flex-initial mb-5 w-1/2">
@@ -125,9 +129,12 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             value={data.marca_id}
                             selected
                             id="marca"
+                            required
                             onChange={(e) => setData('marca_id', e.target.value)}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
+                        <p className="text-red-800 py-2">{errors.marca && <div>{errors.marca}</div>}</p>
+
                             <option disabled  value=""> Seleccione una marca</option>
                             {marcas.map((mar) => (
                                 <option
@@ -153,6 +160,8 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             onChange={(e) => setData('slotsm2', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.slotsm2 && <div>{errors.slotsm2}</div>}</p>
+
                     </div>
                     <div className="flex-initial mr-2 mb-5 w-1/2">
                         <label htmlFor="slotsram" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Slots para RAM</label>
@@ -167,6 +176,7 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             onChange={(e) => setData('slotsram', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.slotsram && <div>{errors.slotsram}</div>}</p>
                     </div>
 
                 </div>
@@ -186,6 +196,7 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             onChange={(e) => setData('ddrmax', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.ddrmax && <div>{errors.ddrmax}</div>}</p>
                     </div>
                     <div className="flex-initial mb-5 w-1/2">
                         <label htmlFor="mhzmax" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Frecuencia max RAM(Mhz)</label>
@@ -201,6 +212,8 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             onChange={(e) => setData('mhzmax', e.target.value)}
 
                         />
+                        <p className="text-red-800 py-2">{errors.mhzmax && <div>{errors.mhzmax}</div>}</p>
+
                     </div>
 
                 </div>
@@ -235,7 +248,7 @@ export default function FormularioPlaca({ sockets, marcas }) {
                                         name={key}
                                         id={key}
                                         className="hidden"
-
+                                        required
                                         onChange={(e) => handleImagenChange(e, key)}
                                     />
                                     <label htmlFor={key} className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">

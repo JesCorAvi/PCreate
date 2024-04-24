@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import validation from '../../../validation.json';
 
 export default function FormularioFVentilador({ marcas }) {
-    const { data, setData, post } = useForm({
+    const { data, setData, post, errors } = useForm({
         marca_id: '',
         nombre: '',
         descripcion: '',
@@ -62,6 +62,8 @@ export default function FormularioFVentilador({ marcas }) {
                         onChange={(e) => setData('nombre', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
+                        <p className="text-red-800 py-2">{errors.nombre && <div>{errors.nombre}</div>}</p>
+
                 </div>
                 <div className="mb-5">
                     <label htmlFor="descripcion" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción del producto</label>
@@ -76,6 +78,7 @@ export default function FormularioFVentilador({ marcas }) {
                         onChange={(e) => setData('descripcion', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
+                    <p className="text-red-800 py-2">{errors.descripcion && <div>{errors.descripcion}</div>}</p>
                 </div>
                 <div className="flex">
                     <div className="flex-initial mr-2 mb-5 w-1/2">
@@ -86,13 +89,14 @@ export default function FormularioFVentilador({ marcas }) {
                             type="decimal"
                             name="precio"
                             id="precio"
+                            required
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Introduzca un valor numerico"
                             min="1"
                             onChange={(e) => setData('precio', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
-
+                        <p className="text-red-800 py-2">{errors.precio && <div>{errors.precio}</div>}</p>
                     </div>
                     <div className="flex-initial mb-5 w-1/2">
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
@@ -127,6 +131,7 @@ export default function FormularioFVentilador({ marcas }) {
                                         id={key}
                                         className="hidden"
                                         required
+
                                         onChange={(e) => handleImagenChange(e, key)}
                                     />
                                     <label htmlFor={key} className="cursor-pointer block bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -135,6 +140,7 @@ export default function FormularioFVentilador({ marcas }) {
                                 </div>
                             ))}
                         </div>
+
                     </div>
                 </div>
                 <Boton tipo="submit" texto="Crear Artículo"></Boton>

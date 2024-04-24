@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import validation from '../../../validation.json';
 
 export default function FormularioGrafica({marcas }) {
-    const { data, setData, post } = useForm({
+    const { data, setData, post, errors } = useForm({
         categoria_id: '1',
         marca_id: '',
         nombre: '',
@@ -92,6 +92,7 @@ export default function FormularioGrafica({marcas }) {
                             type="decimal"
                             name="precio"
                             id="precio"
+                            required
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Introduzca un valor numerico"
                             min="1"

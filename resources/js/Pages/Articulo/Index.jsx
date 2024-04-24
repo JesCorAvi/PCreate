@@ -20,11 +20,9 @@ export default function Index({ auth, categorias, marcas, articulos }) {
                 marcas = {marcas}
                 articulos = {articulos}
             >
-
             </Productos>
             <Footer></Footer>
             <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
-
         </>
     );
 }

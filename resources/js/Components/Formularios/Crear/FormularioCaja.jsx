@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import validation from '../../../validation.json';
 
 export default function FormularioCaja({ marcas }) {
-    const { data, setData, post } = useForm({
+    const { data, setData, post, errors} = useForm({
         marca_id: '',
         nombre: '',
         descripcion: '',
@@ -65,6 +65,8 @@ export default function FormularioCaja({ marcas }) {
                         onChange={(e) => setData('nombre', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
+                        <p className="text-red-800 py-2">{errors.nombre && <div>{errors.nombre}</div>}</p>
+
                 </div>
                 <div className="mb-5">
                     <label htmlFor="descripcion" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción del producto</label>
@@ -79,6 +81,7 @@ export default function FormularioCaja({ marcas }) {
                         onChange={(e) => setData('descripcion', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
+                    <p className="text-red-800 py-2">{errors.descripcion && <div>{errors.descripcion}</div>}</p>
                 </div>
                 <div className="flex">
                     <div className="flex-initial mr-2 mb-5 w-1/2">
@@ -93,9 +96,10 @@ export default function FormularioCaja({ marcas }) {
                             placeholder="Introduzca un valor numerico"
                             min="1"
                             onChange={(e) => setData('precio', e.target.value)}
+                            required
                             onBlur={(e) => validar(e.target)}
                         />
-
+                        <p className="text-red-800 py-2">{errors.precio && <div>{errors.precio}</div>}</p>
                     </div>
                     <div className="flex-initial mb-5 w-1/2">
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
@@ -170,6 +174,7 @@ export default function FormularioCaja({ marcas }) {
                                 </div>
                             ))}
                         </div>
+
                     </div>
                 </div>
                 <Boton tipo="submit" texto="Crear Artículo"></Boton>
