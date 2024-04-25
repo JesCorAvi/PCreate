@@ -27,7 +27,7 @@ export default function Show({ auth, categorias, mustVerifyEmail, status, avatar
             >
                 <Head title="Tienda" />
             </LayoutLogueado>
-            <div className='flex px-20'>
+            <div className='flex lg:px-20'>
                 <aside className='hidden lg:flex flex-col pt-32 gap-4'>
 
                     <a className={seccionActual === 'edit' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('edit')}>
