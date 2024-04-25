@@ -20,13 +20,16 @@ export default function Edit({ auth, mustVerifyEmail, status, avatar, categorias
                         />
                     </div>
                     <div className="bg-white shadow sm:rounded-lg">
-                        <UpdateAvatarForm
-                            avatar={avatar}
-                            className="p-3 sm:p-8" />
-                    </div>
-                    <div className="bg-white shadow sm:rounded-lg">
                         <UpdatePasswordForm className="p-4 sm:p-8" />
                     </div>
+                    <div className="bg-white shadow sm:rounded-lg">
+                        <UpdateAvatarForm
+                            avatar={avatar}
+                            status={status}
+                            className="p-4 sm:p-8"
+                            />
+                    </div>
+
                     <div className="bg-white shadow sm:rounded-lg">
                         <DeleteUserForm className="p-4 sm:p-8" />
                     </div>

@@ -33,13 +33,16 @@ function UploadAvatar(avatar, className = '') {
     }
 
     return (
+
         <section className={className}>
-            <h2 className="text-lg font-medium text-gray-900">Cambiar Imagen de perfil</h2>
-            <br></br>
-            <p className="mt-1 text-sm text-gray-600">
-                Asegurate de que el archivo subido sea una imagen
-            </p>
-            <br></br>
+            <div className='p-5'>
+            <header>
+                <h2 className="text-lg font-medium text-gray-900">Cambiar Imagen de perfil</h2>
+
+                <p className="mt-1 text-sm text-gray-600">
+                    Asegurate de que el archivo subido sea una imagen
+                </p>
+            </header>
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div className="mr-2 w-52 h-52">
                     <label htmlFor="avatar" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen de perfil</label>
@@ -58,6 +61,7 @@ function UploadAvatar(avatar, className = '') {
                 <InputError message={errors.avatar} className="mt-2" />
                 <PrimaryButton type="submit">cambiar</PrimaryButton>
             </form>
+            </div>
         </section>
     )
 }

@@ -2,7 +2,7 @@ import { Link } from '@inertiajs/react';
 
 export default function Comentario({usuario,nota,fecha,comentario, avatar}) {
     return (
-        <div className="border-4 border-solid rounded-md w-200 h-42 py-3 flex flex-col  ">
+        <div className="border-4 border-solid rounded-md h-42 py-3 flex flex-col  ">
             <div className='flex justify-between'>
                 <div className='flex'>
                     <p className='px-6 text-xl font-semibold'>{usuario}.</p>

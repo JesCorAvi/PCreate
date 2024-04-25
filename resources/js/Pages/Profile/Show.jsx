@@ -1,10 +1,14 @@
 import LayoutLogueado from '@/Layouts/LayoutLogueado';
 import Footer from '@/Layouts/Footer';
+
 import { Head } from '@inertiajs/react';
 import Edit from '../../Components/Edit';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import NavLink from '@/Components/NavLink';
+import Datos from '@/Components/Datos';
+import Pedidos from '@/Components/Pedidos';
+import Direcciones from '@/Components/Direcciones';
+
 
 export default function Show({ auth, categorias, mustVerifyEmail, status, avatar }) {
     const [seccionActual, setSeccionActual] = useState(null);
@@ -24,10 +28,8 @@ export default function Show({ auth, categorias, mustVerifyEmail, status, avatar
                 <Head title="Tienda" />
             </LayoutLogueado>
             <div className='flex px-20'>
-                <aside className='flex flex-col pt-32 gap-4'>
-                    <a className={seccionActual === 'mis datos' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('mis datos')}>
-                        Mis datos
-                    </a>
+                <aside className='hidden lg:flex flex-col pt-32 gap-4'>
+
                     <a className={seccionActual === 'edit' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('edit')}>
                         Editar Perfil
                     </a>
@@ -41,9 +43,12 @@ export default function Show({ auth, categorias, mustVerifyEmail, status, avatar
                         Cerrar sesión
                     </a>
                 </aside>
-                <div className="flex flex-col items-center justify-center flex-grow"> {/* Flexbox para centrar vertical y horizontalmente */}
+                <div className="flex flex-col items-center justify-center flex-grow w-9/12">
+                    {seccionActual === 'mis datos' && <Datos/>}
                     {seccionActual === 'edit' && <Edit mustVerifyEmail={mustVerifyEmail} status={status} avatar={avatar} />}
-                    {seccionActual === 'pedidos' && <Edit mustVerifyEmail={mustVerifyEmail} status={status} avatar={avatar} />}
+                    {seccionActual === 'pedidos' && <Pedidos mustVerifyEmail={mustVerifyEmail} status={status} avatar={avatar} />}
+                    {seccionActual === 'direcciones' && <Direcciones mustVerifyEmail={mustVerifyEmail} status={status} avatar={avatar} />}
+
                 </div>
             </div>
             <Footer />
