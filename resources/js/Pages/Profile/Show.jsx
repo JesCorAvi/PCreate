@@ -10,8 +10,8 @@ import Pedidos from '@/Components/Pedidos';
 import Direcciones from '@/Components/Direcciones';
 
 
-export default function Show({ auth, categorias, mustVerifyEmail, status, avatar }) {
-    const [seccionActual, setSeccionActual] = useState(null);
+export default function Show({ auth, categorias, mustVerifyEmail, status, avatar, pedidos, direcciones, provincias }) {
+    const [seccionActual, setSeccionActual] = useState("pedidos");
     const handleBotonClick = (seccion) => {
         setSeccionActual(seccion);
     };
@@ -29,12 +29,11 @@ export default function Show({ auth, categorias, mustVerifyEmail, status, avatar
             </LayoutLogueado>
             <div className='flex lg:px-20'>
                 <aside className='hidden lg:flex flex-col pt-32 gap-4'>
-
-                    <a className={seccionActual === 'edit' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('edit')}>
-                        Editar Perfil
-                    </a>
                     <a className={seccionActual === 'pedidos' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('pedidos')}>
                         Mis pedidos
+                    </a>
+                    <a className={seccionActual === 'edit' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('edit')}>
+                        Editar Perfil
                     </a>
                     <a className={seccionActual === 'direcciones' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('direcciones')}>
                         Direcciones
@@ -45,9 +44,24 @@ export default function Show({ auth, categorias, mustVerifyEmail, status, avatar
                 </aside>
                 <div className="flex flex-col items-center justify-center flex-grow w-9/12">
                     {seccionActual === 'mis datos' && <Datos/>}
-                    {seccionActual === 'edit' && <Edit mustVerifyEmail={mustVerifyEmail} status={status} avatar={avatar} />}
-                    {seccionActual === 'pedidos' && <Pedidos mustVerifyEmail={mustVerifyEmail} status={status} avatar={avatar} />}
-                    {seccionActual === 'direcciones' && <Direcciones mustVerifyEmail={mustVerifyEmail} status={status} avatar={avatar} />}
+                    {seccionActual === 'edit' && <Edit
+                        mustVerifyEmail={mustVerifyEmail}
+                        status={status}
+                        avatar={avatar}
+                    />}
+                    {seccionActual === 'pedidos' && <Pedidos
+                        mustVerifyEmail={mustVerifyEmail}
+                        status={status}
+                        avatar={avatar}
+                        pedidos={pedidos}
+                    />}
+                    {seccionActual === 'direcciones' && <Direcciones
+                        mustVerifyEmail={mustVerifyEmail}
+                        status={status}
+                        avatar={avatar}
+                        direcciones={direcciones}
+                        provincias={provincias}
+                    />}
 
                 </div>
             </div>

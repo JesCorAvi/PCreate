@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Categoria;
+use App\Models\Provincia;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,7 +24,10 @@ class ProfileController extends Controller
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'avatar' => auth()->user()->avatar,
-            'categorias' => Categoria::all()
+            'categorias' => Categoria::all(),
+            "domicilios" => auth()->user()->domicilios,
+            Auth::user()->direcciones->load('provincias'),
+            "provincias" => Provincia::all(),
         ]);
     }
 

@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('domicilios', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained();
+            $table->foreignId("provincia_id")->constrained();
             $table->string("direccion");
+            $table->string("ciudad");
+            $table->integer("cpostal");
             $table->timestamps();
         });
     }
