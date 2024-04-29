@@ -25,8 +25,7 @@ class ProfileController extends Controller
             'status' => session('status'),
             'avatar' => auth()->user()->avatar,
             'categorias' => Categoria::all(),
-            "domicilios" => auth()->user()->domicilios,
-            Auth::user()->direcciones->load('provincias'),
+            "domicilios" => Auth::user()->domicilios->load('provincia'),
             "provincias" => Provincia::all(),
         ]);
     }

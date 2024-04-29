@@ -6,6 +6,8 @@ use App\Models\Domicilio;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDomicilioRequest;
 use App\Http\Requests\UpdateDomicilioRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DomicilioController extends Controller
 {
@@ -28,9 +30,15 @@ class DomicilioController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreDomicilioRequest $request)
+    public function store(Request $request)
     {
-        //
+        Domicilio::create([
+            "direccion" => $request->direccion,
+            "ciudad" => $request->ciudad,
+            "cpostal" => $request->cpostal,
+            "provincia_id" => $request->provincia_id,
+            "user_id" => Auth::user()->id
+        ]);
     }
 
     /**
@@ -52,16 +60,25 @@ class DomicilioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDomicilioRequest $request, Domicilio $domicilio)
+    public function update(Request $request)
     {
-        //
+        $domicilio = Domicilio::find($request->id);
+
+        $domicilio->update([
+            "direccion" => $request->direccion,
+            "ciudad" => $request->ciudad,
+            "cpostal" => $request->cpostal,
+            "provincia_id" => $request->provincia_id,
+        ]);
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Domicilio $domicilio)
+    public function destroy(Request $request)
     {
-        //
+        Domicilio::destroy($request->id);
+        return redirect()->back();
     }
 }

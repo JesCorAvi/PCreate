@@ -1,7 +1,7 @@
 import LayoutLogueado from '@/Layouts/LayoutLogueado';
 import Footer from '@/Layouts/Footer';
 
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import Edit from '../../Components/Edit';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -10,14 +10,16 @@ import Pedidos from '@/Components/Pedidos';
 import Direcciones from '@/Components/Direcciones';
 
 
-export default function Show({ auth, categorias, mustVerifyEmail, status, avatar, pedidos, direcciones, provincias }) {
+export default function Show({ auth, categorias, mustVerifyEmail, status, avatar, pedidos, domicilios, provincias }) {
     const [seccionActual, setSeccionActual] = useState("pedidos");
     const handleBotonClick = (seccion) => {
         setSeccionActual(seccion);
     };
     const estilo_boton_normal = "text-xl font-bold p-1 transition duration-300 ease-in-out transform hover:scale-105 hover:cursor-pointer hover:border-l-4 hover:border-gray-400 hover:p-1";
     const estilo_boton_seleccionado = "text-xl font-bold border-l-4 border-black p-1 transition duration-300 ease-in-out transform hover:cursor-pointer";
-
+    function cerrarSesion() {
+        axios.post(route('logout'))
+    }
     return (
         <div>
             <LayoutLogueado
@@ -38,9 +40,9 @@ export default function Show({ auth, categorias, mustVerifyEmail, status, avatar
                     <a className={seccionActual === 'direcciones' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('direcciones')}>
                         Direcciones
                     </a>
-                    <a className={seccionActual === 'salir' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('salir')}>
-                        Cerrar sesión
-                    </a>
+                    <Link className={estilo_boton_normal} href={route('logout')} method="post" as="button">
+                        Cerrar sesion
+                    </Link>
                 </aside>
                 <div className="flex flex-col items-center justify-center flex-grow w-9/12">
                     {seccionActual === 'mis datos' && <Datos/>}
@@ -59,7 +61,7 @@ export default function Show({ auth, categorias, mustVerifyEmail, status, avatar
                         mustVerifyEmail={mustVerifyEmail}
                         status={status}
                         avatar={avatar}
-                        direcciones={direcciones}
+                        domicilios={domicilios}
                         provincias={provincias}
                     />}
 

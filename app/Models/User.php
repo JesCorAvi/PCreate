@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    public function direcciones(): HasMany
+    public function domicilios(): HasMany
     {
         return $this->hasMany(Domicilio::class);
     }

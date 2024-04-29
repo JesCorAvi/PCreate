@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\ArticuloController;
+use App\Http\Controllers\DomicilioController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocketController;
+use App\Models\Domicilio;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,6 +29,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/perfil', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/perfil', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::post('/perfil/store', [DomicilioController::class, 'store'])->name('domicilio.store');
+Route::put('/perfil/update', [DomicilioController::class, 'update'])->name('domicilio.update');
+
+Route::post('/perfil/destroy', [DomicilioController::class, 'destroy'])->name('domicilio.destroy');
+
+
+
 Route::get('/tienda/crear', [ArticuloController::class, 'create'])->name('articulo.create');
 
 Route::post('/tienda/creado', [ArticuloController::class, 'store'])->name('articulo.store');
