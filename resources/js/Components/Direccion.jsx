@@ -22,8 +22,10 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                 direccion: data.direccion,
                 ciudad: data.ciudad,
                 cpostal: data.cpostal,
-                provincia_id: data.provincia_id
+                provincia_id: data.provincia_id,
+                id : id
             });
+
         } else {
             post(route('domicilio.store'), data);
         }

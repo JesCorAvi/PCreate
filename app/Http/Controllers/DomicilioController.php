@@ -39,6 +39,8 @@ class DomicilioController extends Controller
             "provincia_id" => $request->provincia_id,
             "user_id" => Auth::user()->id
         ]);
+        return redirect()->back()->with('success', 'Dirección creada exitosamente.');
+
     }
 
     /**
@@ -70,6 +72,7 @@ class DomicilioController extends Controller
             "cpostal" => $request->cpostal,
             "provincia_id" => $request->provincia_id,
         ]);
+        return redirect()->back()->with('success', 'Dirección modificada exitosamente.');
 
     }
 
@@ -79,6 +82,6 @@ class DomicilioController extends Controller
     public function destroy(Request $request)
     {
         Domicilio::destroy($request->id);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Dirección borrada exitosamente.');
     }
 }
