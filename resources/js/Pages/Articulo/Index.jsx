@@ -5,7 +5,7 @@ import Productos from '@/Components/Productos';
 
 import { Head } from '@inertiajs/react';
 
-export default function Index({ auth, categorias, marcas, articulos }) {
+export default function Index({ auth, categorias, marcas, articulos, cantidad }) {
     return (
         <>
             <LayoutLogueado
@@ -19,6 +19,7 @@ export default function Index({ auth, categorias, marcas, articulos }) {
                 categorias = {categorias}
                 marcas = {marcas}
                 articulos = {articulos}
+                cantidad = {cantidad}
             >
             </Productos>
             <Footer></Footer>

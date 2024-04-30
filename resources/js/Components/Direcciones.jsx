@@ -1,57 +1,21 @@
 import { Head } from '@inertiajs/react';
 import Direccion from './Direccion';
-import { Collapse, IconButton } from '@mui/material';
+import { Collapse, IconButton, Alert } from '@mui/material';
+import { usePage } from '@inertiajs/react';
+import { useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import { useEffect } from 'react';
 
-export default function Direcciones({ auth, domicilios, provinciasn, messages }) {
-    console.log(domicilios);
+
+
+
+export default function Direcciones({ auth, domicilios, provincias }) {
+
     return (
         <div className="min-h-screen w-9/12">
             <div className=' xl:p-24'>
                 <Head title="Direcciones" />
-                <Collapse in={open}>
-                {messages.success && (
-                    <Alert
-                        severity='success'
-                        action={
-                            <IconButton
-                                aria-label="close"
-                                color="inherit"
-                                size="small"
-                                onClick={() => {
-                                    setOpen(false); // Cambia el estado de open cuando se hace clic
-                                }}
-                            >
-                                <CloseIcon fontSize="inherit" />
-                            </IconButton>
-                        }
-                        sx={{ mb: 2 }}
-                    >
-                        {messages.success}
-                    </Alert>
 
-                )}
-                {messages.error && (
-                    <Alert
-                        severity='error'
-                        action={
-                            <IconButton
-                                aria-label="close"
-                                color="inherit"
-                                size="small"
-                                onClick={() => {
-                                    setOpen(false); // Cambia el estado de open cuando se hace clic
-                                }}
-                            >
-                                <CloseIcon fontSize="inherit" />
-                            </IconButton>
-                        }
-                        sx={{ mb: 2 }}
-                    >
-                        {messages.error}
-                    </Alert>
-
-                )}
-            </Collapse>
                 {domicilios ? (
                     domicilios.map((direccion) => (
 
@@ -70,7 +34,7 @@ export default function Direcciones({ auth, domicilios, provinciasn, messages })
                 ) : (
                     <h1 className='text-xl p-10'>No hay direcciones</h1>
                 )}
-                <h2 className="text-center text-xl">Crear nueva dirección</h2>
+                <h2 className="text-center text-xl font-semibold">Crear nueva dirección</h2>
                 <div>
                     <Direccion
                         direccion={""}

@@ -56,6 +56,7 @@ Route::post('/tienda/editado/{id}', [ArticuloController::class, 'update'])->name
 
 Route::delete('/tienda/destruir/{id}', [ArticuloController::class, 'destroy'])->name('articulo.destroy');
 
+//Route::get('/carrito', [CarritoController::class, 'index'])->name('carritos.index');
 
 
 require __DIR__.'/auth.php';
