@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import validation from '../../../validation.json';
 
 export default function FormularioCpu({ sockets, marcas }) {
-    const { data, setData, post } = useForm({
+    const { data, setData, post, errors } = useForm({
         socket_id: '',
         marca_id: '',
         nombre: '',
@@ -87,6 +87,8 @@ export default function FormularioCpu({ sockets, marcas }) {
                         onChange={(e) => setData('nombre', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
+                    <p className="text-red-800 py-2">{errors.nombre && <div>{errors.nombre}</div>}</p>
+
                 </div>
                 <div className="mb-5">
                     <label htmlFor="descripcion" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción del producto</label>
@@ -102,6 +104,7 @@ export default function FormularioCpu({ sockets, marcas }) {
                         onChange={(e) => setData('descripcion', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
+                    <p className="text-red-800 py-2">{errors.descripcion && <div>{errors.descripcion}</div>}</p>
                 </div>
                 <div className="flex">
                     <div className="flex-initial mr-2 mb-5 w-1/2">
@@ -119,7 +122,7 @@ export default function FormularioCpu({ sockets, marcas }) {
                             onChange={(e) => setData('precio', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
-
+                        <p className="text-red-800 py-2">{errors.precio && <div>{errors.precio}</div>}</p>
                     </div>
                     <div className="flex-initial mb-5 w-1/2">
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
@@ -156,6 +159,7 @@ export default function FormularioCpu({ sockets, marcas }) {
                             onChange={(e) => setData('nucleos', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.nucleos && <div>{errors.nucleos}</div>}</p>
                     </div>
                     <div className="flex-initial mr-2 mb-5 w-1/2">
                         <label htmlFor="frecuencia" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Frecuencia de procesador(en Ghz)</label>
@@ -171,8 +175,8 @@ export default function FormularioCpu({ sockets, marcas }) {
                             onChange={(e) => setData('frecuencia', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.frecuencia && <div>{errors.frecuencia}</div>}</p>
                     </div>
-
                 </div>
                 <div className="flex">
 
@@ -191,6 +195,7 @@ export default function FormularioCpu({ sockets, marcas }) {
                             onChange={(e) => setData('consumo', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.consumo && <div>{errors.consumo}</div>}</p>
                     </div>
                 </div>
                 <div className="mb-5">
@@ -213,6 +218,7 @@ export default function FormularioCpu({ sockets, marcas }) {
                                 </div>
                             ))}
                         </div>
+
                     </div>
                 </div>
                 <Boton tipo="submit" texto="Crear Artículo"></Boton>

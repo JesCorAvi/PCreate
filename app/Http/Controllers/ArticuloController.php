@@ -51,6 +51,7 @@ class ArticuloController extends Controller
         }
 
         // Obtener los resultados filtrados
+        $cantidad = $query->count();
         $articulosFiltrados = $query->paginate(12);
         if ($categoria !== "null" && $categoria !== '' && $categoria !== null) {
             $articulosFiltrados->appends('categoria', $categoria);
@@ -69,7 +70,8 @@ class ArticuloController extends Controller
             "articulos" => $articulosFiltrados,
             "categorias" => Categoria::all(),
             "marcas" => Marca::all(),
-            "sockets" => Socket::all()
+            "sockets" => Socket::all(),
+            "cantidad" => $cantidad
         ]);
     }
 

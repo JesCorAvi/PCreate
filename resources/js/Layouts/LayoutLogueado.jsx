@@ -2,7 +2,6 @@ import { useState } from 'react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import Busqueda from '@/Components/Busqueda';
-
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
@@ -75,7 +74,7 @@ export default function Layout({ user, header, children, categorias }) {
                                         </Dropdown.Trigger>
 
                                         <Dropdown.Content>
-                                            <Dropdown.Link href={route('profile.edit')}>Perfil</Dropdown.Link>
+                                            <Dropdown.Link href={route('profile.show')}>Perfil</Dropdown.Link>
                                             <Dropdown.Link href={route('logout')} method="post" as="button">
                                                 Cerrar sesion
                                             </Dropdown.Link>
@@ -145,8 +144,8 @@ export default function Layout({ user, header, children, categorias }) {
                             </div>
 
                             <div className="mt-3 space-y-1">
-                                <ResponsiveNavLink href={route('profile.edit')}>Carrito</ResponsiveNavLink>
-                                <ResponsiveNavLink href={route('profile.edit')}>Perfil</ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('profile.show')}>Carrito</ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('profile.show')}>Perfil</ResponsiveNavLink>
                                 <ResponsiveNavLink method="post" href={route('logout')} as="button">
                                     Cerrar sesion
                                 </ResponsiveNavLink>

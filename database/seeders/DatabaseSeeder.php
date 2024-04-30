@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CategoriaSeeder::class,
             MarcaSeeder::class,
-
+            ProvinciaSeeder::class,
         ]);
         /*
         User::factory(10)->create();

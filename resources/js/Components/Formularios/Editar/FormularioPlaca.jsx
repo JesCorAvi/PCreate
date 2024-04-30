@@ -5,7 +5,7 @@ import validation from '../../../validation.json';
 
 
 export default function FormularioPlaca({ sockets, marcas, articulo }) {
-    const { data, setData, post } = useForm({
+    const { data, setData, post, errors } = useForm({
         id: articulo.id,
         socket_id: JSON.parse(articulo.datos).socket_id,
         marca_id: articulo.marca_id,
@@ -94,6 +94,7 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                         onChange={(e) => setData('nombre', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
+                    <p className="text-red-800 py-2">{errors.nombre && <div>{errors.nombre}</div>}</p>
                 </div>
                 <div className="mb-5">
                     <label htmlFor="descripcion" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción del producto</label>
@@ -109,6 +110,7 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                         onChange={(e) => setData('descripcion', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
+                    <p className="text-red-800 py-2">{errors.descripcion && <div>{errors.descripcion}</div>}</p>
                 </div>
                 <div className="flex">
                     <div className="flex-initial mr-2 mb-5 w-1/2">
@@ -119,6 +121,7 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
 
                             type="decimal"
                             name="precio"
+                            required
                             id="precio"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Introduzca un valor numerico"
@@ -126,11 +129,12 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                             onChange={(e) => setData('precio', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
-
+                        <p className="text-red-800 py-2">{errors.precio && <div>{errors.precio}</div>}</p>
                     </div>
                     <div className="flex-initial mb-5 w-1/2">
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
                         <select
+                            required
                             id="marca"
                             value={data.marca_id}
                             onChange={(e) => setData('marca_id', e.target.value)}
@@ -163,6 +167,7 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                             onChange={(e) => setData('slotsm2', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.slotsm2 && <div>{errors.slotsm2}</div>}</p>
                     </div>
                     <div className="flex-initial mr-2 mb-5 w-1/2">
                         <label htmlFor="slotsram" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Slots para RAM</label>
@@ -179,6 +184,7 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                             onChange={(e) => setData('slotsram', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.slotsram && <div>{errors.slotsram}</div>}</p>
                     </div>
 
                 </div>
@@ -200,6 +206,7 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                             onChange={(e) => setData('ddrmax', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.ddrmax && <div>{errors.ddrmax}</div>}</p>
                     </div>
                     <div className="flex-initial mb-5 w-1/2">
                         <label htmlFor="mhzmax" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Frecuencia max RAM(Mhz)</label>
@@ -217,6 +224,7 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
                             onChange={(e) => setData('mhzmax', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.mhzmax && <div>{errors.mhzmax}</div>}</p>
                     </div>
 
                 </div>

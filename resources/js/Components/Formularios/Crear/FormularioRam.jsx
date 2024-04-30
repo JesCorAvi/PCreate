@@ -5,7 +5,7 @@ import validation from '../../../validation.json';
 
 
 export default function FormularioRam({marcas }) {
-    const { data, setData, post } = useForm({
+    const { data, setData, post, errors } = useForm({
         socket_id: '',
         categoria_id: '1',
         marca_id: '',
@@ -72,6 +72,7 @@ export default function FormularioRam({marcas }) {
                         onChange={(e) => setData('nombre', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
+                    <p className="text-red-800 py-2">{errors.nombre && <div>{errors.nombre}</div>}</p>
                 </div>
                 <div className="mb-5">
                     <label htmlFor="descripcion" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción del producto</label>
@@ -87,6 +88,7 @@ export default function FormularioRam({marcas }) {
                         onChange={(e) => setData('descripcion', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
+                    <p className="text-red-800 py-2">{errors.descripcion && <div>{errors.descripcion}</div>}</p>
                 </div>
                 <div className="flex">
                     <div className="flex-initial mr-2 mb-5 w-1/2">
@@ -94,7 +96,7 @@ export default function FormularioRam({marcas }) {
                         <input
                             value={data.precio}
                             pattern={validation.precio}
-
+                            required
                             type="decimal"
                             name="precio"
                             id="precio"
@@ -104,7 +106,7 @@ export default function FormularioRam({marcas }) {
                             onChange={(e) => setData('precio', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
-
+                        <p className="text-red-800 py-2">{errors.precio && <div>{errors.precio}</div>}</p>
                     </div>
                     <div className="flex-initial mb-5 w-1/2">
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
@@ -142,6 +144,7 @@ export default function FormularioRam({marcas }) {
                             onChange={(e) => setData('cantidad', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.cantidad && <div>{errors.cantidad}</div>}</p>
                     </div>
                     <div className="flex-initial mr-2 mb-5 w-1/2">
                         <label htmlFor="memoria" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total de memoria(En Gb)</label>
@@ -157,6 +160,7 @@ export default function FormularioRam({marcas }) {
                             onChange={(e) => setData('memoria', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.memoria && <div>{errors.memoria}</div>}</p>
                     </div>
 
                 </div>
@@ -178,6 +182,7 @@ export default function FormularioRam({marcas }) {
                             onChange={(e) => setData('frecuencia', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.frecuencia && <div>{errors.frecuencia}</div>}</p>
                     </div>
                     <div className="flex-initial mb-5 w-1/2">
                         <label htmlFor="tipo" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Memoria DDR</label>
@@ -193,6 +198,7 @@ export default function FormularioRam({marcas }) {
                             onChange={(e) => setData('ddr', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
+                        <p className="text-red-800 py-2">{errors.ddr && <div>{errors.ddr}</div>}</p>
                     </div>
                 </div>
                 <div className="mb-5">
@@ -215,6 +221,7 @@ export default function FormularioRam({marcas }) {
                                 </div>
                             ))}
                         </div>
+
                     </div>
                 </div>
                 <Boton tipo="submit" texto="Crear Artículo"></Boton>

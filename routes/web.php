@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\ArticuloController;
+use App\Http\Controllers\DomicilioController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocketController;
+use App\Models\Domicilio;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,10 +24,19 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/perfil', [ProfileController::class, 'show'])->name('profile.show');
+
+    Route::patch('/perfil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/perfil', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::post('/perfil/store', [DomicilioController::class, 'store'])->name('domicilio.store');
+Route::put('/perfil/update', [DomicilioController::class, 'update'])->name('domicilio.update');
+
+Route::post('/perfil/destroy', [DomicilioController::class, 'destroy'])->name('domicilio.destroy');
+
+
+
 Route::get('/tienda/crear', [ArticuloController::class, 'create'])->name('articulo.create');
 
 Route::post('/tienda/creado', [ArticuloController::class, 'store'])->name('articulo.store');
@@ -45,6 +56,7 @@ Route::post('/tienda/editado/{id}', [ArticuloController::class, 'update'])->name
 
 Route::delete('/tienda/destruir/{id}', [ArticuloController::class, 'destroy'])->name('articulo.destroy');
 
+//Route::get('/carrito', [CarritoController::class, 'index'])->name('carritos.index');
 
 
 require __DIR__.'/auth.php';
