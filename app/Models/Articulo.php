@@ -41,4 +41,11 @@ class Articulo extends Model
     {
         return $this->hasMany(Foto::class);
     }
+
+    public function carritos(): BelongsToMany
+    {
+        return $this->belongsToMany(Carrito::class, 'articulo_carrito')
+            ->withPivot('cantidad')
+            ->withTimestamps();
+    }
 }

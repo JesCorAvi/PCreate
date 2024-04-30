@@ -42,7 +42,7 @@ export default function Layout({ user, header, children, categorias }) {
 
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex hover:bg-gray-800">
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
+                                <NavLink href={route('carrito.index')} active={route().current('carrito.index')}>
                                     <p className="text-white">Carrito</p>
                                 </NavLink>
                             </div>
@@ -129,7 +129,7 @@ export default function Layout({ user, header, children, categorias }) {
                         </ResponsiveNavLink>
                     </div>
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
+                        <ResponsiveNavLink href={route('articulo.index')} active={route().current('articulo.index')}>
                             Tienda
                         </ResponsiveNavLink>
                     </div>
@@ -144,7 +144,7 @@ export default function Layout({ user, header, children, categorias }) {
                             </div>
 
                             <div className="mt-3 space-y-1">
-                                <ResponsiveNavLink href={route('profile.show')}>Carrito</ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('carrito.index')}>Carrito</ResponsiveNavLink>
                                 <ResponsiveNavLink href={route('profile.show')}>Perfil</ResponsiveNavLink>
                                 <ResponsiveNavLink method="post" href={route('logout')} as="button">
                                     Cerrar sesion

@@ -3,6 +3,7 @@ import { Link } from '@inertiajs/react';
 import BotonGrande from './BotonGrande';
 import Comentario from './Comentario';
 import PrimaryButton from './PrimaryButton';
+import Alertas from './Alertas';
 
 export default function Pieza({ active = false, classNameName = '', children, articulo }) {
     const imagenpr = articulo.fotos.find(foto => foto.orden === 1)?.imagen;
@@ -33,6 +34,8 @@ export default function Pieza({ active = false, classNameName = '', children, ar
     }
 
     return (
+        <>
+        <Alertas></Alertas>
         <div className='xl:px-40 min-h-screen'>
             <p className="py-2"><Link href={route("articulo.index")}>Tienda</Link>{' > '}{articulo.nombre}</p>
             <article className='block xl:flex px-5'>
@@ -124,5 +127,6 @@ export default function Pieza({ active = false, classNameName = '', children, ar
             </div>
 
         </div>
+        </>
     );
 }

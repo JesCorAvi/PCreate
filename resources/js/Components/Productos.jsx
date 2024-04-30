@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
 
-export default function Productos({ articulos, categorias, marcas, active = false, classNameName = '', children, ...props }) {
+export default function Productos({ articulos, categorias, marcas,cantidad, active = false, classNameName = '', children, ...props }) {
     function acortar(cadena, longitud) {
         if (cadena.length <= longitud) {
             return cadena; // Devuelve la cadena original si es igual o menor que la longitud especificada
@@ -65,6 +65,7 @@ export default function Productos({ articulos, categorias, marcas, active = fals
                                     imagen={"http://127.0.0.1:8000/storage/uploads/articulos/" + art.fotos.find(foto => foto.orden === 0)?.imagen}
                                     precio={art.precio}
                                     ruta={route("articulos.show", { id: art.id })}
+                                    id={art.id}
                                 />
                             ))}
                         </section>
