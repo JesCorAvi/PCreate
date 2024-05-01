@@ -58,6 +58,9 @@ Route::post('/tienda/editado/{id}', [ArticuloController::class, 'update'])->name
 Route::delete('/tienda/destruir/{id}', [ArticuloController::class, 'destroy'])->name('articulo.destroy');
 
 Route::post('/carrito/store', [CarritoController::class, 'store'])->name('carrito.store')->middleware('auth');
+Route::post('/carrito/update', [CarritoController::class, 'update'])->name('carrito.update')->middleware('auth');
+Route::post('/carrito/destroy', [CarritoController::class, 'destroy'])->name('carrito.destroy')->middleware('auth');
+
 
 Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index')->middleware('auth');
 

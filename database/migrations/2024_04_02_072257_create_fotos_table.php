@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId("articulo_id")->constrained();
             $table->integer("orden");
-            $table->string("imagen");
+            $table->string("imagen")->default("default.png");
             $table->timestamps();
             $table->unique(["articulo_id", "orden"]);
         });
