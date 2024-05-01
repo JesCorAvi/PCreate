@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             CategoriaSeeder::class,
             MarcaSeeder::class,
             ProvinciaSeeder::class,
+            ArticuloSeeder::class,
+
         ]);
         /*
         User::factory(10)->create();

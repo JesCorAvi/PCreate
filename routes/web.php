@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticuloController;
+use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\DomicilioController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocketController;
@@ -56,7 +57,11 @@ Route::post('/tienda/editado/{id}', [ArticuloController::class, 'update'])->name
 
 Route::delete('/tienda/destruir/{id}', [ArticuloController::class, 'destroy'])->name('articulo.destroy');
 
-//Route::get('/carrito', [CarritoController::class, 'index'])->name('carritos.index');
+Route::post('/carrito/store', [CarritoController::class, 'store'])->name('carrito.store')->middleware('auth');
+
+Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index')->middleware('auth');
+
+
 
 
 require __DIR__.'/auth.php';
