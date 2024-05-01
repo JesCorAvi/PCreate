@@ -4,9 +4,16 @@ import Alertas from '@/Components/Alertas';
 import Linea from '@/Components/Linea';
 import { Head } from '@inertiajs/react';
 import Boton from '@/Components/Boton';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
-export default function Index({ auth, categorias, carrito, articulos, cantidad }) {
-    function precioTotal() {
+export default function Index({ auth, categorias, carrito, articulos: InitialArticulos, cantidad }) {
+    const [articulos, setArticulos] = useState(InitialArticulos);
+    const [precioTotal, setPrecioTotal] = useState(Total());
+    const [cantidadTotal, setCantidadTotal] = useState(cantidad);
+
+
+    function Total() {
         let total = 0;
         if (!articulos) return 0;
         articulos.forEach(articulo => {
@@ -14,11 +21,24 @@ export default function Index({ auth, categorias, carrito, articulos, cantidad }
         });
         return total.toFixed(2);;
     }
+    function recargarArticulos() {
+        axios.get("/carritoActualizar").then(response => {
+            setArticulos(response.data.articulos);
+            setCantidadTotal(response.data.cantidad);
+        }).catch(error => {
+            console.error('Error al cargar los artículos:', error);
+        });
+    }
+
+    // Asegúrate de tener 'articulos' como dependencia para este efecto
+    useEffect(() => {
+        setPrecioTotal(Total());
+    }, [articulos]);
     return (
         <>
             <LayoutLogueado
                 user={auth.user}
-                header={<><h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Carrito</h2><p className=" text-gray-800 leading-tight text-center">Tienes {cantidad} carticulos en la cesta</p></>}
+                header={<><h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Carrito</h2><p className=" text-gray-800 leading-tight text-center">Tienes {cantidadTotal} carticulos en la cesta</p></>}
                 categorias={categorias}
             >
                 <Head title="Tienda" />
@@ -36,6 +56,7 @@ export default function Index({ auth, categorias, carrito, articulos, cantidad }
                                 imagen={articulo.fotos[0].imagen}
                                 cantidad={articulo.pivot.cantidad}
                                 id={articulo.id}
+                                recargarArticulos={recargarArticulos}
                             />
                         ))}
                     </div>
@@ -45,8 +66,8 @@ export default function Index({ auth, categorias, carrito, articulos, cantidad }
 
                 <div className='w-full lg:w-1/4 flex flex-col justify-start items-center lg:block'>
                     <p className="font-semibold text-2xl p-5">SUBTOTAL</p>
-                    <p className='p-5'>{cantidad} articulos en el carrito</p>
-                    <p className='p-5 text-xl font-semibold'>{precioTotal()} €</p>
+                    <p className='p-5'>{cantidadTotal} articulos en el carrito</p>
+                    <p className='p-5 text-xl font-semibold'>{precioTotal} €</p>
                     <Boton texto="Comprar"></Boton>
                 </div>
             </div>

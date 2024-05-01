@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import axios from 'axios';
 
-export default function Linea({ auth, nombre, precio, imagen, cantidad : initialCantidad, id}) {
+export default function Linea({ auth, nombre, precio, imagen, cantidad : initialCantidad, id, recargarArticulos}) {
     const [cantidad, setCantidad] = useState(initialCantidad);
     function modificarCantidad(tipo) {
         axios.post("carrito/update", {
@@ -11,12 +11,15 @@ export default function Linea({ auth, nombre, precio, imagen, cantidad : initial
             articulo_id: id
         }).then(response => {
             setCantidad(response.data.cantidad);
+            recargarArticulos();
         });
     }
     function borrar() {
         axios.post("carrito/destroy", {
             articulo_id: id
-        })
+        }).then(response => {
+            recargarArticulos();
+        });
     }
     return (
         <div className="border-2 border-solid border-black rounded-md my-5 w-3/4">

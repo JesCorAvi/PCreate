@@ -64,6 +64,7 @@ Route::post('/carrito/destroy', [CarritoController::class, 'destroy'])->name('ca
 
 Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index')->middleware('auth');
 
+Route::get('/carritoActualizar', [CarritoController::class, 'articulos'])->name('carrito.articulos')->middleware('auth');
 
 
 

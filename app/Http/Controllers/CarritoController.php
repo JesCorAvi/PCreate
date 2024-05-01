@@ -39,6 +39,31 @@ class CarritoController extends Controller
         ]);
     }
 
+    public function articulos()
+    {
+        $carrito = Carrito::with('articulos')->where('user_id', auth()->id())->first();
+        $totalArticulos = 0;
+
+        if($carrito){
+            $articulos = $carrito->articulos->load(['fotos' => function ($query) {
+                $query->where('orden', 0);
+            }]);
+            foreach($articulos as $articulo){
+                $totalArticulos += $articulo->pivot->cantidad;
+            }
+        }
+        else{
+            $articulos = null;
+        }
+
+        return response()->json([
+            "carrito" => $carrito,
+            "categorias" => Categoria::all(),
+            "articulos" => $articulos,
+            "cantidad" => $totalArticulos,
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -68,7 +93,6 @@ class CarritoController extends Controller
             }
 
             return redirect()->back();
-
     }
 
     /**
