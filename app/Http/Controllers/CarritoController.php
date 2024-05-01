@@ -19,7 +19,10 @@ class CarritoController extends Controller
         $totalArticulos = 0;
 
         if($carrito){
-            $articulos = $carrito->articulos;
+            $articulos = $carrito->articulos->load(['fotos' => function ($query) {
+                $query->where('orden', 0);
+
+            }]);
             foreach($articulos as $articulo){
                 $totalArticulos += $articulo->pivot->cantidad;
             }
@@ -87,16 +90,40 @@ class CarritoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Carrito $carrito)
+    public function update(Request $request)
     {
-        //
+        $carrito = Carrito::where('user_id', auth()->id())->first();
+        $nuevaCantidad = 0;
+
+        if ($request->tipo == "+"){
+            $nuevaCantidad = $carrito->articulos->find($request->articulo_id)->pivot->cantidad + 1;
+            $carrito->articulos()->updateExistingPivot($request->articulo_id, [
+                'cantidad' => $nuevaCantidad
+            ]);
+        }
+        else if ($request->tipo == "-"){
+            $nuevaCantidad = $carrito->articulos->find($request->articulo_id)->pivot->cantidad - 1;
+            $carrito->articulos()->updateExistingPivot($request->articulo_id, [
+                'cantidad' => $nuevaCantidad
+            ]);
+            if ($nuevaCantidad == 0){
+                $carrito->articulos()->detach($request->articulo_id);
+                if ($carrito->articulos->count() == 0){
+                    $carrito->delete();
+                }
+            }
+        }
+
+        return response()->json(['cantidad' => $nuevaCantidad]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Carrito $carrito)
+    public function destroy(Request $request)
     {
-        //
+        $carrito = Carrito::where('user_id', auth()->id())->first();
+        $carrito->articulos()->detach($request->articulo_id);
+
     }
 }
