@@ -7,7 +7,7 @@ import Boton from '@/Components/Boton';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-export default function Index({ auth, categorias, carrito, articulos: InitialArticulos, cantidad }) {
+export default function Index({ auth, categorias, articulos: InitialArticulos, cantidad }) {
     const [articulos, setArticulos] = useState(InitialArticulos);
     const [precioTotal, setPrecioTotal] = useState(Total());
     const [cantidadTotal, setCantidadTotal] = useState(cantidad);
@@ -40,6 +40,7 @@ export default function Index({ auth, categorias, carrito, articulos: InitialArt
                 user={auth.user}
                 header={<><h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Carrito</h2><p className=" text-gray-800 leading-tight text-center">Tienes {cantidadTotal} carticulos en la cesta</p></>}
                 categorias={categorias}
+
             >
                 <Head title="Tienda" />
             </LayoutLogueado>

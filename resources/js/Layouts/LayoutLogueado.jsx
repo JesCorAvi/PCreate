@@ -5,9 +5,11 @@ import Busqueda from '@/Components/Busqueda';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 
 export default function Layout({ user, header, children, categorias }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    const { carrito } = usePage().props;
 
     return (
         <div className=" bg-white >">

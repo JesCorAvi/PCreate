@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Carrito;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
@@ -43,6 +44,9 @@ class HandleInertiaRequests extends Middleware
             'messages' => fn () => [
                 'success' => Session::get('success'),
                 'error' => Session::get('error'),
+            ],
+            'carrito' => fn () => [
+                'total' => Carrito::with('articulos')->where('user_id', auth()->id())->first()->articulos->count()
             ],
         ];
     }

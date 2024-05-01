@@ -19,9 +19,8 @@ class CarritoController extends Controller
         $totalArticulos = 0;
 
         if($carrito){
-            $articulos = $carrito->articulos->load(['fotos' => function ($query) {
+            $articulos = $carrito->articulos()->orderBy('nombre', 'asc')->get()->load(['fotos' => function ($query) {
                 $query->where('orden', 0);
-
             }]);
             foreach($articulos as $articulo){
                 $totalArticulos += $articulo->pivot->cantidad;
@@ -45,7 +44,7 @@ class CarritoController extends Controller
         $totalArticulos = 0;
 
         if($carrito){
-            $articulos = $carrito->articulos->load(['fotos' => function ($query) {
+            $articulos = $carrito->articulos()->orderBy('nombre', 'asc')->get()->load(['fotos' => function ($query) {
                 $query->where('orden', 0);
             }]);
             foreach($articulos as $articulo){
