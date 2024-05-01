@@ -16,12 +16,23 @@ class CarritoController extends Controller
     public function index()
     {
         $carrito = Carrito::with('articulos')->where('user_id', auth()->id())->first();
-        $articulos = $carrito->articulos;
+        $totalArticulos = 0;
+
+        if($carrito){
+            $articulos = $carrito->articulos;
+            foreach($articulos as $articulo){
+                $totalArticulos += $articulo->pivot->cantidad;
+            }
+        }
+        else{
+            $articulos = null;
+        }
 
         return Inertia::render('Carrito/Index', [
             "carrito" => $carrito,
             "categorias" => Categoria::all(),
-            "articulos" => $articulos
+            "articulos" => $articulos,
+            "cantidad" => $totalArticulos,
         ]);
     }
 
