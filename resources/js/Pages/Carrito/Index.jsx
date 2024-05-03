@@ -25,6 +25,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
         axios.get("/carritoActualizar").then(response => {
             setArticulos(response.data.articulos);
             setCantidadTotal(response.data.cantidad);
+
         }).catch(error => {
             console.error('Error al cargar los artículos:', error);
         });

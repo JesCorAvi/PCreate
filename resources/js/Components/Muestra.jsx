@@ -4,8 +4,12 @@ import BotonGrande from './BotonGrande';
 import Comentario from './Comentario';
 import PrimaryButton from './PrimaryButton';
 import Alertas from './Alertas';
+import useCarritoStore from '@/carritoStore';
+import axios from 'axios';
 
 export default function Pieza({ active = false, classNameName = '', children, articulo }) {
+    const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
+
     const imagenpr = articulo.fotos.find(foto => foto.orden === 1)?.imagen;
     const imagenSec1 = articulo.fotos.find(foto => foto.orden === 2)?.imagen;
     const imagenSec2 = articulo.fotos.find(foto => foto.orden === 3)?.imagen;
@@ -17,6 +21,16 @@ export default function Pieza({ active = false, classNameName = '', children, ar
 
     const [lightboxVisible, setLightboxVisible] = useState(false);
     const datos = JSON.parse(articulo.datos);
+
+    function añadirAlCarrito() {
+        axios.post(route('carrito.store'), {
+            articulo_id: articulo.id,
+        }).then(response => {
+            actualizarCantidadArticulos();
+        }).catch(error => {
+            console.log(error);
+        });
+    }
 
     function acortar(cadena, longitud) {
         return cadena.length <= longitud ? cadena : cadena.substring(0, longitud) + '...';
@@ -59,7 +73,7 @@ export default function Pieza({ active = false, classNameName = '', children, ar
                         <p className="font-bold text-4xl overflow-hidden">{articulo.precio}€</p>
                     </div>
                     <div className='text-center'>
-                        <BotonGrande texto="AÑADIR AL CARRITO" />
+                        <BotonGrande onClick={añadirAlCarrito} texto="AÑADIR AL CARRITO" />
                     </div>
                 </section>
 

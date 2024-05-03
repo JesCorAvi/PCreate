@@ -45,9 +45,9 @@ class HandleInertiaRequests extends Middleware
                 'success' => Session::get('success'),
                 'error' => Session::get('error'),
             ],
-            'carrito' => fn () => [
-                'total' => Carrito::with('articulos')->where('user_id', auth()->id())->first()->articulos->count()
-            ],
+            //'carrito' => fn () => [
+            //    'total' => optional(optional(Carrito::with('articulos')->where('user_id', auth()->id())->first())->articulos)->count() ?? 0
+            //],
         ];
     }
 }

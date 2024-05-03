@@ -2,9 +2,12 @@
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import axios from 'axios';
+import useCarritoStore from '../carritoStore';
 
 export default function Linea({ auth, nombre, precio, imagen, cantidad : initialCantidad, id, recargarArticulos}) {
     const [cantidad, setCantidad] = useState(initialCantidad);
+    const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
+
     function modificarCantidad(tipo) {
         axios.post("carrito/update", {
             tipo: tipo,
@@ -12,6 +15,8 @@ export default function Linea({ auth, nombre, precio, imagen, cantidad : initial
         }).then(response => {
             setCantidad(response.data.cantidad);
             recargarArticulos();
+            actualizarCantidadArticulos();
+
         });
     }
     function borrar() {
@@ -19,6 +24,8 @@ export default function Linea({ auth, nombre, precio, imagen, cantidad : initial
             articulo_id: id
         }).then(response => {
             recargarArticulos();
+            actualizarCantidadArticulos();
+
         });
     }
     return (

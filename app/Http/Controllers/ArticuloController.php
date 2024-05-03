@@ -29,6 +29,7 @@ class ArticuloController extends Controller
         $marca = $request->input('marca');
         $precioMinimo = $request->input('precioMinimo');
         $precioMaximo = $request->input('precioMaximo');
+        $palabrasClave = $request->input('palabras');
         // Realizar el filtrado de acuerdo a los parámetros recibidos
         $query = Articulo::with(['fotos' => function ($query) {
             $query->where('orden', 0);
@@ -50,6 +51,10 @@ class ArticuloController extends Controller
             $query->where('precio', '<=', $precioMaximo);
         }
 
+        if ($palabrasClave) {
+            $query->where('nombre', 'like', '%' . $palabrasClave . '%');
+        }
+
         // Obtener los resultados filtrados
         $cantidad = $query->count();
         $articulosFiltrados = $query->paginate(12);
@@ -64,6 +69,9 @@ class ArticuloController extends Controller
         }
         if ($precioMaximo !== "null" && $precioMaximo !== null) {
             $articulosFiltrados->appends('precioMaximo', $precioMaximo);
+        }
+        if ($palabrasClave) {
+            $articulosFiltrados->appends('palabras', $palabrasClave);
         }
 
         return Inertia::render('Articulo/Index', [
