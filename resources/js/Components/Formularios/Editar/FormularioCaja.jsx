@@ -186,7 +186,7 @@ export default function FormularioCaja({ marcas, articulo }) {
                         </div>
                     </div>
                 </div>
-                <Boton tipo="submit" texto="Crear Artículo"></Boton>
+                <Boton tipo="submit" texto="Editar Artículo"></Boton>
             </form>
         </div>
     );

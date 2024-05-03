@@ -16,6 +16,8 @@ use Inertia\Response;
 use App\Models\Socket;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 
 class ArticuloController extends Controller
@@ -553,14 +555,14 @@ function subirImagen($image, $ruta)
     $image->storeAs($ruta, $name, 'public');
 
     // Procesar la imagen
-    /*
-    $manager = new ImageManager();
-    $imageR = $manager->make($image->getRealPath());
-    $imageR->scaleDown(400); // Ajusta esto según tus necesidades
+
+    $manager = new ImageManager(new Driver());
+    $imageR = $manager->read(Storage::disk('public')->get('uploads/articulos/' . $name));
+    $imageR->scaleDown(1000); // Ajusta esto según tus necesidades
 
     // Guardar la imagen procesada
-    $imageR->save(public_path('storage/' . $name . '/' . $name));
-    */
+    $imageR->save(public_path('storage/uploads/articulos/' . $name));
+
 
     return $name;
 }

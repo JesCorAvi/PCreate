@@ -3,10 +3,11 @@ import Boton from './Boton';
 import useCarritoStore from '../carritoStore';
 
 
-export default function Pieza({ active = false, classNameName = '', children, ...props }) {
+export default function Pieza({ active = false, classNameName = '',handleAddToCartClick, children, ...props }) {
     const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
 
     function añadirAlCarrito() {
+        handleAddToCartClick();
         axios.post(route('carrito.store'), {
             articulo_id: props.id,
         }).then(response => {

@@ -185,7 +185,7 @@ export default function FormularioDisipador({  sockets, marcas, articulo  }) {
                         </div>
                     </div>
                 </div>
-                <Boton tipo="submit" texto="Crear Artículo"></Boton>
+                <Boton tipo="submit" texto="Editar Artículo"></Boton>
             </form>
         </div>
     );

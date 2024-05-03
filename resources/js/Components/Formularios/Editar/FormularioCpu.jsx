@@ -230,7 +230,7 @@ export default function FormularioCpu({  sockets, marcas, articulo }) {
                         </div>
                     </div>
                 </div>
-                <Boton tipo="submit" texto="Aditar Artículo"></Boton>
+                <Boton tipo="submit" texto="Editar Artículo"></Boton>
             </form>
         </div>
     );
