@@ -5,9 +5,20 @@ import Busqueda from '@/Components/Busqueda';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
+import useCarritoStore from '../carritoStore';
+import { useEffect } from 'react';
 
 export default function Layout({ user, header, children, categorias }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    const { cantidadArticulos } = useCarritoStore();
+    const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
+
+    const { carrito } = usePage().props;
+
+    useEffect(() => {
+       actualizarCantidadArticulos();
+    }, []); // Dependencias vacías para que se ejecute solo al montar el componente
 
     return (
         <div className=" bg-white >">
@@ -43,7 +54,7 @@ export default function Layout({ user, header, children, categorias }) {
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex hover:bg-gray-800">
                                 <NavLink href={route('carrito.index')} active={route().current('carrito.index')}>
-                                    <p className="text-white">Carrito</p>
+                                    <p className="text-white">Carrito ({cantidadArticulos})</p>
                                 </NavLink>
                             </div>
                             <div className="ms-3 relative">

@@ -19,9 +19,8 @@ class CarritoController extends Controller
         $totalArticulos = 0;
 
         if($carrito){
-            $articulos = $carrito->articulos->load(['fotos' => function ($query) {
+            $articulos = $carrito->articulos()->orderBy('nombre', 'asc')->get()->load(['fotos' => function ($query) {
                 $query->where('orden', 0);
-
             }]);
             foreach($articulos as $articulo){
                 $totalArticulos += $articulo->pivot->cantidad;
@@ -32,6 +31,31 @@ class CarritoController extends Controller
         }
 
         return Inertia::render('Carrito/Index', [
+            "carrito" => $carrito,
+            "categorias" => Categoria::all(),
+            "articulos" => $articulos,
+            "cantidad" => $totalArticulos,
+        ]);
+    }
+
+    public function articulos()
+    {
+        $carrito = Carrito::with('articulos')->where('user_id', auth()->id())->first();
+        $totalArticulos = 0;
+
+        if($carrito){
+            $articulos = $carrito->articulos()->orderBy('nombre', 'asc')->get()->load(['fotos' => function ($query) {
+                $query->where('orden', 0);
+            }]);
+            foreach($articulos as $articulo){
+                $totalArticulos += $articulo->pivot->cantidad;
+            }
+        }
+        else{
+            $articulos = null;
+        }
+
+        return response()->json([
             "carrito" => $carrito,
             "categorias" => Categoria::all(),
             "articulos" => $articulos,
@@ -68,7 +92,6 @@ class CarritoController extends Controller
             }
 
             return redirect()->back();
-
     }
 
     /**

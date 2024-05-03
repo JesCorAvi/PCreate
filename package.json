@@ -27,6 +27,7 @@
         "@mui/material": "^5.15.15",
         "flowbite-react": "^0.8.0",
         "react-responsive": "^10.0.0",
-        "react-router-dom": "^6.22.3"
+        "react-router-dom": "^6.22.3",
+        "zustand": "^4.5.2"
     }
 }

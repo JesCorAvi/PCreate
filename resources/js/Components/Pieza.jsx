@@ -1,10 +1,16 @@
 import { Link } from '@inertiajs/react';
 import Boton from './Boton';
+import useCarritoStore from '../carritoStore';
+
 
 export default function Pieza({ active = false, classNameName = '', children, ...props }) {
+    const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
+
     function añadirAlCarrito() {
         axios.post(route('carrito.store'), {
             articulo_id: props.id,
+        }).then(response => {
+            actualizarCantidadArticulos();
         }).catch(error => {
             console.log(error);
         });
