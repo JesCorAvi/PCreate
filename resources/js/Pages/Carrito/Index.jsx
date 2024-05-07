@@ -48,7 +48,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
             <Alertas></Alertas>
 
             <div className=' lg:flex w-full min-h-screen lg:p-20'>
-                {articulos.length ? (
+                {articulos && articulos.length ? (
                     <>
                         <div className='flex flex-col justify-start items-center w-full lg:w-3/4'>
                             {articulos.map((articulo) => (

@@ -45,7 +45,7 @@ export default function FormularioFVentilador({ marcas, articulo  }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('articulo.store', data))
+        post(route('articulo.update', data))
     };
      function validar(target)    {
         if (target.validity.valid) {

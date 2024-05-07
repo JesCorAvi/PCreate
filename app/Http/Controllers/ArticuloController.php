@@ -318,14 +318,20 @@ class ArticuloController extends Controller
      */
     public function update(Request $request)
     {
-        $request->validate([
-            'imagenpr' => 'image',
-            'imagensec1' => 'image',
-            'imagensec2' => 'image',
-            "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:200",
-            "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
-            "precio" => "required|regex:/^\d*\.?\d*$/",
-        ]);
+        //problemas en la validacion de las imagenes, si se envia cadena peta
+        try{
+            $request->validate([
+                'imagenpr' => 'nullable|image',
+                'imagensec1' => 'nullable|image',
+                'imagensec2' => 'nullable|image',
+                "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:200",
+                "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
+                "precio" => "required|regex:/^\d*\.?\d*$/",
+            ]);
+        }
+        catch(ValidationException $e){
+            dd($e->errors());
+        }
 
         $articulo = Articulo::find($request->id);
         $datosComunes = [
@@ -520,7 +526,7 @@ class ArticuloController extends Controller
         }
 
         if ($articulo) {
-            return redirect()->route('articulos.show', ['id' => $articulo->id])->with('success', 'Articulo creado exitosamente.');
+            return redirect()->route('articulos.show', ['id' => $articulo->id])->with('success', 'Articulo editado exitosamente.');
         } else {
             return redirect()->back()->with('error', 'Error al crear el articulo.');
         }

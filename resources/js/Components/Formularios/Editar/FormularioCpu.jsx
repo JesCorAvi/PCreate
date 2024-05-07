@@ -48,7 +48,7 @@ export default function FormularioCpu({  sockets, marcas, articulo }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('articulo.store', data))
+        post(route('articulo.update', data))
     };
      function validar(target)    {
         if (target.validity.valid) {

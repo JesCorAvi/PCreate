@@ -47,9 +47,10 @@ export default function FormularioGrafica({ marcas, articulo  }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('articulo.store', data))
+        post(route('articulo.update', data))
     };
-     function validar(target)    {
+
+    function validar(target)    {
         if (target.validity.valid) {
             target.classList.remove('border-red-500');
         } else {
