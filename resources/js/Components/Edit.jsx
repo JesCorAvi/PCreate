@@ -10,7 +10,8 @@ import { Head } from '@inertiajs/react';
 export default function Edit({ auth, mustVerifyEmail, status, avatar, categorias }) {
     return (
         <>
-            <div className="py-12">
+            <Head title="Editar Usuario" />
+            <div className="py-16 max-w-2xl xl:max-w-6xl">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="bg-white shadow sm:rounded-lg">
                         <UpdateProfileInformationForm

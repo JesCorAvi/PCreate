@@ -43,7 +43,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
                 categorias={categorias}
 
             >
-                <Head title="Tienda" />
+                <Head title="Carrito" />
             </LayoutLogueado>
             <Alertas></Alertas>
 

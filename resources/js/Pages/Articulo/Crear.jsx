@@ -13,7 +13,7 @@ export default function Crear({ auth, categorias, marcas, sockets }) {
                 header={<h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Crear componente</h2>}
                 categorias = {categorias}
             >
-                <Head title="Tienda" />
+                <Head title="Crear Artículo" />
             </LayoutLogueado>
             <CrearProducto
                 categorias = {categorias}
