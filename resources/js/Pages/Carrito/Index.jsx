@@ -60,6 +60,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
                                     cantidad={articulo.pivot.cantidad}
                                     id={articulo.id}
                                     recargarArticulos={recargarArticulos}
+                                    ruta={route("articulos.show", { id: articulo.id })}
                                 />
                             ))}
                         </div>

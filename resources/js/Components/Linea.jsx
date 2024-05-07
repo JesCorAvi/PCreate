@@ -3,8 +3,9 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import axios from 'axios';
 import useCarritoStore from '../carritoStore';
+import { Link } from '@inertiajs/react';
 
-export default function Linea({ auth, nombre, precio, imagen, cantidad: initialCantidad, id, recargarArticulos }) {
+export default function Linea({ auth, nombre, precio, imagen, cantidad: initialCantidad, id, recargarArticulos, ruta }) {
     const [cantidad, setCantidad] = useState(initialCantidad);
     const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
 
@@ -34,7 +35,7 @@ export default function Linea({ auth, nombre, precio, imagen, cantidad: initialC
                 <img className='w-40 h-40 rounded-md self-center' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + imagen} />
                 <div className='w-full'>
                     <div className='min-h-32'>
-                        <a href="#" className="text-2xl  underline pt-3 ">{nombre}</a>
+                    <Link href={ruta} className=' min-h-24 font-semibold underline text-2xl'>{nombre}</Link>
                     </div>
                     <div name="abajo">
                         <div className='flex gap-4 justify-between'>

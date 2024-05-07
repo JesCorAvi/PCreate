@@ -74,11 +74,13 @@ export default function Pieza({ active = false, classNameName = '', children, ar
                 <p className="py-2"><Link href={route("articulo.index")}>Tienda</Link>{' > '}{articulo.nombre}</p>
                 <article className='block xl:flex px-5'>
                     <section className="flex-1 flex flex-col items-center justify-center">
-                        <img onClick={() => handleOpenLightbox()} src={imagenGrande} alt="Imagen seleccionada en grande" className='w-imagen h-imagen object-contain border-2 border-solid rounded-md cursor-pointer' />
+                        <div className="w-imagen h-imagen">
+                            <img onClick={() => handleOpenLightbox()} src={imagenGrande} alt="Imagen seleccionada en grande" className='w-imagen h-imagen object-contain border-2 border-solid rounded-md cursor-zoom-in' />
+                        </div>
                         <div className='flex max-w-full overflow-x-auto justify-center'>
-                            <img onClick={() => handleGrande(imagenPrincipal)} src={imagenPrincipal} alt="Imagen principal" className='w-20 h-20 object-contain border-2 border-solid rounded-md cursor-pointer' />
-                            <img onClick={() => handleGrande(imagenSecundaria1)} src={imagenSecundaria1} alt="Imagen secundaria 1" className='w-20 h-20 object-contain border-2 border-solid rounded-md cursor-pointer' />
-                            <img onClick={() => handleGrande(imagenSecundaria2)} src={imagenSecundaria2} alt="Imagen secundaria 2" className='w-20 h-20 object-contain border-2 border-solid rounded-md cursor-pointer' />
+                            <img onClick={() => handleGrande(imagenPrincipal)} src={imagenPrincipal} alt="Imagen principal" className='w-32 h-32 object-contain rounded-md cursor-pointer' />
+                            <img onClick={() => handleGrande(imagenSecundaria1)} src={imagenSecundaria1} alt="Imagen secundaria 1" className='w-32 h-32 object-contain rounded-md cursor-pointer' />
+                            <img onClick={() => handleGrande(imagenSecundaria2)} src={imagenSecundaria2} alt="Imagen secundaria 2" className='w-32 h-32 object-contain rounded-md cursor-pointer' />
                         </div>
                     </section>
                     <section className="flex-1 text-justify xl:px-10 flex flex-col justify-between " >
@@ -155,34 +157,30 @@ export default function Pieza({ active = false, classNameName = '', children, ar
                 </article>
                 {lightboxVisible && (
                     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={handleCloseLightbox}>
-                        <img src={imagenGrande} alt="Imagen principal" className="max-w-screen-lg max-h-screen p-5 cursor-pointer" />
+                        <img src={imagenGrande} alt="Imagen principal" className="max-w-screen-lg max-h-screen p-5 cursor-zoom-out" />
                     </div>
                 )}
                 <div className='flex justify-between'>
-                    <div className="bg-black text-white rounded-md p-1 m-1">
+                    <div className="p-1 bg-black text-white rounded-md p-1 m-1 flex items-center justify-center hover:bg-slate-600">
                         <Link href={route("articulo.edit", articulo.id)}>Editar artículo</Link>
                     </div>
-                    <div className="bg-black text-white rounded-md p-1 m-1">
-                        <div className="bg-black text-white rounded-md p-1 m-1">
-                            <button onClick={handleDeleteClick}>
-                                Borrar artículo
-                            </button>
-                        </div>
-                        <Modal className="p-6" show={isDeleteModalVisible} onClose={handleCloseModal}>
-                            <h2 className="text-lg font-medium text-gray-900 font-semibold p-10">
-                                ¿Estás seguro de que quieres borrar este artículo?
-                            </h2>
-                            <p className="mt-1 text-lg px-10 text-gray-600">
-                                Esta acción no puede ser revertida.
-                            </p>
-                            <Link className=" text-white bg-red-900 hover:bg-red-600 rounded-md m-10 p-1" as='Button' method="DELETE" href={route("articulo.destroy", articulo.id)}>
-                                Borrar artículo
-                            </Link>
-                            <button className=" text-white bg-black hover:bg-slate-700 rounded-md p-1" onClick={handleCloseModal}>Cancelar</button>
-                        </Modal>
+                    <button className="p-1 bg-black text-white rounded-md m-1 flex items-center justify-center hover:bg-slate-600" onClick={handleDeleteClick}>
+                        Borrar artículo
+                    </button>
+                    <Modal className="p-6" show={isDeleteModalVisible} onClose={handleCloseModal}>
+                        <h2 className="text-lg font-medium text-gray-900 font-semibold p-10">
+                            ¿Estás seguro de que quieres borrar este artículo?
+                        </h2>
+                        <p className="mt-1 text-lg px-10 text-gray-600">
+                            Esta acción no puede ser revertida.
+                        </p>
+                        <Link className=" text-white bg-red-900 hover:bg-red-600 rounded-md m-10 p-1" as='Button' method="DELETE" href={route("articulo.destroy", articulo.id)}>
+                            Borrar artículo
+                        </Link>
+                        <button className=" text-white bg-black hover:bg-slate-700 rounded-md p-1" onClick={handleCloseModal}>Cancelar</button>
+                    </Modal>
 
 
-                    </div>
                 </div>
 
             </div>
