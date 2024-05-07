@@ -33,7 +33,9 @@ export default function Linea({ auth, nombre, precio, imagen, cantidad: initialC
             <div className='flex flex-col xl:flex-row  p-4 gap-4'>
                 <img className='w-40 h-40 rounded-md self-center' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + imagen} />
                 <div className='w-full'>
-                    <a href="#" className="text-2xl  underline pt-3">{nombre}</a>
+                    <div className='min-h-32'>
+                        <a href="#" className="text-2xl  underline pt-3 ">{nombre}</a>
+                    </div>
                     <div name="abajo">
                         <div className='flex gap-4 justify-between'>
                             <p className='font-semibold text-xl'>{precio}€</p>

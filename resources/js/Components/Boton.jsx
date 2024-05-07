@@ -6,6 +6,7 @@ export default function Boton({texto, tipo, onClick }) {
     const handleClick = () => {
         setIsClicked(true);
         setTimeout(() => setIsClicked(false), 500); // reset after the duration of the animation
+        onClick();
     };
 
     return (

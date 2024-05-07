@@ -77,7 +77,7 @@ export default function FormularioCpu({ sockets, marcas }) {
                     <input
                         value={data.nombre}
                         pattern={validation.nombre}
-                        maxLength="200"
+                        maxLength="120"
                         type="text"
                         name="nombre"
                         id="nombre"

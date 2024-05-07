@@ -64,7 +64,7 @@ export default function FormularioFuente({ marcas, articulo  }) {
                     <input
                         value={data.nombre}
                         pattern={validation.nombre}
-
+                        maxLength="120"
                         type="text"
                         name="nombre"
                         id="nombre"

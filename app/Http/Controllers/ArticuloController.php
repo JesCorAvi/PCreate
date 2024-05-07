@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use App\Rules\ImagenOCadena;
+
 
 
 class ArticuloController extends Controller
@@ -107,7 +109,7 @@ class ArticuloController extends Controller
             'imagenpr' => 'required|image',
             'imagensec1' => 'required|image',
             'imagensec2' => 'required|image',
-            "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:200",
+            "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:120",
             "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
             "precio" => "required|regex:/^\d*\.?\d*$/",
         ]);
@@ -319,19 +321,15 @@ class ArticuloController extends Controller
     public function update(Request $request)
     {
         //problemas en la validacion de las imagenes, si se envia cadena peta
-        try{
             $request->validate([
-                'imagenpr' => 'nullable|image',
-                'imagensec1' => 'nullable|image',
-                'imagensec2' => 'nullable|image',
-                "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:200",
+                'imagenpr' =>  [new ImagenOCadena],
+                'imagensec1' =>  [new ImagenOCadena],
+                'imagensec2' =>  [new ImagenOCadena],
+                "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:120",
                 "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
                 "precio" => "required|regex:/^\d*\.?\d*$/",
             ]);
-        }
-        catch(ValidationException $e){
-            dd($e->errors());
-        }
+
 
         $articulo = Articulo::find($request->id);
         $datosComunes = [
