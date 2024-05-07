@@ -33,6 +33,7 @@ export default function FormularioSocket({}) {
                     <input
                         type="text"
                         name="nombre"
+                        maxLength="120"
                         pattern={validation.nombre}
                         value={socket} onChange={(e) =>
                         setSocket(e.target.value)}

@@ -44,7 +44,7 @@ export default function FormularioFuente({ marcas, articulo  }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('articulo.store', data))
+        post(route('articulo.update', data))
     };
      function validar(target)    {
         if (target.validity.valid) {
@@ -64,7 +64,7 @@ export default function FormularioFuente({ marcas, articulo  }) {
                     <input
                         value={data.nombre}
                         pattern={validation.nombre}
-
+                        maxLength="120"
                         type="text"
                         name="nombre"
                         id="nombre"
@@ -171,7 +171,7 @@ export default function FormularioFuente({ marcas, articulo  }) {
                         </div>
                     </div>
                 </div>
-                <Boton tipo="submit" texto="Crear Artículo"></Boton>
+                <Boton tipo="submit" texto="Editar Artículo"></Boton>
             </form>
         </div>
     );

@@ -48,7 +48,7 @@ export default function FormularioCpu({  sockets, marcas, articulo }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('articulo.store', data))
+        post(route('articulo.update', data))
     };
      function validar(target)    {
         if (target.validity.valid) {
@@ -90,6 +90,7 @@ export default function FormularioCpu({  sockets, marcas, articulo }) {
                         type="text"
                         name="nombre"
                         id="nombre"
+                        maxLength="120"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Introduzca el nombre del componente"
                         required
@@ -230,7 +231,7 @@ export default function FormularioCpu({  sockets, marcas, articulo }) {
                         </div>
                     </div>
                 </div>
-                <Boton tipo="submit" texto="Aditar Artículo"></Boton>
+                <Boton tipo="submit" texto="Editar Artículo"></Boton>
             </form>
         </div>
     );

@@ -46,33 +46,37 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
                 <Head title="Tienda" />
             </LayoutLogueado>
             <Alertas></Alertas>
+
             <div className=' lg:flex w-full min-h-screen lg:p-20'>
+                {articulos && articulos.length ? (
+                    <>
+                        <div className='flex flex-col justify-start items-center w-full lg:w-3/4'>
+                            {articulos.map((articulo) => (
+                                <Linea
+                                    key={articulo.id}
+                                    nombre={articulo.nombre}
+                                    precio={articulo.precio}
+                                    imagen={articulo.fotos[0].imagen}
+                                    cantidad={articulo.pivot.cantidad}
+                                    id={articulo.id}
+                                    recargarArticulos={recargarArticulos}
+                                />
+                            ))}
+                        </div>
 
-                {articulos ? (
-                    <div className='flex flex-col justify-start items-center w-full lg:w-3/4'>
-                        {articulos.map((articulo) => (
-                            <Linea
-                                key={articulo.id}
-                                nombre={articulo.nombre}
-                                precio={articulo.precio}
-                                imagen={articulo.fotos[0].imagen}
-                                cantidad={articulo.pivot.cantidad}
-                                id={articulo.id}
-                                recargarArticulos={recargarArticulos}
-                            />
-                        ))}
-                    </div>
+
+                        <div className='w-full lg:w-1/4 flex flex-col justify-start items-center lg:block'>
+                            <p className="font-semibold text-2xl p-5">SUBTOTAL</p>
+                            <p className='p-5'>{cantidadTotal} articulos en el carrito</p>
+                            <p className='p-5 text-xl font-semibold'>{precioTotal} €</p>
+                            <Boton texto="Comprar"></Boton>
+                        </div>
+                    </>
                 ) : (
-                    <h1>No hay articulos en el carrito</h1>
+                    <h1 className="font-semibold text-2xl text-center w-full p-20">No hay articulos en el carrito</h1>
                 )}
-
-                <div className='w-full lg:w-1/4 flex flex-col justify-start items-center lg:block'>
-                    <p className="font-semibold text-2xl p-5">SUBTOTAL</p>
-                    <p className='p-5'>{cantidadTotal} articulos en el carrito</p>
-                    <p className='p-5 text-xl font-semibold'>{precioTotal} €</p>
-                    <Boton texto="Comprar"></Boton>
-                </div>
             </div>
+
             <Footer></Footer>
             <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
         </>

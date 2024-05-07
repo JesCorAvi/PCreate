@@ -5,19 +5,13 @@ use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\DomicilioController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocketController;
-use App\Models\Domicilio;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect()->route('articulo.index');
 });
+
 
 
 Route::get('/dashboard', function () {

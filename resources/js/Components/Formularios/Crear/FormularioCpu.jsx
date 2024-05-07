@@ -76,8 +76,8 @@ export default function FormularioCpu({ sockets, marcas }) {
                     <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modelo</label>
                     <input
                         value={data.nombre}
-                        pattern={validation.precio}
-                        maxLength="200"
+                        pattern={validation.nombre}
+                        maxLength="120"
                         type="text"
                         name="nombre"
                         id="nombre"

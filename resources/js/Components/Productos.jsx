@@ -3,9 +3,11 @@ import Filtro from '@/Components/Filtro';
 import Pieza from '@/Components/Pieza';
 import React, { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import Modal from '@/Components/Modal';
+import BotonGrande from '@/Components/BotonGrande';
 
 
-export default function Productos({ articulos, categorias, marcas,cantidad, active = false, classNameName = '', children, ...props }) {
+export default function Productos({ articulos, categorias, marcas, cantidad, active = false, classNameName = '', children, ...props }) {
     function acortar(cadena, longitud) {
         if (cadena.length <= longitud) {
             return cadena; // Devuelve la cadena original si es igual o menor que la longitud especificada
@@ -15,22 +17,22 @@ export default function Productos({ articulos, categorias, marcas,cantidad, acti
     }
     const [articulosFiltrados, setArticulos] = useState(articulos);
     const filtrar = (categoria, marca, precioMinimo, precioMaximo) => {
-            const params = {};
-            if (categoria != "") {
-                params.categoria = categoria;
-            }
-            if (marca != "") {
-                params.marca = marca;
-            }
-            if (precioMinimo != "") {
-                params.precioMinimo = precioMinimo;
-            }
-            if (precioMaximo != "") {
-                params.precioMaximo = precioMaximo;
-            }
-            router.get(route('articulo.index', params));
+        const params = {};
+        if (categoria != "") {
+            params.categoria = categoria;
+        }
+        if (marca != "") {
+            params.marca = marca;
+        }
+        if (precioMinimo != "") {
+            params.precioMinimo = precioMinimo;
+        }
+        if (precioMaximo != "") {
+            params.precioMaximo = precioMaximo;
+        }
+        router.get(route('articulo.index', params));
 
-        };
+    };
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
     const [visibleLinks, setVisibleLinks] = useState(articulosFiltrados.links);
     useEffect(() => {
@@ -44,7 +46,15 @@ export default function Productos({ articulos, categorias, marcas,cantidad, acti
         }
     }, [isSmallScreen, articulosFiltrados.links]);
 
+    const [isAddToCartModalVisible, setIsAddToCartModalVisible] = useState(false);
 
+    const handleAddToCartClick = () => {
+        setIsAddToCartModalVisible(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsAddToCartModalVisible(false);
+    };
     return (
         <>
             <div className="flex min-h-screen">
@@ -53,6 +63,15 @@ export default function Productos({ articulos, categorias, marcas,cantidad, acti
                     filtrar={filtrar}
                 >
                 </Filtro>
+                <Modal className="p-6" show={isAddToCartModalVisible} onClose={handleCloseModal}>
+                    <div className='flex flex-col items-center'>
+                        <img className='w-32 y-32 m-5 pt-5' src="http://127.0.0.1:8000/assets/exito.svg"></img>
+                        <h2 className="text-lg text-gray-900 font-semibold pt-5">
+                            Producto añadido al carrito
+                        </h2>
+                    </div>
+                    <BotonGrande onClick={handleCloseModal} texto={"Aceptar"}></BotonGrande>
+                </Modal>
                 <div className="flex justify-center items-center w-full pb-10">
                     {articulosFiltrados.data.length === 0 ? (
                         <h1 className='font-semibold text-xl'>No hay artículos</h1>
@@ -66,6 +85,7 @@ export default function Productos({ articulos, categorias, marcas,cantidad, acti
                                     precio={art.precio}
                                     ruta={route("articulos.show", { id: art.id })}
                                     id={art.id}
+                                    handleAddToCartClick={handleAddToCartClick}
                                 />
                             ))}
                         </section>

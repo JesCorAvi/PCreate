@@ -62,7 +62,7 @@ export default function FormularioRam({marcas }) {
                     <input
                         value={data.nombre}
                         pattern={validation.nombre}
-
+                        maxLength="120"
                         type="text"
                         name="nombre"
                         id="nombre"

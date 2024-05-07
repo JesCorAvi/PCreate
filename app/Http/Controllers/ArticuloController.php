@@ -16,6 +16,10 @@ use Inertia\Response;
 use App\Models\Socket;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
+use App\Rules\ImagenOCadena;
+
 
 
 class ArticuloController extends Controller
@@ -105,7 +109,7 @@ class ArticuloController extends Controller
             'imagenpr' => 'required|image',
             'imagensec1' => 'required|image',
             'imagensec2' => 'required|image',
-            "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:200",
+            "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:120",
             "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
             "precio" => "required|regex:/^\d*\.?\d*$/",
         ]);
@@ -316,14 +320,16 @@ class ArticuloController extends Controller
      */
     public function update(Request $request)
     {
-        $request->validate([
-            'imagenpr' => 'image',
-            'imagensec1' => 'image',
-            'imagensec2' => 'image',
-            "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:200",
-            "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
-            "precio" => "required|regex:/^\d*\.?\d*$/",
-        ]);
+        //problemas en la validacion de las imagenes, si se envia cadena peta
+            $request->validate([
+                'imagenpr' =>  [new ImagenOCadena],
+                'imagensec1' =>  [new ImagenOCadena],
+                'imagensec2' =>  [new ImagenOCadena],
+                "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:120",
+                "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
+                "precio" => "required|regex:/^\d*\.?\d*$/",
+            ]);
+
 
         $articulo = Articulo::find($request->id);
         $datosComunes = [
@@ -518,7 +524,7 @@ class ArticuloController extends Controller
         }
 
         if ($articulo) {
-            return redirect()->route('articulos.show', ['id' => $articulo->id])->with('success', 'Articulo creado exitosamente.');
+            return redirect()->route('articulos.show', ['id' => $articulo->id])->with('success', 'Articulo editado exitosamente.');
         } else {
             return redirect()->back()->with('error', 'Error al crear el articulo.');
         }
@@ -553,14 +559,14 @@ function subirImagen($image, $ruta)
     $image->storeAs($ruta, $name, 'public');
 
     // Procesar la imagen
-    /*
-    $manager = new ImageManager();
-    $imageR = $manager->make($image->getRealPath());
-    $imageR->scaleDown(400); // Ajusta esto según tus necesidades
+
+    $manager = new ImageManager(new Driver());
+    $imageR = $manager->read(Storage::disk('public')->get('uploads/articulos/' . $name));
+    $imageR->scaleDown(1000); // Ajusta esto según tus necesidades
 
     // Guardar la imagen procesada
-    $imageR->save(public_path('storage/' . $name . '/' . $name));
-    */
+    $imageR->save(public_path('storage/uploads/articulos/' . $name));
+
 
     return $name;
 }

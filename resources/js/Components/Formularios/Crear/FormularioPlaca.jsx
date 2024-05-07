@@ -77,7 +77,7 @@ export default function FormularioPlaca({ sockets, marcas }) {
                     <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modelo</label>
                     <input
                         pattern={validation.nombre}
-                        maxLength="200"
+                        maxLength="120"
                         value={data.nombre}
                         type="text"
                         name="nombre"
