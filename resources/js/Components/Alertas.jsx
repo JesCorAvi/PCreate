@@ -10,10 +10,17 @@ export default function Busqueda({categorias}) {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
+        let timer;
         if (messages.success) {
             setOpen(true);
+            timer = setTimeout(() => {
+                setOpen(false);
+            }, 5000); // 5 segundos
         }
-    }, [messages.success]);
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [messages]);
 
 
     return (

@@ -6,7 +6,9 @@ import PrimaryButton from './PrimaryButton';
 import Alertas from './Alertas';
 import useCarritoStore from '@/carritoStore';
 import axios from 'axios';
-import Modal from '@/Components/Modal'; // Asegúrate de importar tu componente Modal
+import Modal from '@/Components/Modal';
+import SecondaryButton from './SecondaryButton';
+
 
 
 
@@ -99,7 +101,11 @@ export default function Pieza({ active = false, classNameName = '', children, ar
                         </div>
                         <Modal className="p-6" show={isAddToCartModalVisible} onClose={handleCloseModal}>
                             <div className='flex flex-col items-center'>
-                                <img className='w-32 y-32 m-5 pt-5' src="http://127.0.0.1:8000/assets/exito.svg"></img>
+                                <img
+                                    className={`w-32 y-32 m-5 pt-5 ${isAddToCartModalVisible ? 'aparecer' : ''}`}
+                                    src="http://127.0.0.1:8000/assets/exito.svg"
+
+                                ></img>
                                 <h2 className="text-lg text-gray-900 font-semibold pt-5">
                                     Producto añadido al carrito
                                 </h2>
@@ -174,10 +180,14 @@ export default function Pieza({ active = false, classNameName = '', children, ar
                         <p className="mt-1 text-lg px-10 text-gray-600">
                             Esta acción no puede ser revertida.
                         </p>
-                        <Link className=" text-white bg-red-900 hover:bg-red-600 rounded-md m-10 p-1" as='Button' method="DELETE" href={route("articulo.destroy", articulo.id)}>
-                            Borrar artículo
-                        </Link>
-                        <button className=" text-white bg-black hover:bg-slate-700 rounded-md p-1" onClick={handleCloseModal}>Cancelar</button>
+                        <div className="mt-6 flex justify-end p-6 gap-3">
+
+                            <Link className=" `inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150" as='Button' method="DELETE" href={route("articulo.destroy", articulo.id)}>
+                                Borrar artículo
+                            </Link>
+                            <SecondaryButton type='button' onClick={handleCloseModal}>Cancelar</SecondaryButton>
+                        </div>
+
                     </Modal>
 
 

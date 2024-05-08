@@ -19,7 +19,7 @@ export default function Direcciones({ auth, domicilios, provincias }) {
                 {domicilios ? (
                     domicilios.map((direccion) => (
 
-                        <div>
+                        <div key={direccion.id}>
                             <Direccion
                                 id={direccion.id}
                                 direccion={direccion.direccion}
