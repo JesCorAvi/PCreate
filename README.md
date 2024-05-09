@@ -6,7 +6,7 @@ PASOS PARA EJECUTAR EL PROYECTO
 
 3.hacer cp .env.example .env para regenerar el archivo .env. Tras esto rellenarlo con los datos de la base de datos.
 
-4. Regenerar la clave de la aplicacion con php artisan key:generate
+4. Regenerar la clave de la aplicacion con php artisan key:generate.
 
 5.Ejecutar php artisan migrate para migrar las tablas de la base de datos.
 
