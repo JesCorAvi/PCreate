@@ -13,11 +13,17 @@ export default function Layout({ user, header, children, categorias }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const { cantidadArticulos } = useCarritoStore();
     const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
+    const { actualizarCantidadArticulosCookies } = useCarritoStore((state) => state);
+
 
     const { carrito } = usePage().props;
 
     useEffect(() => {
-       actualizarCantidadArticulos();
+        if(user){
+            actualizarCantidadArticulos();
+        }else{
+            actualizarCantidadArticulosCookies();
+        }
     }, []); // Dependencias vacías para que se ejecute solo al montar el componente
 
     return (

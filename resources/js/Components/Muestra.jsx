@@ -12,8 +12,10 @@ import SecondaryButton from './SecondaryButton';
 
 
 
-export default function Pieza({ active = false, classNameName = '', children, articulo }) {
+export default function Pieza({user, active = false, classNameName = '', children, articulo }) {
     const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
+    const { actualizarCantidadArticulosCookies } = useCarritoStore((state) => state);
+
 
     const imagenpr = articulo.fotos.find(foto => foto.orden === 1)?.imagen;
     const imagenSec1 = articulo.fotos.find(foto => foto.orden === 2)?.imagen;
@@ -29,13 +31,31 @@ export default function Pieza({ active = false, classNameName = '', children, ar
 
     function añadirAlCarrito() {
         handleAddToCartClick()
-        axios.post(route('carrito.store'), {
-            articulo_id: articulo.id,
-        }).then(response => {
-            actualizarCantidadArticulos();
-        }).catch(error => {
-            console.log(error);
-        });
+        if(user){
+            axios.post(route('carrito.store'), {
+                articulo_id: articulo.id,
+            }).then(response => {
+                actualizarCantidadArticulos();
+            }).catch(error => {
+                console.log(error);
+            });
+        }else{
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            let articuloEncontrado = carrito.find(art => art.articulo_id === articulo.id);
+            if (articuloEncontrado) {
+                articuloEncontrado.cantidad++;
+            } else {
+                carrito.push({
+                    articulo_id: articulo.id,
+                    nombre: articulo.nombre,
+                    precio: articulo.precio,
+                    foto: articulo.fotos[0].imagen,
+                    cantidad: 1
+                });
+            }
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            actualizarCantidadArticulosCookies();
+        }
     }
 
     function acortar(cadena, longitud) {

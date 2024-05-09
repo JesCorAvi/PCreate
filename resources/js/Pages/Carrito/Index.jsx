@@ -7,10 +7,14 @@ import Boton from '@/Components/Boton';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
+
 export default function Index({ auth, categorias, articulos: InitialArticulos, cantidad }) {
     const [articulos, setArticulos] = useState(InitialArticulos);
     const [precioTotal, setPrecioTotal] = useState(Total());
     const [cantidadTotal, setCantidadTotal] = useState(cantidad);
+    if (!auth.user) {
+        setArticulos(JSON.parse(localStorage.getItem('carrito')));
+    }
 
 
     function Total() {
