@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect('/tienda');
+        return redirect('/tienda')->with('borrarLocalStorage', true);
     }
 
     /**

@@ -8,26 +8,55 @@ import { Link } from '@inertiajs/react';
 export default function Linea({ auth, nombre, precio, imagen, cantidad: initialCantidad, id, recargarArticulos, ruta }) {
     const [cantidad, setCantidad] = useState(initialCantidad);
     const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
+    const { actualizarCantidadArticulosCookies } = useCarritoStore((state) => state);
+
 
     function modificarCantidad(tipo) {
-        axios.post("carrito/update", {
-            tipo: tipo,
-            articulo_id: id
-        }).then(response => {
-            setCantidad(response.data.cantidad);
-            recargarArticulos();
-            actualizarCantidadArticulos();
+        if(auth.user){
+            axios.post("carrito/update", {
+                tipo: tipo,
+                articulo_id: id
+            }).then(response => {
+                setCantidad(response.data.cantidad);
+                recargarArticulos();
+                actualizarCantidadArticulos();
+            });
+        }else{
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            let articulo = carrito.find(articulo => articulo.id == id);
+            if (tipo == "+") {
+                articulo.pivot.cantidad++;
+            } else {
+                if (articulo.pivot.cantidad > 1) {
+                    articulo.pivot.cantidad--;
+                }else{
+                    carrito = carrito.filter(item => item.id !== id);
 
-        });
+                }
+            }
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            setCantidad(articulo.pivot.cantidad);
+            recargarArticulos();
+            actualizarCantidadArticulosCookies();
+        }
+
     }
     function borrar() {
-        axios.post("carrito/destroy", {
-            articulo_id: id
-        }).then(response => {
-            recargarArticulos();
-            actualizarCantidadArticulos();
+        if(auth.user){
+            axios.post("carrito/destroy", {
+                articulo_id: id
+            }).then(response => {
+                recargarArticulos();
+                actualizarCantidadArticulos();
 
-        });
+            });
+        }else{
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            carrito = carrito.filter(item => item.id !== id);
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            recargarArticulos();
+            actualizarCantidadArticulosCookies();
+        }
     }
     return (
         <div className="border-2 border-solid border-black rounded-md my-5 w-4/6">
