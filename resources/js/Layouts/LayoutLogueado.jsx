@@ -16,7 +16,6 @@ export default function Layout({ user, header, children, categorias }) {
     const { actualizarCantidadArticulosCookies } = useCarritoStore((state) => state);
 
 
-    const { carrito } = usePage().props;
 
     useEffect(() => {
         if(user){
@@ -24,7 +23,7 @@ export default function Layout({ user, header, children, categorias }) {
         }else{
             actualizarCantidadArticulosCookies();
         }
-    }, []); // Dependencias vacías para que se ejecute solo al montar el componente
+    }, [user]);
 
     return (
         <div className=" bg-white >">
@@ -92,7 +91,7 @@ export default function Layout({ user, header, children, categorias }) {
 
                                         <Dropdown.Content>
                                             <Dropdown.Link href={route('profile.show')}>Perfil</Dropdown.Link>
-                                            <Dropdown.Link href={route('logout')} method="post" as="button">
+                                            <Dropdown.Link  href={route('logout')} method="post" as="button">
                                                 Cerrar sesion
                                             </Dropdown.Link>
                                         </Dropdown.Content>

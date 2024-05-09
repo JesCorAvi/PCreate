@@ -15,11 +15,11 @@ const useCarritoStore = create((set) => ({
     },
     actualizarCantidadArticulosCookies: () => {
         let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-        let total = 0;
-        for(let i = 0; i < carrito.length; i++) {
-            total += carrito[i].cantidad;
-        }
-        set({ cantidadArticulos: total })
+        var total = 0;
+        carrito.forEach(e => {
+            total += e.pivot.cantidad;
+        });
+        set({ cantidadArticulos: total });
     }
 }));
 

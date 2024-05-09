@@ -12,7 +12,9 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
+        carrito: "",
     });
+    data.carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
     useEffect(() => {
         return () => {
@@ -22,8 +24,8 @@ export default function Register() {
 
     const submit = (e) => {
         e.preventDefault();
-
         post(route('register'));
+
     };
 
     return (
@@ -33,7 +35,7 @@ export default function Register() {
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="name" value="Nombre" />
-
+                    <input type="hidden" value={data.carrito} name="carrito"/>
                     <TextInput
                         id="name"
                         name="name"

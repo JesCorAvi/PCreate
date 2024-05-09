@@ -56,7 +56,7 @@ class ArticuloController extends Controller
         }
 
         if ($palabrasClave) {
-            $query->where('nombre', 'like', '%' . $palabrasClave . '%');
+            $query->where('nombre', 'ilike', '%' . $palabrasClave . '%');
         }
 
         // Obtener los resultados filtrados
@@ -105,14 +105,19 @@ class ArticuloController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'imagenpr' => 'required|image',
-            'imagensec1' => 'required|image',
-            'imagensec2' => 'required|image',
-            "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:120",
-            "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
-            "precio" => "required|regex:/^\d*\.?\d*$/",
-        ]);
+        try{
+            $request->validate([
+                'imagenpr' => 'required|image',
+                'imagensec1' => 'required|image',
+                'imagensec2' => 'required|image',
+                "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:120",
+                "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/s",
+                "precio" => "required|regex:/^\d*\.?\d*$/",
+            ]);
+        }
+        catch(ValidationException $e){
+            dd($e->errors());
+        }
 
 
         $datosComunes = [
@@ -326,7 +331,7 @@ class ArticuloController extends Controller
                 'imagensec1' =>  [new ImagenOCadena],
                 'imagensec2' =>  [new ImagenOCadena],
                 "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:120",
-                "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
+                "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/s",
                 "precio" => "required|regex:/^\d*\.?\d*$/",
             ]);
 

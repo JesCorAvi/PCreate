@@ -44,10 +44,10 @@ class HandleInertiaRequests extends Middleware
             'messages' => fn () => [
                 'success' => Session::get('success'),
                 'error' => Session::get('error'),
+                'borrarLocalStorage' => Session::get('borrarLocalStorage'),
+
             ],
-            //'carrito' => fn () => [
-            //    'total' => optional(optional(Carrito::with('articulos')->where('user_id', auth()->id())->first())->articulos)->count() ?? 0
-            //],
+
         ];
     }
 }

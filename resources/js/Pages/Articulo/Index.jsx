@@ -2,10 +2,19 @@ import LayoutLogueado from '@/Layouts/LayoutLogueado';
 import Footer from '@/Layouts/Footer';
 import Productos from '@/Components/Productos';
 import Alertas from '@/Components/Alertas';
+import { usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
 
 import { Head } from '@inertiajs/react';
 
 export default function Index({ auth, categorias, marcas, articulos, cantidad }) {
+    const { messages } = usePage().props;
+    console.log(messages.borrarLocalStorage);
+    useEffect(() => {
+        if (messages.borrarLocalStorage) {
+          localStorage.removeItem("carrito");
+        }
+      }, [messages.borrarLocalStorage]);
     return (
         <>
             <LayoutLogueado

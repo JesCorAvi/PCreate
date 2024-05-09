@@ -9,33 +9,51 @@ import { useEffect } from 'react';
 
 
 export default function Index({ auth, categorias, articulos: InitialArticulos, cantidad }) {
+
+
     const [articulos, setArticulos] = useState(InitialArticulos);
     const [precioTotal, setPrecioTotal] = useState(Total());
     const [cantidadTotal, setCantidadTotal] = useState(cantidad);
-    if (!auth.user) {
-        setArticulos(JSON.parse(localStorage.getItem('carrito')));
-    }
+    useEffect(() => {
+        if (!auth.user) {
+            let carrito = JSON.parse(localStorage.getItem('carrito'));
+            setArticulos(carrito);
+            setCantidadTotal(Total() );
+        }
+    }, []);
 
 
     function Total() {
         let total = 0;
         if (!articulos) return 0;
-        articulos.forEach(articulo => {
-            total += articulo.precio * articulo.pivot.cantidad;
-        });
+            articulos.forEach(articulo => {
+                total += articulo.precio * articulo.pivot.cantidad;
+            });
         return total.toFixed(2);;
+
     }
+
     function recargarArticulos() {
-        axios.get("/carritoActualizar").then(response => {
-            setArticulos(response.data.articulos);
-            setCantidadTotal(response.data.cantidad);
+        if(auth.user){
+            axios.get("/carritoActualizar").then(response => {
+                setArticulos(response.data.articulos);
+                setCantidadTotal(response.data.cantidad);
+            }).catch(error => {
+                console.error('Error al cargar los artículos:', error);
+            });
+            return;
+        }else{
+            let carrito = JSON.parse(localStorage.getItem('carrito'));
+            setArticulos(carrito);
+            let total = 0;
+            carrito.forEach(e => {
+                total += e.pivot.cantidad;
+            });
+            setCantidadTotal(total);
+        }
 
-        }).catch(error => {
-            console.error('Error al cargar los artículos:', error);
-        });
     }
 
-    // Asegúrate de tener 'articulos' como dependencia para este efecto
     useEffect(() => {
         setPrecioTotal(Total());
     }, [articulos]);
@@ -57,6 +75,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
                         <div className='flex flex-col justify-start items-center w-full lg:w-3/4'>
                             {articulos.map((articulo) => (
                                 <Linea
+                                    auth={auth}
                                     key={articulo.id}
                                     nombre={articulo.nombre}
                                     precio={articulo.precio}

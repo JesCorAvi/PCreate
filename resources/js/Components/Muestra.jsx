@@ -46,11 +46,11 @@ export default function Pieza({user, active = false, classNameName = '', childre
                 articuloEncontrado.cantidad++;
             } else {
                 carrito.push({
-                    articulo_id: articulo.id,
+                    id: articulo.id,
                     nombre: articulo.nombre,
                     precio: articulo.precio,
-                    foto: articulo.fotos[0].imagen,
-                    cantidad: 1
+                    fotos:[{imagen: articulo.fotos[0].imagen}],
+                    pivot: { cantidad: 1 },
                 });
             }
             localStorage.setItem('carrito', JSON.stringify(carrito));

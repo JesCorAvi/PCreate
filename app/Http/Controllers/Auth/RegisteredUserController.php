@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Carrito;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -12,6 +13,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Cookie;
+
+
 
 
 class RegisteredUserController extends Controller
@@ -41,11 +45,18 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        $articulos = $request->carrito;
+        $carrito = Carrito::create([
+            'user_id' => $user->id,
+        ]);
+        foreach($articulos as $articulo){
+            $carrito->articulos()->attach($articulo["id"], ['cantidad' => $articulo["pivot"]["cantidad"]]);
+        }
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect('/tienda');
-    }
+        return redirect('/tienda')->with('borrarLocalStorage', true);
+        }
 }

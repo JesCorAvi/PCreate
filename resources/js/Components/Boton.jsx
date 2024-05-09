@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function Boton({texto, tipo, onClick }) {
+export default function Boton({texto, tipo, onClick = () => {} } ) {
     const [isClicked, setIsClicked] = useState(false);
 
     const handleClick = () => {
