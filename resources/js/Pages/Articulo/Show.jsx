@@ -13,6 +13,7 @@ export default function Show({ auth, categorias, articulo}) {
                 header={<h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center"></h2>}
                 categorias = {categorias}
             />
+            <Head title="Detalles" />
             <Muestra
                 articulo = {articulo}
 

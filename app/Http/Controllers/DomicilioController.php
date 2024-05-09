@@ -32,6 +32,12 @@ class DomicilioController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'direccion' => 'required',
+            'ciudad' => 'required|max:150',
+            'cpostal' => 'required|integer|digits:5',
+            'provincia_id' => 'required',
+        ]);
         Domicilio::create([
             "direccion" => $request->direccion,
             "ciudad" => $request->ciudad,
@@ -64,6 +70,12 @@ class DomicilioController extends Controller
      */
     public function update(Request $request)
     {
+        $request->validate([
+            'direccion' => 'required',
+            'ciudad' => 'required|max:150',
+            'cpostal' => 'required|integer|digits:5',
+            'provincia_id' => 'required',
+        ]);
         $domicilio = Domicilio::find($request->id);
 
         $domicilio->update([

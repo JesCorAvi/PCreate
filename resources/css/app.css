@@ -52,9 +52,25 @@
         width: 35rem;
     }
     .h-imagen {
-        width: 35rem;
+        height: 35rem;
     }
 
 .h-comp {
     height: 28rem
 }
+@keyframes aparecer {
+    0% {
+      transform: scale(0); /* Comienza invisible */
+    }
+    50% {
+      transform: scale(1.2); /* Aumenta al 120% */
+    }
+    100% {
+      transform: scale(1); /* Vuelve al tamaño original */
+    }
+  }
+
+  /* Aplica la animación a la imagen */
+  img.aparecer {
+    animation: aparecer 0.5s ease-out; /* Duración de la animación y función de tiempo */
+  }

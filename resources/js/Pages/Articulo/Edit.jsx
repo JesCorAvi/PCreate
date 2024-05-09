@@ -10,9 +10,12 @@ import FormularioFuente from '@/Components/Formularios/Editar/FormularioFuente';
 import FormularioCaja from '@/Components/Formularios/Editar/FormularioCaja';
 import FormularioVentilador from '@/Components/Formularios/Editar/FormularioVentilador';
 import Alertas from '@/Components/Alertas';
+import { Head } from '@inertiajs/react';
+
 
 export default function Show({ auth, categorias, articulo, marcas, sockets }) {
     <Alertas></Alertas>
+
     let Formulario;
     switch (articulo.categoria.nombre) {
         case "Placa base":
@@ -47,6 +50,7 @@ export default function Show({ auth, categorias, articulo, marcas, sockets }) {
 
     return (
         <>
+            <Head title="Editar Artículo" />
             <LayoutLogueado
                 user={auth.user}
                 header={<h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center"></h2>}

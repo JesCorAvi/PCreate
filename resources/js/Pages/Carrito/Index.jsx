@@ -43,7 +43,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
                 categorias={categorias}
 
             >
-                <Head title="Tienda" />
+                <Head title="Carrito" />
             </LayoutLogueado>
             <Alertas></Alertas>
 
@@ -60,6 +60,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
                                     cantidad={articulo.pivot.cantidad}
                                     id={articulo.id}
                                     recargarArticulos={recargarArticulos}
+                                    ruta={route("articulos.show", { id: articulo.id })}
                                 />
                             ))}
                         </div>
