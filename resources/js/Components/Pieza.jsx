@@ -3,14 +3,15 @@ import Boton from './Boton';
 import useCarritoStore from '../carritoStore';
 
 
-export default function Pieza({ active = false, classNameName = '',handleAddToCartClick, children, ...props }) {
+export default function Pieza({user, active = false, classNameName = '',handleAddToCartClick, children, ...props }) {
     const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
+    const { actualizarCantidadArticulosCookies } = useCarritoStore((state) => state);
 
     function añadirAlCarrito() {
         handleAddToCartClick()
         if(user){
             axios.post(route('carrito.store'), {
-                articulo_id: articulo.id,
+                articulo_id: props.id,
             }).then(response => {
                 actualizarCantidadArticulos();
             }).catch(error => {
@@ -18,15 +19,15 @@ export default function Pieza({ active = false, classNameName = '',handleAddToCa
             });
         }else{
             let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-            let articuloEncontrado = carrito.find(art => art.articulo_id === articulo.id);
+            let articuloEncontrado = carrito.find(art => art.articulo_id === props.id);
             if (articuloEncontrado) {
                 articuloEncontrado.cantidad++;
             } else {
                 carrito.push({
-                    id: articulo.id,
-                    nombre: articulo.nombre,
-                    precio: articulo.precio,
-                    fotos:[{imagen: articulo.fotos[0].imagen}],
+                    id: props.id,
+                    nombre: props.nombre,
+                    precio: props.precio,
+                    fotos:[{imagen: props.imagen}],
                     pivot: { cantidad: 1 },
                 });
             }
