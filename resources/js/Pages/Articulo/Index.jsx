@@ -30,6 +30,7 @@ export default function Index({ auth, categorias, marcas, articulos, cantidad })
                 marcas = {marcas}
                 articulos = {articulos}
                 cantidad = {cantidad}
+                user = {auth.user}
             >
             </Productos>
             <Footer></Footer>

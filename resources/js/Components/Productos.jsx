@@ -7,7 +7,7 @@ import Modal from '@/Components/Modal';
 import BotonGrande from '@/Components/BotonGrande';
 
 
-export default function Productos({ articulos, categorias, marcas, cantidad, active = false, classNameName = '', children, ...props }) {
+export default function Productos({user, articulos, categorias, marcas, cantidad, active = false, classNameName = '', children, ...props }) {
     function acortar(cadena, longitud) {
         if (cadena.length <= longitud) {
             return cadena; // Devuelve la cadena original si es igual o menor que la longitud especificada
@@ -90,6 +90,7 @@ export default function Productos({ articulos, categorias, marcas, cantidad, act
                                     ruta={route("articulos.show", { id: art.id })}
                                     id={art.id}
                                     handleAddToCartClick={handleAddToCartClick}
+                                    user = {user}
                                 />
                             ))}
                         </section>
