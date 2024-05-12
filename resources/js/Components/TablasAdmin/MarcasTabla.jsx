@@ -9,12 +9,16 @@ export default function MarcasTabla() {
     const [Marcas, setMarcas] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [creatingMarca, setCreatingMarca] = useState(false); // Nuevo estado para controlar la apertura del modal
-    const [nombreMarca, setNombreMarca] = useState('');
+    const [creatingMarca, setCreatingMarca] = useState(false);
+    const [modifyingMarca, setModifyingMarca] = useState(false);
+    const [marcaIdToModify, setMarcaIdToModify] = useState(null);
+    const [nombreNuevaMarca, setNombreNuevaMarca] = useState('');
+    const [nombreMarcaModificar, setNombreMarcaModificar] = useState('');
 
     useEffect(() => {
         getMarcas(currentPage);
-    }, [currentPage]); // Se vuelve a cargar cuando cambia la página actual
+    }, [currentPage]);
+
     function getMarcas(page) {
         axios.post(`http://127.0.0.1:8000/marcas/getMarca?page=${page}`)
             .then((response) => {
@@ -24,6 +28,18 @@ export default function MarcasTabla() {
             .catch((error) => {
                 console.error('Error al obtener Marcas:', error);
             });
+    }
+
+    function openModifyModal(id, nombre) {
+        setMarcaIdToModify(id);
+        setNombreMarcaModificar(nombre);
+        setModifyingMarca(true);
+    }
+
+    function closeModifyModal() {
+        setModifyingMarca(false);
+        setMarcaIdToModify(null);
+        setNombreMarcaModificar('');
     }
 
     function changePage(page) {
@@ -36,51 +52,75 @@ export default function MarcasTabla() {
     }
 
     function delMarcas(id) {
-        axios.post(route('marca.destroy', id ))
-            .then((response) => {
-                getMarcas()
-            });
-    }
-    function modMarcas(id) {
-        axios.post(route('marca.edit', { id: id }))
-            .then((response) => {
-                getMarcas()
-            });
-    }
-    function createMarca(e) {
-        e.preventDefault();
-        axios.post(route('marca.store',nombreMarca))
+        axios.post(route('marca.destroy', {id:id }))
             .then((response) => {
                 getMarcas();
-                setCreatingMarca(false); // Cerrar el modal después de crear la marca
-                setNombreMarca(''); // Limpiar el campo del nombre de la marca
+            });
+    }
+
+    function modifyMarca(e) {
+        e.preventDefault();
+        axios.post("/marca/update", { id: marcaIdToModify, nombre: nombreMarcaModificar })
+            .then((response) => {
+                getMarcas();
+                closeModifyModal();
+            })
+            .catch((error) => {
+                console.error('Error al modificar la marca:', error);
+            });
+    }
+
+    function createMarca(e) {
+        e.preventDefault();
+        axios.post("/marca/store",{nombre:nombreNuevaMarca})
+            .then((response) => {
+                getMarcas();
+                setCreatingMarca(false);
+                setNombreNuevaMarca('');
             })
             .catch((error) => {
                 console.error('Error al crear la marca:', error);
             });
     }
+
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <button className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold' onClick={() => setCreatingMarca(true)}> Crear Marca </button>
+            <button className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold' onClick={() => setCreatingMarca(true)}> Crear Marca </button>
 
-        {/* Modal para crear marca */}
-        <Modal show={creatingMarca} onClose={() => setCreatingMarca(false)}>
-        <form onSubmit={(e) => createMarca(e)} className="p-6">
+            <Modal show={creatingMarca} onClose={() => setCreatingMarca(false)}>
+                <form onSubmit={(e) => createMarca(e)} className="p-6">
+                    <h2 className="text-lg font-medium text-gray-900">Crear Marca</h2>
+                    <input
+                        type="text"
+                        placeholder="Nombre de la marca"
+                        value={nombreNuevaMarca}
+                        onChange={(e) => setNombreNuevaMarca(e.target.value)}
+                        className="mt-2 p-2 border rounded-md w-full"
+                    />
+                    <div className="mt-4 flex justify-end">
+                        <SecondaryButton onClick={() => setCreatingMarca(false)}>Cancelar</SecondaryButton>
+                        <button className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold' type="submit" >Crear Marca</button>
+                    </div>
+                </form>
+            </Modal>
 
-                <h2 className="text-lg font-medium text-gray-900">Crear Marca</h2>
-                <input
-                    type="text"
-                    placeholder="Nombre de la marca"
-                    value={nombreMarca}
-                    onChange={(e) => setNombreMarca(e.target.value)}
-                    className="mt-2 p-2 border rounded-md w-full"
-                />
-                <div className="mt-4 flex justify-end">
-                    <SecondaryButton onClick={() => setCreatingMarca(false)}>Cancelar</SecondaryButton>
-                    <button className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold' type="submit" >Crear Marca</button>
-                </div>
-            </form>
-        </Modal>
+            <Modal show={modifyingMarca} onClose={closeModifyModal}>
+                <form onSubmit={(e) => modifyMarca(e)} className="p-6">
+                    <h2 className="text-lg font-medium text-gray-900">Modificar Marca</h2>
+                    <input
+                        type="text"
+                        placeholder="Nombre de la marca"
+                        value={nombreMarcaModificar}
+                        onChange={(e) => setNombreMarcaModificar(e.target.value)}
+                        className="mt-2 p-2 border rounded-md w-full"
+                    />
+                    <div className="mt-4 flex justify-end">
+                        <SecondaryButton onClick={closeModifyModal}>Cancelar</SecondaryButton>
+                        <button className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold' type="submit">Modificar Marca</button>
+                    </div>
+                </form>
+            </Modal>
+
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -100,8 +140,8 @@ export default function MarcasTabla() {
                                 <p className="text-center">{marca.nombre}</p>
                             </td>
                             <td className="px-6 py-4 flex gap-2 justify-center items-center">
-                                    <SecondaryButton onClick={() => modMarcas(marca.id)}>Editar</SecondaryButton>
-                                    <DangerButton text="Borrar" onClick={() => delMarcas(marca.id)}></DangerButton>
+                                <SecondaryButton onClick={() => openModifyModal(marca.id, marca.nombre)}>Editar</SecondaryButton>
+                                <DangerButton text="Borrar" onClick={() => delMarcas(marca.id)}></DangerButton>
                             </td>
                         </tr>
                     ))}

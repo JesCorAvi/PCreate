@@ -6,6 +6,8 @@ use App\Models\Marca;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMarcaRequest;
 use App\Http\Requests\UpdateMarcaRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MarcaController extends Controller
 {
@@ -33,7 +35,7 @@ class MarcaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreMarcaRequest $request)
+    public function store(Request $request)
     {
         Marca::Create([
             "nombre" => $request->nombre,
@@ -62,7 +64,7 @@ class MarcaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateMarcaRequest $request)
+    public function update(Request $request)
     {
         $marca = Marca::find($request->id);
         $marca->update([
@@ -73,9 +75,21 @@ class MarcaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UpdateMarcaRequest $request)
+    public function destroy(Request $request)
     {
         $marca = Marca::find($request->id);
-        $marca->delete();
+        if ($marca) {
+            foreach ($marca->articulos as $articulo) {
+                foreach ($articulo->fotos as $foto) {
+
+                    Storage::delete('uploads/articulos/' . $foto->nombre_archivo);
+
+                    $foto->delete();
+                }
+                $articulo->delete();
+            }
+
+            $marca->delete();
+        }
     }
 }

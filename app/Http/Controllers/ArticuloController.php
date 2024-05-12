@@ -533,7 +533,7 @@ class ArticuloController extends Controller
         }
 
         if ($articulo) {
-            return redirect()->route('articulos.show', ['id' => $articulo->id])->with('success', 'Articulo editado exitosamente.');
+            return redirect()->route('profile.show')->with('success', 'Articulo editado exitosamente.');
         } else {
             return redirect()->back()->with('error', 'Error al crear el articulo.');
         }
@@ -555,7 +555,7 @@ class ArticuloController extends Controller
 
         $articulo->delete();
 
-        return redirect()->route('articulo.index');
+        return redirect()->route('profile.show');
     }
 }
 

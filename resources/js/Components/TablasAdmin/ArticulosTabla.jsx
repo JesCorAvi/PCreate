@@ -33,17 +33,12 @@ export default function ArticulosTabla() {
     }
 
     function delArticulos(id) {
-        axios.delete(route('articulo.destroy', { id: id }))
+        axios.post(route('articulo.destroy', { id: id }))
             .then((response) => {
                 getArticulos()
             });
     }
-    function modArticulos(id) {
-        axios.post(route('articulo.edit', { id: id }))
-            .then((response) => {
-                getArticulos()
-            });
-    }
+
 
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -78,7 +73,7 @@ export default function ArticulosTabla() {
                                 {articulo.marca.nombre}
                             </td>
                             <td className="px-6 py-4 flex gap-2">
-                                <SecondaryButton onClick={() => modArticulos(articulo.id)}>Editar</SecondaryButton>
+                                <Link className='inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150' href={route('articulo.edit', articulo.id)} method="get" as="button"> Editar </Link>
                                 <DangerButton text="Borrar" onClick={() => delArticulos(articulo.id)}></DangerButton>
                             </td>
                         </tr>

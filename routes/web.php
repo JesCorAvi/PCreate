@@ -40,7 +40,7 @@ Route::get('/tienda', [ArticuloController::class, 'Tienda'])->name('articulo.ind
 Route::get('/tienda/{id}',[ArticuloController::class, 'show'])->name('articulos.show');
 Route::get('/tienda/editar/{id}',[ArticuloController::class, 'edit'])->name('articulo.edit');
 Route::post('/tienda/editado/{id}', [ArticuloController::class, 'update'])->name('articulo.update');
-Route::delete('/tienda/destruir/{id}', [ArticuloController::class, 'destroy'])->name('articulo.destroy');
+Route::post('/tienda/destruir/{id}', [ArticuloController::class, 'destroy'])->name('articulo.destroy');
 Route::post('/articulos/getArticulos', [ArticuloController::class, 'getArticulos'])->name('articulo.getArticulos')->middleware('auth');
 
 
@@ -51,7 +51,7 @@ Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index
 Route::get('/carritoActualizar', [CarritoController::class, 'articulos'])->name('carrito.articulos')->middleware('auth');
 
 Route::post('/marcas/getMarca', [MarcaController::class, 'getMarcas'])->name('marcas.getMarcas')->middleware('auth');
-Route::post('/marca/store', [MarcaController::class, 'store'])->name('marca.store')->middleware('auth');
+Route::post('/marca/store', [MarcaController::class, 'store'])->name('marca.store');
 Route::post('/marca/update', [MarcaController::class, 'update'])->name('marca.update')->middleware('auth');
 Route::post('/marca/destroy', [MarcaController::class, 'destroy'])->name('marca.destroy')->middleware('auth');
 
