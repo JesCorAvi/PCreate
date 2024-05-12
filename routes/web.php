@@ -55,6 +55,9 @@ Route::post('/carrito/store', [CarritoController::class, 'store'])->name('carrit
 Route::post('/carrito/update', [CarritoController::class, 'update'])->name('carrito.update')->middleware('auth');
 Route::post('/carrito/destroy', [CarritoController::class, 'destroy'])->name('carrito.destroy')->middleware('auth');
 
+Route::post('/perfil/getUsers', [ProfileController::class, 'getUsers'])->name('profile.getUsers')->middleware('auth');
+Route::post('/perfil/delUsers', [ProfileController::class, 'destroyId'])->name('profile.destroyId')->middleware('auth');
+
 
 Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index');
 
