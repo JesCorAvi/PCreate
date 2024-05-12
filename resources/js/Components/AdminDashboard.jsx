@@ -1,6 +1,8 @@
 
 import { useState } from 'react';
 import UsuariosTabla from '@/Components/TablasAdmin/UsuariosTabla';
+import ArticulosTabla from '@/Components/TablasAdmin/ArticulosTabla';
+import MarcasTabla from './TablasAdmin/MarcasTabla';
 
 export default function AdminDashboard({ }) {
 
@@ -22,9 +24,6 @@ export default function AdminDashboard({ }) {
                 <button className={tablaActual === 'Articulos' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('Articulos')}>
                     Articulos
                 </button>
-                <button className={tablaActual === 'Categorias' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('Categorias')}>
-                    Categorias
-                </button>
                 <button className={tablaActual === 'Marcas' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('Marcas')}>
                     Marcas
                 </button>
@@ -36,6 +35,10 @@ export default function AdminDashboard({ }) {
                 </button>
             </div>
             {tablaActual === 'Usuarios' && < UsuariosTabla/>}
+            {tablaActual === 'Articulos' && < ArticulosTabla/>}
+            {tablaActual === 'Marcas' && < MarcasTabla/>}
+
+
 
 
         </div>

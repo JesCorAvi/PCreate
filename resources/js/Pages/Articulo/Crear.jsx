@@ -3,7 +3,7 @@ import Footer from '@/Layouts/Footer';
 import CrearProducto from '@/Components/CrearProducto';
 
 
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 
 export default function Crear({ auth, categorias, marcas, sockets }) {
     return (
@@ -15,6 +15,7 @@ export default function Crear({ auth, categorias, marcas, sockets }) {
             >
                 <Head title="Crear Artículo" />
             </LayoutLogueado>
+            <Link href={route('profile.show')} className="underline px-10">Volver al dashboard</Link>
             <CrearProducto
                 categorias = {categorias}
                 marcas = {marcas}

@@ -24,9 +24,13 @@ use App\Rules\ImagenOCadena;
 
 class ArticuloController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    public function getArticulos()
+    {
+        $articulos = Articulo::with('categoria')->with("marca")->paginate(10);
+        return response()->json($articulos);
+    }
+
     public function Tienda(Request $request)
     {
         $categoria = $request->input('categoria');
