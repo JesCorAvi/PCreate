@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 class Factura extends Model
 {
     use HasFactory;
-
+    protected $fillable = ['user_id', 'domicilio_id'];
     public function provincia(): BelongsTo
     {
         return $this->belongsTo(Provincia::class);
@@ -20,7 +20,9 @@ class Factura extends Model
 
     public function articulos(): BelongsToMany
     {
-        return $this->belongsToMany(Articulo::class, 'articulo_factura');
+        return $this->belongsToMany(Articulo::class, 'articulo_factura')
+        ->withPivot('cantidad')
+        ->withTimestamps();
     }
 
 }

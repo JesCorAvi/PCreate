@@ -5,7 +5,7 @@ import Modal from '@/Components/Modal';
 import DangerButton from './DangerButton';
 import SecondaryButton from './SecondaryButton';
 
-export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_id, provincias, id, initialIsEditing }) {
+export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_id, provincias, id, telefono, initialIsEditing }) {
     const [isEditing, setIsEditing] = useState(!!id);
     const [lightboxVisible, setLightboxVisible] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -19,11 +19,12 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
     };
 
     const { data, setData, reset, post, put, errors } = useForm({
-        id: id,
-        direccion: direccion,
-        ciudad: ciudad,
-        cpostal: cpostal,
-        provincia_id: provincia_id
+        id: id || '',
+    direccion: direccion || '',
+    ciudad: ciudad || '',
+    cpostal: cpostal || '',
+    provincia_id: provincia_id || '',
+    telefono: telefono || ''
     });
 
     function crearDireccion(e) {
@@ -36,6 +37,7 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                 ciudad: data.ciudad,
                 cpostal: data.cpostal,
                 provincia_id: data.provincia_id,
+                telefono: data.telefono,
                 id: id
             });
 
@@ -98,6 +100,15 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                             placeholder='Código Postal'
                             value={data.cpostal}
                             onChange={(e) => setData('cpostal', e.target.value)}
+                        />
+                        <input className='w-full'
+                            maxLength={11}
+                            minLength={9}
+                            name='telefono'
+                            required
+                            placeholder='Numero de telefono'
+                            value={data.telefono}
+                            onChange={(e) => setData('telefono', e.target.value)}
                         />
                         <select className='w-full'
                             name='provincia_id'

@@ -15,6 +15,7 @@ class Domicilio extends Model
         'cpostal',
         'provincia_id',
         'user_id',
+        'telefono',
     ];
 
     public function user(): BelongsTo

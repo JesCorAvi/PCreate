@@ -37,6 +37,9 @@ class MarcaController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'nombre' => 'required',
+        ]);
         Marca::Create([
             "nombre" => $request->nombre,
         ]);
@@ -66,6 +69,9 @@ class MarcaController extends Controller
      */
     public function update(Request $request)
     {
+        $request->validate([
+            'nombre' => 'required',
+        ]);
         $marca = Marca::find($request->id);
         $marca->update([
             "nombre" => $request->nombre,

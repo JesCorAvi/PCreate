@@ -5,7 +5,7 @@ import CrearProducto from '@/Components/CrearProducto';
 
 import { Head, Link } from '@inertiajs/react';
 
-export default function Crear({ auth, categorias, marcas, sockets }) {
+export default function Create({ auth, categorias, marcas, sockets }) {
     return (
         <>
             <LayoutLogueado

@@ -42,7 +42,8 @@ export default function ArticulosTabla() {
 
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <Link className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold' href={route('articulo.create')} method="get" as="button"> Crear artículo </Link>
+            <Link className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold'
+            href={route('articulo.create')} method="get" as="button"> Crear artículo </Link>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>

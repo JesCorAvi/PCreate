@@ -40,7 +40,7 @@ class CarritoController extends Controller
 
     public function articulos()
     {
-        $carrito = Carrito::with('articulos')->where('user_id', auth()->id())->first();
+        $carrito = auth()->user()->carritos->first();
         $totalArticulos = 0;
 
         if($carrito){
@@ -76,7 +76,7 @@ class CarritoController extends Controller
      */
     public function store(Request $request)
     {
-            $carrito = Carrito::where('user_id', auth()->id())->first();
+            $carrito = auth()->user()->carritos->first();
 
             if (!$carrito) {
                 $carrito = Carrito::create([

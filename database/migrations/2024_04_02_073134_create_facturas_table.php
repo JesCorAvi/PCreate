@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('facturas', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained();
-            $table->foreignId("provincia_id")->constrained();
             $table->foreignId("domicilio_id")->constrained();
-
             $table->timestamps();
         });
     }

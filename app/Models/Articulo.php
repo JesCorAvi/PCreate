@@ -15,10 +15,7 @@ class Articulo extends Model
 
     protected $fillable = ["nombre","categoria_id", "descripcion", "precio", "datos", "marca_id"];
 
-    public function facturas(): BelongsToMany
-    {
-        return $this->belongsToMany(Factura::class, 'articulo_factura');
-    }
+
     public function pcs(): BelongsToMany
     {
         return $this->belongsToMany(Pc::class, 'articulo_pc');
@@ -47,5 +44,11 @@ class Articulo extends Model
         return $this->belongsToMany(Carrito::class, 'articulo_carrito')
             ->withPivot('cantidad')
             ->withTimestamps();
+    }
+    public function facturas(): BelongsToMany
+    {
+        return $this->belongsToMany(Factura::class, 'articulo_factura')
+        ->withPivot('cantidad')
+        ->withTimestamps();
     }
 }

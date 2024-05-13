@@ -70,9 +70,9 @@ export default function Linea({ auth, nombre, precio, imagen, cantidad: initialC
                         <div className='flex gap-4 justify-between'>
                             <p className='font-semibold text-xl'>{precio}€</p>
                             <div className='flex gap-2' >
-                                <button onClick={() => modificarCantidad("-")} className=' bg-black text-white text-xl rounded-xl w-6 h-6 font-semibold hover:bg-gray-700'> - </button>
+                                <button onClick={() => modificarCantidad("-")} className=' bg-blue-800 text-white text-xl rounded-xl w-6 h-6 font-semibold hover:bg-gray-700'> - </button>
                                 <p className=' font-semibold text-xl'> {cantidad} </p>
-                                <button onClick={() => modificarCantidad("+")} className='bg-black text-xl rounded-xl text-white w-6 h-6 font-semibold  hover:bg-gray-700'> + </button>
+                                <button onClick={() => modificarCantidad("+")} className='bg-blue-800 text-xl rounded-xl text-white w-6 h-6 font-semibold  hover:bg-gray-700'> + </button>
                             </div>
                         </div>
                         <button className='underline' onClick={borrar}>Borrar</button>

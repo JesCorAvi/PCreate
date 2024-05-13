@@ -96,7 +96,7 @@ class ArticuloController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Articulo/Crear', [
+        return Inertia::render('Articulo/Create', [
             "categorias" => Categoria::all(),
             "marcas" => Marca::all(),
             "sockets" => Socket::all(),
@@ -109,7 +109,6 @@ class ArticuloController extends Controller
      */
     public function store(Request $request)
     {
-        try{
             $request->validate([
                 'imagenpr' => 'required|image',
                 'imagensec1' => 'required|image',
@@ -118,10 +117,7 @@ class ArticuloController extends Controller
                 "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/s",
                 "precio" => "required|regex:/^\d*\.?\d*$/",
             ]);
-        }
-        catch(ValidationException $e){
-            dd($e->errors());
-        }
+
 
 
         $datosComunes = [

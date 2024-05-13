@@ -6,6 +6,7 @@ import { Head } from '@inertiajs/react';
 import Boton from '@/Components/Boton';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { Link } from '@inertiajs/react';
 
 
 export default function Index({ auth, categorias, articulos: InitialArticulos, cantidad }) {
@@ -93,7 +94,11 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
                             <p className="font-semibold text-2xl p-5">SUBTOTAL</p>
                             <p className='p-5'>{cantidadTotal} articulos en el carrito</p>
                             <p className='p-5 text-xl font-semibold'>{precioTotal} €</p>
-                            <Boton texto="Comprar"></Boton>
+                            <Link
+                                className='bg-blue-600 text-white font-bold text-center flex justify-center m-3 items-center rounded-md w-full px-3 py-5  border-b-2 border-t-2 border-gray-300 hover:bg-blue-700 cursor-pointer'
+                                href={route('factura.create')} method="get"
+                            >Procesar pedido
+                            </Link>
                         </div>
                     </>
                 ) : (

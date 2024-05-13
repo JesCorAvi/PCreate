@@ -1,18 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import Edit from '@/Components/Edit';
 import Datos from '@/Components/Datos';
 import Pedidos from '@/Components/Pedidos';
 import Direcciones from '@/Components/Direcciones';
 
-export default function ShowUsuario({mustVerifyEmail, avatar, pedidos, domicilios, provincias}) {
+export default function ShowUsuario({ mustVerifyEmail, avatar, pedidos, domicilios, provincias }) {
     const [seccionActual, setSeccionActual] = useState("pedidos");
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const seccionFromURL = params.get('seccion');
+        if (seccionFromURL) {
+            setSeccionActual(seccionFromURL.toLowerCase());
+        }
+    }, []); // Este efecto se ejecutará solo una vez después del montaje del componente
 
     const handleBotonClick = (seccion) => {
         setSeccionActual(seccion);
+
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('seccion', seccion.toLowerCase());
+        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+        window.history.pushState({}, '', newUrl);
     };
+
     const estilo_boton_normal = "flex items-center justify-center text-xl font-bold lg:p-1 transition duration-300 ease-in-out transform hover:scale-105 hover:cursor-pointer hover:border-l-4 hover:border-gray-400 hover:p-1";
     const estilo_boton_seleccionado = "flex  items-center justify-center text-xl font-bold border-b-4 lg:border-b-0 lg:border-l-4 border-black lg:p-1 transition duration-300 ease-in-out transform hover:cursor-pointer";
+
     return (
         <div className='block lg:flex lg:px-20'>
             <aside className='flex lg:flex-col lg:pt-32 gap-4 p-3'>
@@ -49,7 +64,6 @@ export default function ShowUsuario({mustVerifyEmail, avatar, pedidos, domicilio
                     domicilios={domicilios}
                     provincias={provincias}
                 />}
-
             </div>
         </div>
     );

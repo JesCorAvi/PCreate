@@ -93,6 +93,7 @@ export default function MarcasTabla() {
                     <input
                         type="text"
                         placeholder="Nombre de la marca"
+                        required
                         value={nombreNuevaMarca}
                         onChange={(e) => setNombreNuevaMarca(e.target.value)}
                         className="mt-2 p-2 border rounded-md w-full"
@@ -110,6 +111,7 @@ export default function MarcasTabla() {
                     <input
                         type="text"
                         placeholder="Nombre de la marca"
+                        required
                         value={nombreMarcaModificar}
                         onChange={(e) => setNombreMarcaModificar(e.target.value)}
                         className="mt-2 p-2 border rounded-md w-full"

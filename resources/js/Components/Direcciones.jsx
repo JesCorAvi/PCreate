@@ -28,6 +28,7 @@ export default function Direcciones({ auth, domicilios, provincias }) {
                                 provincia_id={direccion.provincia.id}
                                 provincias={provincias}
                                 initialIsEditing={true}
+                                telefono={direccion.telefono}
                             />
                         </div>
                     ))
