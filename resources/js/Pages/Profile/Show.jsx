@@ -12,7 +12,7 @@ import ShowUsuario from '@/Components/ShowUsuario';
 import AdminDashboard from '@/Components/AdminDashboard';
 
 
-export default function Show({ auth, mustVerifyEmail, status, categorias, avatar, pedidos, domicilios, provincias }) {
+export default function Show({ auth, mustVerifyEmail, status, categorias, avatar, pedidos, domicilios, provincias, facturas }) {
     return (
         <div>
             <LayoutLogueado
@@ -30,6 +30,7 @@ export default function Show({ auth, mustVerifyEmail, status, categorias, avatar
                     domicilios={domicilios}
                     provincias={provincias}
                     mustVerifyEmail={mustVerifyEmail}
+                    facturas = {facturas}
                 ></ShowUsuario>
             )
             : (

@@ -24,5 +24,9 @@ class Factura extends Model
         ->withPivot('cantidad')
         ->withTimestamps();
     }
+    public function domicilio(): BelongsTo
+    {
+        return $this->belongsTo(Domicilio::class);
+    }
 
 }

@@ -28,6 +28,7 @@ class ProfileController extends Controller
             'categorias' => Categoria::all(),
             "domicilios" => Auth::user()->domicilios->load('provincia'),
             "provincias" => Provincia::all(),
+            "facturas" => Auth::user()->facturas->load(['domicilio.provincia', 'articulos.fotos']),
         ]);
     }
 
