@@ -60,6 +60,7 @@ class FacturaController extends Controller
         $carrito->delete();
 
         return redirect()->route('articulo.index')->with('success', 'Compra realizada exitosamente.');
+
     }
 
     /**

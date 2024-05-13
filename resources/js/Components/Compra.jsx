@@ -1,9 +1,23 @@
-import { useState } from 'react';
-import { Link } from '@inertiajs/react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { Link, useForm } from '@inertiajs/react';
 
 export default function Compra({ user, provincias, domicilios, articulos }) {
     const [direccionSeleccionada, setDireccionSeleccionada] = useState(null);
+    const { data, setData, post } = useForm({
+      domicilio_id: null
+    });
+
+    useEffect(() => {
+      if (domicilios.length > 0 && !direccionSeleccionada) {
+        setDireccionSeleccionada(domicilios[0].id);
+        setData('domicilio_id', domicilios[0].id);
+      }
+    }, [domicilios, direccionSeleccionada]);
+
+    const comprar = (e) => {
+      e.preventDefault();
+      post(route('factura.store'));
+    };
 
     function Total() {
         let total = 0;
@@ -21,9 +35,6 @@ export default function Compra({ user, provincias, domicilios, articulos }) {
         return cantidad;
     }
 
-    function comprar() {
-        axios.post(route('factura.store', {domicilio_id: direccionSeleccionada }))
-    }
 
     return (
         <div className='min-h-screen lg:flex w-full gap-16 lg:p-20'>
