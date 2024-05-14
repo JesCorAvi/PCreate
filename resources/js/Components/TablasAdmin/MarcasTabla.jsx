@@ -20,7 +20,7 @@ export default function MarcasTabla() {
     }, [currentPage]);
 
     function getMarcas(page) {
-        axios.post(`http://127.0.0.1:8000/marcas/getMarca?page=${page}`)
+        axios.post(route('marca.getMarcas', { page: page }))
             .then((response) => {
                 setMarcas(response.data.data);
                 setTotalPages(response.data.last_page);

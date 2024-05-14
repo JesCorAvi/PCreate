@@ -12,7 +12,7 @@ export default function UsuariosTabla() {
         getUsuarios(currentPage);
     }, [currentPage]); // Se vuelve a cargar cuando cambia la página actual
     function getUsuarios(page) {
-        axios.post(`http://127.0.0.1:8000/articulos/getUsuarios?page=${page}`)
+        axios.post(route('usuario.getUsuarios', { page: page }))
             .then((response) => {
                 setArticulos(response.data.data);
                 setTotalPages(response.data.last_page);

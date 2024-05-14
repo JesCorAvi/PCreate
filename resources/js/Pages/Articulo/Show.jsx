@@ -16,7 +16,7 @@ export default function Show({ auth, categorias, articulo}) {
             <Head title="Detalles" />
             <Muestra
                 articulo = {articulo}
-
+                user={auth.user}
             ></Muestra>
             <Footer></Footer>
         </>

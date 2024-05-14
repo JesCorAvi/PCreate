@@ -13,7 +13,7 @@ export default function ArticulosTabla() {
         getArticulos(currentPage);
     }, [currentPage]); // Se vuelve a cargar cuando cambia la página actual
     function getArticulos(page) {
-        axios.post(`http://127.0.0.1:8000/articulos/getArticulos?page=${page}`)
+        axios.post(route('articulo.getArticulos', { page: page }))
             .then((response) => {
                 setArticulos(response.data.data);
                 setTotalPages(response.data.last_page);
