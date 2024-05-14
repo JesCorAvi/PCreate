@@ -39,7 +39,11 @@ class FacturaController extends Controller
             'categorias' => Categoria::all(),
         ]);
     }
-
+    public function redirect(Request $request){
+        return Inertia::render('Factura/Redirect',[
+            'domicilio_id' => $request->domicilio_id,
+        ]);
+    }
     /**
      * Store a newly created resource in storage.
      */

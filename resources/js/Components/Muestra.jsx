@@ -96,7 +96,7 @@ export default function Pieza({user, active = false, classNameName = '', childre
                 <p className="py-2"><Link href={route("articulo.index")}>Tienda</Link>{' > '}{articulo.nombre}</p>
                 <article className='block xl:flex px-5'>
                     <section className="flex-1 flex flex-col items-center justify-center">
-                        <div className="w-imagen h-imagen">
+                        <div className="lg:w-imagen lg:h-imagen ">
                             <img onClick={() => handleOpenLightbox()} src={imagenGrande} alt="Imagen seleccionada en grande" className='w-imagen h-imagen object-contain border-2 border-solid rounded-md cursor-zoom-in' />
                         </div>
                         <div className='flex max-w-full overflow-x-auto justify-center'>

@@ -5,6 +5,7 @@ use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\DomicilioController;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\MarcaController;
+use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocketController;
 use Illuminate\Support\Facades\Route;
@@ -56,7 +57,11 @@ Route::post('/marca/update', [MarcaController::class, 'update'])->name('marca.up
 Route::post('/marca/destroy', [MarcaController::class, 'destroy'])->name('marca.destroy')->middleware('auth');
 
 Route::get('/comprar', [FacturaController::class, 'create'])->name('factura.create')->middleware('auth');
+
 Route::post('/comprar/listo', [FacturaController::class, 'store'])->name('factura.store')->middleware('auth');
 
+Route::post("/paypal/pago", [PaypalController::class, 'payment'])->name('paypal.pago')->middleware('auth');
+Route::get("/paypal/listo", [PaypalController::class, 'success'])->name('paypal.listo')->middleware('auth');
+Route::get("/paypal/cancelar", [PaypalController::class, 'cancel'])->name('paypal.cancelar')->middleware('auth');
 
 require __DIR__.'/auth.php';

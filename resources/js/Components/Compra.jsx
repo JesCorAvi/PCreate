@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, useForm } from '@inertiajs/react';
 
-export default function Compra({ user, provincias, domicilios, articulos }) {
+export default function Compra({ user, domicilios, articulos }) {
     const [direccionSeleccionada, setDireccionSeleccionada] = useState(null);
     const { data, setData, post } = useForm({
-      domicilio_id: null
+      domicilio_id: null,
+      total: Total(),
     });
 
     useEffect(() => {
@@ -16,7 +17,7 @@ export default function Compra({ user, provincias, domicilios, articulos }) {
 
     const comprar = (e) => {
       e.preventDefault();
-      post(route('factura.store'));
+      post(route('paypal.pago'));
     };
 
     function Total() {
@@ -63,7 +64,7 @@ export default function Compra({ user, provincias, domicilios, articulos }) {
             <div className='h-60 w-full xl:mt-16 lg:w-1/4 flex flex-col text-center justify-center items-center lg:block border border-solid border-gray-300 rounded-md'>
                 <p className="font-semibold text-2xl p-5">RESUMEN</p>
                 <p className='p-3'>{Cantidad()}  articulos en el carrito</p>
-                <p className='p-4 text-3xl font-semibold'>{Total()} €</p>
+                <p className='p-4 text-3xl font-semibold'>{data.total} €</p>
                 <button onClick={comprar}
                 className='text-xl bg-blue-600 text-white font-bold text-center flex justify-center items-center rounded-md w-full px-3 py-5  border-b-2 border-t-2 border-gray-300 hover:bg-blue-700 cursor-pointer'
                 >
