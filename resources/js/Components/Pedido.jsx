@@ -1,5 +1,6 @@
-
 import { Head } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+
 
 export default function Pedido({ factura }) {
     function Total() {
@@ -9,6 +10,7 @@ export default function Pedido({ factura }) {
         });
         return total.toFixed(2);
     }
+
     function formatDate(date) {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         const formattedDate = new Date(date).toLocaleDateString('es-ES', options);
@@ -18,6 +20,7 @@ export default function Pedido({ factura }) {
         });
         return mesMayusculas;
     }
+
     return (
         <div className="border-2 border-solid border-black rounded-md xl:my-5">
             <div className="border-b-2 px-2 py-1 border-solid border-black flex gap-5">
@@ -36,13 +39,18 @@ export default function Pedido({ factura }) {
             </div>
             <div className='px-2 py-1'>
                 <p><strong>Fecha de entrega:</strong> {formatDate(factura.entrega_aproximada)}</p>
-                <div className='flex items-center flex-col p-4 gap-4 xl:flex-row'>
-                    <img className='w-36 h-36 rounded-md' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + factura.articulos[0].fotos[0].imagen}></img>
-                    <a href="#" className="text-2xl underline pt-3">
-                        {factura.articulos[0].nombre +
-                            (factura.articulos[1] ? ", " + factura.articulos[1].nombre + "..." : "")}
-                    </a>
+                <div className='flex flex-col gap-4'>
+                    {factura.articulos.map((articulo, index) => (
+                        <div key={index} className="flex items-center">
+                            <img className='w-20 h-20 rounded-md' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + articulo.fotos[0].imagen}></img>
+                            <div>
+                            <Link href={route("articulos.show", { id: articulo.id })} className="text-sm ml-2 underline">{articulo.nombre} </Link>
+                            <p className='ml-2 font-semibold'>{articulo.precio}€</p>
+                            </div>
+                        </div>
+                    ))}
                 </div>
+
             </div>
         </div>
     );
