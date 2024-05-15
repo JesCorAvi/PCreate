@@ -95,7 +95,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
                             <p className='p-5'>{cantidadTotal} articulos en el carrito</p>
                             <p className='p-5 text-xl font-semibold'>{precioTotal} €</p>
                             <Link
-                                className='bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-800  hover:to-purple-800F text-white font-bold text-center flex justify-center m-3 items-center rounded-md w-full px-3 py-5 border-b-2 border-t-2 border-gray-300 cursor-pointer'
+                                className='bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-800  hover:to-purple-800 text-white font-bold text-center flex justify-center m-3 items-center rounded-md w-full px-3 py-5 border-b-2 border-t-2 border-gray-300 cursor-pointer'
                                 href={route('factura.create')} method="get"
                             >Procesar pedido
                             </Link>
