@@ -12,7 +12,7 @@ class ComentarioController extends Controller
 {
     public function getComentarios()
     {
-        $Comentarios = Comentario::paginate(10);
+        $Comentarios = Comentario::orderBy('created_at', 'desc')->paginate(10);
         return response()->json($Comentarios);
     }
     /**
@@ -37,7 +37,7 @@ class ComentarioController extends Controller
     public function store(Request $request, $commentableType, $commentableId)
     {
         $request->validate([
-            'contenido' => 'required',
+            'contenido' => "required|regex:/^(?!.*\b\w{31,}\b).*$/s",
             'estrellas' => 'required',
         ]);
 
@@ -45,6 +45,7 @@ class ComentarioController extends Controller
         $commentable = ('App\\Models\\' . $commentableType)::find($commentableId);
         // Crea y guarda el nuevo comentario
         $comment = new Comentario([
+            'user_id' => auth()->user()->id,
             'contenido' => $request->contenido,
             'estrellas' => $request->estrellas,
         ]);
@@ -73,17 +74,7 @@ class ComentarioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
-    {
-        $request->validate([
-            'contenido' => 'required',
-            "estrellas" => 'required',
-        ]);
-        $Comentario = Comentario::find($request->id);
-        $Comentario->update([
-            "contenido" => $request->contenido,
-            "estrellas" => $request->estrellas,        ]);
-    }
+
 
     /**
      * Remove the specified resource from storage.

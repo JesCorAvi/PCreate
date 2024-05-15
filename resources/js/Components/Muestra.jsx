@@ -81,7 +81,6 @@ export default function Pieza({user, active = false, classNameName = '', childre
     };
 
     const handleCloseModal = () => {
-        setIsDeleteModalVisible(false);
         setIsAddToCartModalVisible(false);
     };
 

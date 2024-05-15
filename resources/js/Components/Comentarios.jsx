@@ -4,15 +4,18 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from './Modal';
 import SecondaryButton from './SecondaryButton';
-import DangerButton from './DangerButton';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 export default function Comentarios({ user, id }) {
     const [comentarios, setComentario] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [creatingComentario, setCreatingComentario] = useState(false);
-    const [estrellasNuevaComentario, setEstrellasNuevaComentario] = useState('');
+    const [estrellasNuevaComentario, setEstrellasNuevaComentario] = useState(0);
     const [contenidoNuevaComentario, setContenidoNuevaComentario] = useState('');
+    const [caracteres, setCaracteres] = useState(0);
+
 
     useEffect(() => {
         getComentarios(currentPage);
@@ -39,7 +42,7 @@ export default function Comentarios({ user, id }) {
     }
 
     function delComentarios(id) {
-        axios.post(route('comentario.destroy', { id: id, id_articulo: id_articulo, contenido: contenido, nota: nota }))
+        axios.post(route('comentario.destroy', { id: id }))
             .then((response) => {
                 getComentarios();
             });
@@ -50,13 +53,13 @@ export default function Comentarios({ user, id }) {
         axios.post(route('comentario.store', { commentableType: 'Articulo', commentableId: id }), {
             estrellas: estrellasNuevaComentario,
             contenido: contenidoNuevaComentario
-        })        .then((response) => {
-                getComentarios();
-                setCreatingComentario(false);
-                setEstrellasNuevaComentario('');
-                setCOntenidoNuevaComentario('');
+        }).then((response) => {
+            getComentarios();
+            setCreatingComentario(false);
+            setEstrellasNuevaComentario(0);
+            setCOntenidoNuevaComentario('');
 
-            })
+        })
             .catch((error) => {
                 console.error('Error al crear el Comentario:', error);
             });
@@ -70,44 +73,79 @@ export default function Comentarios({ user, id }) {
                 <Modal show={creatingComentario} onClose={() => setCreatingComentario(false)}>
                     <form onSubmit={(e) => createComentario(e)} className="p-6">
                         <h2 className="text-lg font-medium text-gray-900">Crear Comentario</h2>
-
+                        <div className="mt-2 p-2 border rounded-md w-full flex justify-center gap-2">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <span
+                                    key={star}
+                                    onClick={() => setEstrellasNuevaComentario(star)}
+                                    className={`cursor-pointer ${star <= estrellasNuevaComentario ? 'text-purple-500' : 'text-gray-400'}`}
+                                >
+                                    {star <= estrellasNuevaComentario ? <StarIcon /> : <StarBorderIcon />}
+                                </span>
+                            ))}
+                        </div>
                         <textarea
                             placeholder="Escribe tu comentario"
                             required
                             value={contenidoNuevaComentario}
-                            onChange={(e) => setContenidoNuevaComentario(e.target.value)}
+                            onChange={(e) => {
+                                setContenidoNuevaComentario(e.target.value);
+                                setCaracteres(e.target.value.length);
+                            }}
                             className="mt-2 p-2 border rounded-md w-full h-64"
                         >
                         </textarea>
-                        <input
-                            type="text"
-                            placeholder="Numero de estrellas"
-                            required
-                            value={estrellasNuevaComentario}
-                            onChange={(e) => setEstrellasNuevaComentario(e.target.value)}
-                            className="mt-2 p-2 border rounded-md w-full "
-                        />
-                        <div className="mt-4 flex justify-end">
-                            <SecondaryButton onClick={() => setCreatingComentario(false)}>Cancelar</SecondaryButton>
-                            <button className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold' type="submit" >Crear Comentario</button>
+                        <div className="mt-4 flex justify-between">
+                            <p className={`self-start font-semibold p-2 ${caracteres > 500 ? 'text-red-700' : ''}`}>{caracteres}/500</p>
+                            <div>
+                                <SecondaryButton onClick={() => setCreatingComentario(false)}>Cancelar</SecondaryButton>
+                                <button
+                                    className='bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-800  hover:to-purple-800  text-white rounded-md px-4 py-2 lg:mx-6 font-semibold'
+                                    type="submit"
+                                    disabled={caracteres > 500}
+                                >
+                                    Crear Comentario
+                                </button>
+                            </div>
                         </div>
+                        {caracteres > 500 && (
+                            <p className="font-semibold text-red-700 p-2 text-center">Has superado el límite de 500 caracteres.</p>
+                        )}
                     </form>
                 </Modal>
             </div>
             {comentarios.length > 0 ? (
-                comentarios.map((comentario) => (
-                    <Comentario
-                        usuario={user.name}
-                        avatar={user.avatar}
-                        nota={comentario.estrellas}
-                        comentario={comentario.contenido}
-                        fecha={comentario.created_at}
-                    />
-                ))
+                <>
+                    {comentarios.map((comentario) => (
+                        <Comentario
+                            key={comentario.id}
+                            id={comentario.id}
+                            usuario={user}
+                            avatar={user.avatar}
+                            nota={comentario.estrellas}
+                            comentario={comentario.contenido}
+                            fecha={comentario.created_at}
+                            delComentarios={delComentarios}
+                            com_user={comentario.user_id}
+                        />
+                    ))}
+                    {totalPages > 1 && (
+                        <div className='flex justify-center  p-5'>
+                            <button className='h-8 w-20 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-800  hover:to-purple-800 text-white rounded-l-lg' onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1}>Anterior</button>
+                            {pageNumbers.map((pageNumber) => (
+                                <button className={`border border-solid border-black h-8 w-8 ${pageNumber === currentPage ? 'text-black bg-slate-400' : ''}`} key={pageNumber} onClick={() => changePage(pageNumber)} disabled={pageNumber === currentPage}>
+                                    {pageNumber}
+                                </button>
+                            ))}
+                            <button className='h-8 w-20 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-800  hover:to-purple-800 text-white rounded-r-lg' onClick={() => changePage(currentPage + 1)} disabled={currentPage === totalPages}>Siguiente</button>
+                        </div>
+                    )}
+                </>
             ) : (
-                <h2 className='text-2xl font-semibold text-center'>No hay comentarios, ¡Sé el primero!</h2>
-            )}
+                <h2 className='text-2xl px-5 font-semibold text-center'>No hay comentarios, ¡Sé el primero!</h2>
+            )
+            }
 
-        </section>
+        </section >
     );
 }
