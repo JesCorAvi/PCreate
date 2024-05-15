@@ -24,9 +24,13 @@ use App\Rules\ImagenOCadena;
 
 class ArticuloController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    public function getArticulos()
+    {
+        $articulos = Articulo::with('categoria')->with("marca")->paginate(10);
+        return response()->json($articulos);
+    }
+
     public function Tienda(Request $request)
     {
         $categoria = $request->input('categoria');
@@ -92,7 +96,7 @@ class ArticuloController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Articulo/Crear', [
+        return Inertia::render('Articulo/Create', [
             "categorias" => Categoria::all(),
             "marcas" => Marca::all(),
             "sockets" => Socket::all(),
@@ -105,7 +109,6 @@ class ArticuloController extends Controller
      */
     public function store(Request $request)
     {
-        try{
             $request->validate([
                 'imagenpr' => 'required|image',
                 'imagensec1' => 'required|image',
@@ -114,10 +117,7 @@ class ArticuloController extends Controller
                 "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/s",
                 "precio" => "required|regex:/^\d*\.?\d*$/",
             ]);
-        }
-        catch(ValidationException $e){
-            dd($e->errors());
-        }
+
 
 
         $datosComunes = [
@@ -529,7 +529,7 @@ class ArticuloController extends Controller
         }
 
         if ($articulo) {
-            return redirect()->route('articulos.show', ['id' => $articulo->id])->with('success', 'Articulo editado exitosamente.');
+            return redirect()->route('profile.show')->with('success', 'Articulo editado exitosamente.');
         } else {
             return redirect()->back()->with('error', 'Error al crear el articulo.');
         }
@@ -551,7 +551,7 @@ class ArticuloController extends Controller
 
         $articulo->delete();
 
-        return redirect()->route('articulo.index');
+        return redirect()->route('profile.show');
     }
 }
 

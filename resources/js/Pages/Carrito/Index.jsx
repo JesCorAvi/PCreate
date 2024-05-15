@@ -6,6 +6,7 @@ import { Head } from '@inertiajs/react';
 import Boton from '@/Components/Boton';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { Link } from '@inertiajs/react';
 
 
 export default function Index({ auth, categorias, articulos: InitialArticulos, cantidad }) {
@@ -18,7 +19,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
         if (!auth.user) {
             let carrito = JSON.parse(localStorage.getItem('carrito'));
             setArticulos(carrito);
-            setCantidadTotal(Total() );
+            setCantidadTotal(Total());
         }
     }, []);
 
@@ -26,15 +27,15 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
     function Total() {
         let total = 0;
         if (!articulos) return 0;
-            articulos.forEach(articulo => {
-                total += articulo.precio * articulo.pivot.cantidad;
-            });
+        articulos.forEach(articulo => {
+            total += articulo.precio * articulo.pivot.cantidad;
+        });
         return total.toFixed(2);;
 
     }
 
     function recargarArticulos() {
-        if(auth.user){
+        if (auth.user) {
             axios.get("/carritoActualizar").then(response => {
                 setArticulos(response.data.articulos);
                 setCantidadTotal(response.data.cantidad);
@@ -42,7 +43,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
                 console.error('Error al cargar los artículos:', error);
             });
             return;
-        }else{
+        } else {
             let carrito = JSON.parse(localStorage.getItem('carrito'));
             setArticulos(carrito);
             let total = 0;
@@ -93,7 +94,11 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
                             <p className="font-semibold text-2xl p-5">SUBTOTAL</p>
                             <p className='p-5'>{cantidadTotal} articulos en el carrito</p>
                             <p className='p-5 text-xl font-semibold'>{precioTotal} €</p>
-                            <Boton texto="Comprar"></Boton>
+                            <Link
+                                className='bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-800  hover:to-purple-800F text-white font-bold text-center flex justify-center m-3 items-center rounded-md w-full px-3 py-5 border-b-2 border-t-2 border-gray-300 cursor-pointer'
+                                href={route('factura.create')} method="get"
+                            >Procesar pedido
+                            </Link>
                         </div>
                     </>
                 ) : (

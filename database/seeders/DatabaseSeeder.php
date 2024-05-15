@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             MarcaSeeder::class,
             ProvinciaSeeder::class,
             ArticuloSeeder::class,
+            UserSeeder::class,
 
         ]);
         /*

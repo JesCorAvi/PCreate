@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId("provincia_id")->constrained();
             $table->string("direccion");
             $table->string("ciudad");
+            $table->string("telefono");
             $table->integer("cpostal");
             $table->timestamps();
         });

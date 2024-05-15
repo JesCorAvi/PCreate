@@ -59,7 +59,7 @@ export default function Linea({ auth, nombre, precio, imagen, cantidad: initialC
         }
     }
     return (
-        <div className="border-2 border-solid border-black rounded-md my-5 w-4/6">
+        <div className="border-2 border-solid border-blue-800 rounded-md my-5 w-4/6">
             <div className='flex flex-col xl:flex-row  p-4 gap-4'>
                 <img className='w-40 h-40 rounded-md self-center' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + imagen} />
                 <div className='w-full'>
@@ -70,9 +70,9 @@ export default function Linea({ auth, nombre, precio, imagen, cantidad: initialC
                         <div className='flex gap-4 justify-between'>
                             <p className='font-semibold text-xl'>{precio}€</p>
                             <div className='flex gap-2' >
-                                <button onClick={() => modificarCantidad("-")} className=' bg-black text-white text-xl rounded-xl w-6 h-6 font-semibold hover:bg-gray-700'> - </button>
+                                <button onClick={() => modificarCantidad("-")} className=' bg-blue-600 text-white text-xl rounded-xl w-6 h-6 font-semibold hover:bg-blue-700'> - </button>
                                 <p className=' font-semibold text-xl'> {cantidad} </p>
-                                <button onClick={() => modificarCantidad("+")} className='bg-black text-xl rounded-xl text-white w-6 h-6 font-semibold  hover:bg-gray-700'> + </button>
+                                <button onClick={() => modificarCantidad("+")} className='bg-blue-600 text-xl rounded-xl text-white w-6 h-6 font-semibold  hover:bg-blue-700'> + </button>
                             </div>
                         </div>
                         <button className='underline' onClick={borrar}>Borrar</button>

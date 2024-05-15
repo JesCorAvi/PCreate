@@ -12,6 +12,11 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public function carritos(): HasMany
+    {
+        return $this->hasMany(Carrito::class);
+    }
+
     public function domicilios(): HasMany
     {
         return $this->hasMany(Domicilio::class);

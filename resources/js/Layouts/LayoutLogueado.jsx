@@ -182,7 +182,7 @@ export default function Layout({ user, header, children, categorias }) {
 
 
             {header && (
-                <header className="bg-white shadow">
+                <header className="bg-white ">
                     <div className="max-w-screen-2xl xl:pt-20  mx-auto py-6 px-4 sm:px-6 lg:px-8" >{header}</div>
                 </header>
             )}

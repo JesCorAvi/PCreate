@@ -94,7 +94,7 @@ export default function Filtro({ categorias, marcas, filtrar }) {
                             name="precioMinimo"
                             onChange={(e) => setPrecioMinimo(e.target.value)}
                             id=""
-                            className="max-w-14 bg-black text-white rounded-md placeholder-white"
+                            className="max-w-14 border-blue-800 text-blue-800 rounded-md placeholder-blue-800"
                             placeholder="Min"
                         />
                         <label htmlFor=""> a </label>
@@ -104,7 +104,7 @@ export default function Filtro({ categorias, marcas, filtrar }) {
                             name="precioMaximo"
                             onChange={(e) => setPrecioMaximo(e.target.value)}
                             id=""
-                            className="max-w-14 bg-black text-white rounded-md placeholder-white"
+                            className="max-w-14 border-blue-800 text-blue-800 rounded-md placeholder-blue-800"
                             placeholder="Max"
                         />
                     </div>

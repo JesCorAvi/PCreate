@@ -1,11 +1,8 @@
 <?php
-
 namespace Database\Seeders;
-
 use Illuminate\Database\Seeder;
 use App\Models\Articulo;
 use App\Models\Foto;
-
 class ArticuloSeeder extends Seeder
 {
     /**
@@ -19,7 +16,7 @@ class ArticuloSeeder extends Seeder
                 Foto::create([
                     'articulo_id' => $articulo->id,
                     'orden' => $i,
-                    'imagen' => 'default.png',
+                    'imagen' => 'default' . rand(1, 9) . '.png',
                 ]);
             }
         });

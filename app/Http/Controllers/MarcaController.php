@@ -6,9 +6,16 @@ use App\Models\Marca;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMarcaRequest;
 use App\Http\Requests\UpdateMarcaRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MarcaController extends Controller
 {
+    public function getMarcas()
+    {
+        $marcas = Marca::paginate(10);
+        return response()->json($marcas);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -28,9 +35,16 @@ class MarcaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreMarcaRequest $request)
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required',
+        ]);
+        Marca::Create([
+            "nombre" => $request->nombre,
+        ]);
+        return redirect()->back()->with('success', 'Marca creada exitosamente.');
+
     }
 
     /**
@@ -46,22 +60,42 @@ class MarcaController extends Controller
      */
     public function edit(Marca $marca)
     {
+
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateMarcaRequest $request, Marca $marca)
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required',
+        ]);
+        $marca = Marca::find($request->id);
+        $marca->update([
+            "nombre" => $request->nombre,
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Marca $marca)
+    public function destroy(Request $request)
     {
-        //
+        $marca = Marca::find($request->id);
+        if ($marca) {
+            foreach ($marca->articulos as $articulo) {
+                foreach ($articulo->fotos as $foto) {
+
+                    Storage::delete('uploads/articulos/' . $foto->nombre_archivo);
+
+                    $foto->delete();
+                }
+                $articulo->delete();
+            }
+
+            $marca->delete();
+        }
     }
 }

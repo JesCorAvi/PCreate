@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Categoria;
 use App\Models\Provincia;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -27,7 +28,8 @@ class ProfileController extends Controller
             'categorias' => Categoria::all(),
             "domicilios" => Auth::user()->domicilios->load('provincia'),
             "provincias" => Provincia::all(),
-        ]);
+            "facturas" => Auth::user()->facturas->sortByDesc('id')->values()->load(['domicilio.provincia', 'articulos.fotos']),
+    ]);
     }
 
 
@@ -66,5 +68,21 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function destroyId(Request $request)
+    {
+
+        $user = User::find($request->id);
+        $users = User::all();
+        $user->delete();
+        return response()->json($users);
+
+
+    }
+
+    public function getUsers(){
+        $users = User::paginate(10);
+        return response()->json($users);
     }
 }
