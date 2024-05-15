@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticuloController;
 use App\Http\Controllers\CarritoController;
+use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\DomicilioController;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\MarcaController;
@@ -55,6 +56,10 @@ Route::post('/marcas/getMarca', [MarcaController::class, 'getMarcas'])->name('ma
 Route::post('/marca/store', [MarcaController::class, 'store'])->name('marca.store')->middleware('auth');
 Route::post('/marca/update', [MarcaController::class, 'update'])->name('marca.update')->middleware('auth');
 Route::post('/marca/destroy', [MarcaController::class, 'destroy'])->name('marca.destroy')->middleware('auth');
+
+Route::post('/tienda/comentarios/getComentario', [ComentarioController::class, 'getComentarios'])->name('comentario.getComentarios')->middleware('auth');
+Route::post('/tienda/comentario/store/{commentableType}/{commentableId}', [ComentarioController::class, 'store'])->name('comentario.store')->middleware('auth');
+Route::post('/tienda/comentario/destroy', [ComentarioController::class, 'destroy'])->name('comentario.destroy')->middleware('auth');
 
 Route::get('/comprar', [FacturaController::class, 'create'])->name('factura.create')->middleware('auth');
 

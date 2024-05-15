@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Comentario extends Model
 {
+    protected $fillable = ['contenido', 'estrellas', 'user_id'];
+
     use HasFactory;
 
     public function comentable(): MorphTo

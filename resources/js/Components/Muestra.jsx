@@ -8,6 +8,7 @@ import useCarritoStore from '@/carritoStore';
 import axios from 'axios';
 import Modal from '@/Components/Modal';
 import SecondaryButton from './SecondaryButton';
+import Comentarios from './Comentarios';
 
 
 
@@ -73,19 +74,13 @@ export default function Pieza({user, active = false, classNameName = '', childre
         setLightboxVisible(false);
     }
 
-    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
     const [isAddToCartModalVisible, setIsAddToCartModalVisible] = useState(false);
 
-
-    const handleDeleteClick = () => {
-        setIsDeleteModalVisible(true);
-    };
     const handleAddToCartClick = () => {
         setIsAddToCartModalVisible(true);
     };
 
     const handleCloseModal = () => {
-        setIsDeleteModalVisible(false);
         setIsAddToCartModalVisible(false);
     };
 
@@ -164,54 +159,13 @@ export default function Pieza({user, active = false, classNameName = '', childre
                     </section>
 
 
-                    <section className="flex-1 flex flex-col text-justify ">
-                        <div className='flex justify-between'>
-                            <h2 className="font-bold text-2xl pt-10 ">Comentarios</h2>
-                            <Link href="" className="font-semibold text-lg pt-10 xl:pr-10 underline">Añadir comentario</Link>
-                        </div>
-                        {[...Array(4)].map((_, index) => (
-                            <Comentario
-                                key={index}
-                                usuario="Jesus. C"
-                                avatar='http://127.0.0.1:8000/assets/avatar.jpg'
-                                nota="4.5"
-                                comentario="Muy buena placa base, me la compré más que nada por estética, ya que las luces que tiene me gustan bastante, pero en términos de conectividad y rendimiento está genial. Tiene bastantes puertos USB, compatibilidad con conectores tipo C que pueda tener tu caja y 2 puertos M.2 para las SSD. Muy contento con la compra."
-                                fecha="22/4/2024"
-                            />
-                        ))}
-                    </section>
+                   <Comentarios id={articulo.id} user={user}></Comentarios>
                 </article>
                 {lightboxVisible && (
                     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={handleCloseLightbox}>
                         <img src={imagenGrande} alt="Imagen principal" className="max-w-screen-lg max-h-screen p-5 cursor-zoom-out" />
                     </div>
                 )}
-                <div className='flex justify-between'>
-                    <div className="p-1 bg-black text-white rounded-md p-1 m-1 flex items-center justify-center hover:bg-slate-600">
-                        <Link href={route("articulo.edit", articulo.id)}>Editar artículo</Link>
-                    </div>
-                    <button className="p-1 bg-black text-white rounded-md m-1 flex items-center justify-center hover:bg-slate-600" onClick={handleDeleteClick}>
-                        Borrar artículo
-                    </button>
-                    <Modal className="p-6" show={isDeleteModalVisible} onClose={handleCloseModal}>
-                        <h2 className="text-lg font-medium text-gray-900 font-semibold p-10">
-                            ¿Estás seguro de que quieres borrar este artículo?
-                        </h2>
-                        <p className="mt-1 text-lg px-10 text-gray-600">
-                            Esta acción no puede ser revertida.
-                        </p>
-                        <div className="mt-6 flex justify-end p-6 gap-3">
-
-                            <Link className=" `inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150" as='Button' method="DELETE" href={route("articulo.destroy", articulo.id)}>
-                                Borrar artículo
-                            </Link>
-                            <SecondaryButton type='button' onClick={handleCloseModal}>Cancelar</SecondaryButton>
-                        </div>
-
-                    </Modal>
-
-
-                </div>
 
             </div>
         </>
