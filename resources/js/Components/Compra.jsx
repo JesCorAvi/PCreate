@@ -66,8 +66,8 @@ export default function Compra({ user, domicilios, articulos }) {
                 <p className='p-3'>{Cantidad()}  articulos en el carrito</p>
                 <p className='p-4 text-3xl font-semibold'>{data.total} €</p>
                 <button onClick={comprar}
-                className='text-xl bg-blue-600 text-white font-bold text-center flex justify-center items-center rounded-md w-full px-3 py-5  border-b-2 border-t-2 border-gray-300 hover:bg-blue-700 cursor-pointer'
-                >
+className='bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-800  hover:to-purple-800 text-white text-xl font-bold text-center flex justify-center items-center rounded-md w-full px-3 py-5 border-b-2 border-t-2 border-gray-300 cursor-pointer'
+>
                     Pagar con Paypal
                 </button>
             </div>

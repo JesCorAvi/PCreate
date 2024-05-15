@@ -13,8 +13,9 @@ export default function Boton({texto, tipo, onClick = () => {} } ) {
         <button
             onClick={handleClick}
             type={tipo}
-            className={`transform transition-transform duration-500 ease-in-out ${isClicked ? 'scale-110' : 'scale-100'} border border-solid border-white m-4 min-h-10 text-lg mb-2 bg-black font-semibold text-white w-52 h-10 rounded-md hover:bg-gray-800`}
+            className={`transform transition-transform duration-500 ease-in-out ${isClicked ? 'scale-110' : 'scale-100'} border border-purple-800 border-solid m-4 min-h-10 text-lg mb-2 bg-white font-semibold text-purple-800 w-52 h-10 rounded-md hover:bg-gradient-to-r from-blue-500 via-purple-500 to-purple-800 hover:text-white`}
         >
+
             {texto}
         </button>
     );

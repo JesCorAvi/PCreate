@@ -97,7 +97,7 @@ export default function Pieza({user, active = false, classNameName = '', childre
                 <article className='block xl:flex px-5'>
                     <section className="flex-1 flex flex-col items-center justify-center">
                         <div className="lg:w-imagen lg:h-imagen ">
-                            <img onClick={() => handleOpenLightbox()} src={imagenGrande} alt="Imagen seleccionada en grande" className='w-imagen h-imagen object-contain border-2 border-solid rounded-md cursor-zoom-in' />
+                            <img onClick={() => handleOpenLightbox()} src={imagenGrande} alt="Imagen seleccionada en grande" className='w-imagen h-imagen object-contain  rounded-md cursor-zoom-in' />
                         </div>
                         <div className='flex max-w-full overflow-x-auto justify-center'>
                             <img onClick={() => handleGrande(imagenPrincipal)} src={imagenPrincipal} alt="Imagen principal" className='w-32 h-32 object-contain rounded-md cursor-pointer' />
