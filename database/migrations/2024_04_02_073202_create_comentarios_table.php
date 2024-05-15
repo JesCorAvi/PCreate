@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer("estrellas");
             $table->morphs('comentable');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

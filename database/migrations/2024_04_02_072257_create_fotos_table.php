@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string("imagen")->default("default.png");
             $table->timestamps();
             $table->unique(["articulo_id", "orden"]);
+            $table->softDeletes();
+
         });
     }
 

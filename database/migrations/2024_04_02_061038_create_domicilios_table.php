@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string("telefono");
             $table->integer("cpostal");
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

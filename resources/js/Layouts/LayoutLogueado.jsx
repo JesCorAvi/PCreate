@@ -60,7 +60,7 @@ export default function Layout({ user, header, children, categorias }) {
 
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex hover:bg-gray-800">
-                                <NavLink className='py-5' href={route('carrito.index')} active={route().current('carrito.index')}>
+                                <NavLink href={route('carrito.index')} active={route().current('carrito.index')}>
                                 <ShoppingCartIcon className='text-white'/>
                                    <p className='text-white'>{cantidadArticulos}</p>
                                 </NavLink>

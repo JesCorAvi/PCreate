@@ -73,7 +73,6 @@ class DomicilioController extends Controller
      */
     public function update(Request $request)
     {
-        dd($request);
         $request->validate([
             'direccion' => 'required',
             'ciudad' => 'required|max:150',

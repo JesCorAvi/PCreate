@@ -19,6 +19,8 @@ return new class extends Migration
             $table->date("entrega_aproximada")->default(Carbon::now()->addDays(5));
             $table->date("fecha_creacion")->default(Carbon::now());
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

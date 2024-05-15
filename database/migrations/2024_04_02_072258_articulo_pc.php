@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId("pc_id")->constrained();
             $table->timestamps();
             $table->unique(["articulo_id", "pc_id"]);
+            $table->softDeletes();
+
         });
     }
 

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->integer("cantidad")->default(1);
             $table->unique(["articulo_id", "factura_id"]);
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

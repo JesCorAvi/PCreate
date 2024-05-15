@@ -1,18 +1,29 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import UsuariosTabla from '@/Components/TablasAdmin/UsuariosTabla';
 import ArticulosTabla from '@/Components/TablasAdmin/ArticulosTabla';
 import MarcasTabla from './TablasAdmin/MarcasTabla';
 
-export default function AdminDashboard({ }) {
 
+export default function AdminDashboard({ }) {
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const tablaFromURL = params.get('tabla');
+        if (tablaFromURL) {
+            setTablaActual(tablaFromURL);
+        }
+    }, []);
     const [tablaActual, setTablaActual] = useState('Usuarios');
 
     const estilo_boton_normal = "font-bold flex justify-center items-center w-36 h-150 border border-solid border-black rounded-lg hover:bg-gray-300";
     const estilo_boton_seleccionado = "font-bold flex justify-center items-center w-36 h-150 border border-solid border-black rounded-lg bg-black text-white";
 
-    const handleBotonClick = (formulario) => {
-        setTablaActual(formulario);
+    const handleBotonClick = (tabla) => {
+        setTablaActual(tabla);
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('tabla', tabla);
+        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+        window.history.pushState({}, '', newUrl);
     };
 
     return (

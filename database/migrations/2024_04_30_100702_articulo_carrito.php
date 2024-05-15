@@ -17,6 +17,8 @@ return new class extends Migration
             $table->integer('cantidad')->default(1);
             $table->timestamps();
             $table->primary(['articulo_id', 'carrito_id']);
+            $table->softDeletes();
+
         });
     }
 

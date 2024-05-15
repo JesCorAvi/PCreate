@@ -31,6 +31,8 @@ class ArticuloController extends Controller
         return response()->json($articulos);
     }
 
+
+
     public function Tienda(Request $request)
     {
         $categoria = $request->input('categoria');
@@ -543,9 +545,9 @@ class ArticuloController extends Controller
     {
         $articulo = Articulo::find($id);
 
-        foreach ($articulo->fotos()->get() as $foto) {
-            Storage::delete("public/uploads/articulos/" . $foto->imagen);
-        }
+        //foreach ($articulo->fotos()->get() as $foto) {
+        //    Storage::delete("public/uploads/articulos/" . $foto->imagen);
+        //}
 
         $articulo->fotos()->delete();
 
