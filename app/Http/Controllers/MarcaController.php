@@ -87,9 +87,6 @@ class MarcaController extends Controller
         if ($marca) {
             foreach ($marca->articulos as $articulo) {
                 foreach ($articulo->fotos as $foto) {
-
-                    Storage::delete('uploads/articulos/' . $foto->nombre_archivo);
-
                     $foto->delete();
                 }
                 $articulo->delete();

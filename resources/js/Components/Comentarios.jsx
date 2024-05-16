@@ -120,8 +120,8 @@ export default function Comentarios({ user, id }) {
                         <Comentario
                             key={comentario.id}
                             id={comentario.id}
-                            usuario={user}
-                            avatar={user.avatar}
+                            usuario={comentario.user.name}
+                            avatar={comentario.user.avatar}
                             nota={comentario.estrellas}
                             comentario={comentario.contenido}
                             fecha={comentario.created_at}

@@ -23,7 +23,7 @@ export default function Comentario({id,usuario, nota, fecha, comentario, avatar,
         <div className="border-4 border-solid rounded-md h-42 py-3 flex flex-col  ">
             <div className='flex justify-between'>
                 <div className='flex'>
-                    <p className='px-6 text-xl font-semibold'>{usuario.name}.</p>
+                    <p className='px-6 text-xl font-semibold'>{usuario}.</p>
                     <div className='flex'>
                         <div className='flex'>
                             {[...Array(5)].map((star, index) => {

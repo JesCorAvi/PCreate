@@ -3,18 +3,18 @@ import axios from 'axios';
 import DangerButton from '../DangerButton';
 import SecondaryButton from '../SecondaryButton';
 
-export default function UsuariosTabla() {
-    const [usuarios, setUsuarios] = useState([]);
+export default function ComentarioTabla() {
+    const [comentarios, setComentarios] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-
+    console.log(comentarios);
     useEffect(() => {
-        getUsuarios(currentPage);
+        getComentarios(currentPage);
     }, [currentPage]); // Se vuelve a cargar cuando cambia la página actual
-    function getUsuarios(page) {
-        axios.post(route('usuario.getUsuarios', { page: page }))
+    function getComentarios(page) {
+        axios.post(route('comentario.getComentarios', { page: page }))
             .then((response) => {
-                setUsuarios(response.data.data);
+                setComentarios(response.data.data);
                 setTotalPages(response.data.last_page);
             })
             .catch((error) => {
@@ -30,35 +30,26 @@ export default function UsuariosTabla() {
     for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
     }
-    function getUsuarios() {
-        axios.post(route("profile.getUsers"))
-            .then((response) => {
-                setUsuarios(response.data.data);
-            })
-            .catch((error) => {
-                console.error('Error al obtener usuarios:', error);
-            });
-    }
 
-    function delUsuarios(id) {
-        axios.post(route('profile.destroyId', {id: id}))
+    function delComentarios(id) {
+        axios.post(route('comentario.destroy', {id: id}))
             .then((response) => {
-                getUsuarios() });
+                getComentarios() });
     }
 
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" className="px-6 py-3">
                             Nombre de usuario
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Email
+                            Contenido
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Rol
+                            Estrellas
                         </th>
                         <th scope="col" className="px-6 py-3">
                             Acciones
@@ -66,19 +57,19 @@ export default function UsuariosTabla() {
                     </tr>
                 </thead>
                 <tbody>
-                    {usuarios.map((usuario) => (
-                        <tr key={usuario.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                    {comentarios.map((comentario) => (
+                        <tr key={comentario} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                             <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {usuario.name}
+                                {comentario.user.name}
                             </td>
                             <td className="px-6 py-4">
-                                {usuario.email}
+                                {comentario.contenido}
                             </td>
                             <td className="px-6 py-4">
-                                {usuario.role}
+                                {comentario.estrellas}/5
                             </td>
                             <td className="px-6 py-4 flex gap-2">
-                                {usuario.id !== 1 && <DangerButton text="Borrar" onClick={() => delUsuarios(usuario.id)}></DangerButton>}
+                                <DangerButton text="Borrar" onClick={() => delComentarios(comentario.id)}></DangerButton>
                             </td>
                         </tr>
                     ))}

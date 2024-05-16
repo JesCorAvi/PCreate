@@ -57,6 +57,11 @@ Route::post('/marca/store', [MarcaController::class, 'store'])->name('marca.stor
 Route::post('/marca/update', [MarcaController::class, 'update'])->name('marca.update')->middleware('auth');
 Route::post('/marca/destroy', [MarcaController::class, 'destroy'])->name('marca.destroy')->middleware('auth');
 
+Route::post('/facturas/getMarcas', [FacturaController::class, 'getFacturas'])->name('factura.getFacturas')->middleware('auth');
+Route::post('/factura/update', [FacturaController::class, 'update'])->name('factura.update')->middleware('auth');
+Route::post('/factura/destroy', [FacturaController::class, 'destroy'])->name('factura.destroy')->middleware('auth');
+
+
 Route::post('/tienda/comentarios/getComentario', [ComentarioController::class, 'getComentarios'])->name('comentario.getComentarios')->middleware('auth');
 Route::post('/tienda/comentario/store/{commentableType}/{commentableId}', [ComentarioController::class, 'store'])->name('comentario.store')->middleware('auth');
 Route::post('/tienda/comentario/destroy', [ComentarioController::class, 'destroy'])->name('comentario.destroy')->middleware('auth');

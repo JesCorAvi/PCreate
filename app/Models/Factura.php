@@ -13,7 +13,7 @@ class Factura extends Model
 {
     use SoftDeletes;
     use HasFactory;
-    protected $fillable = ['user_id', 'domicilio_id'];
+    protected $fillable = ['user_id', 'domicilio_id', "entrega_aproximada"];
     public function provincia(): BelongsTo
     {
         return $this->belongsTo(Provincia::class);
@@ -29,6 +29,11 @@ class Factura extends Model
     public function domicilio(): BelongsTo
     {
         return $this->belongsTo(Domicilio::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
 }

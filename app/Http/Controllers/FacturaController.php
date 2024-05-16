@@ -13,6 +13,21 @@ use Illuminate\Http\Request;
 
 class FacturaController extends Controller
 {
+    public function getFacturas()
+    {
+        $facturas = Factura::with([
+            'user' => function ($query) {
+                $query->withTrashed();
+            },
+            'articulos' => function ($query) {
+                $query->withTrashed();
+            },
+            'domicilio' => function ($query) {
+                $query->withTrashed()->with(['provincia']);
+            }
+        ])->paginate(10);
+        return response()->json($facturas);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -60,7 +75,6 @@ class FacturaController extends Controller
         $carrito->delete();
 
         return redirect()->route('articulo.index')->with('success', 'Compra realizada exitosamente.');
-
     }
 
     /**
@@ -82,16 +96,30 @@ class FacturaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Factura $factura)
+    public function update(Request $request)
     {
-        //
+        $factura = Factura::find($request->id);
+        $fecha_creacion = $factura->fecha_creacion;
+
+        $request->validate([
+            'id' => 'required',
+            'entrega_aproximada' => 'required|date|after_or_equal:' . $fecha_creacion,
+        ]);
+
+        $factura = Factura::find($request->id);
+        $factura->update([
+            'entrega_aproximada' => $request->entrega_aproximada,
+        ]);
+        return redirect()->back()->with('success', 'Factura creada exitosamente.');
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Factura $factura)
+    public function destroy(Request $request)
     {
-        //
+        $factura = Factura::find($request->id);
+        $factura->delete();
     }
 }

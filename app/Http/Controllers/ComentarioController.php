@@ -12,7 +12,7 @@ class ComentarioController extends Controller
 {
     public function getComentarios()
     {
-        $Comentarios = Comentario::orderBy('created_at', 'desc')->paginate(10);
+        $Comentarios = Comentario::with('user')->orderBy('created_at', 'desc')->paginate(10);
         return response()->json($Comentarios);
     }
     /**

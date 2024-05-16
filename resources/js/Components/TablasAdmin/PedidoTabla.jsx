@@ -5,41 +5,46 @@ import SecondaryButton from '../SecondaryButton';
 import { Link } from '@inertiajs/react';
 import Modal from '../Modal';
 
-export default function PedidoTabla() {
-    const [Marcas, setMarcas] = useState([]);
+export default function FacturaTabla() {
+    const [facturas, setFacturas] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [creatingMarca, setCreatingMarca] = useState(false);
-    const [modifyingMarca, setModifyingMarca] = useState(false);
-    const [marcaIdToModify, setMarcaIdToModify] = useState(null);
-    const [nombreNuevaMarca, setNombreNuevaMarca] = useState('');
-    const [nombreMarcaModificar, setNombreMarcaModificar] = useState('');
+    const [modifyingFactura, setModifyingFactura] = useState(false);
+    const [facturaIdToModify, setFacturaIdToModify] = useState(null);
+    const [fechaFacturaModificar, setFechaFacturaModificar] = useState('');
+    const [fechaCreacion, setFechaCreacion] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isDateValid, setIsDateValid] = useState(true);
 
     useEffect(() => {
-        getMarcas(currentPage);
+        getFacturas(currentPage);
     }, [currentPage]);
 
-    function getMarcas(page) {
-        axios.post(route('marca.getMarcas', { page: page }))
+    function getFacturas(page) {
+        axios.post(route('factura.getFacturas', { page: page }))
             .then((response) => {
-                setMarcas(response.data.data);
+                setFacturas(response.data.data);
                 setTotalPages(response.data.last_page);
             })
             .catch((error) => {
-                console.error('Error al obtener Marcas:', error);
+                console.error('Error al obtener Facturas:', error);
             });
     }
 
-    function openModifyModal(id, nombre) {
-        setMarcaIdToModify(id);
-        setNombreMarcaModificar(nombre);
-        setModifyingMarca(true);
+    function openModifyModal(id, entregaAproximada, fechaCreacion) {
+        setFacturaIdToModify(id);
+        setFechaFacturaModificar(entregaAproximada);
+        setFechaCreacion(fechaCreacion);
+        setModifyingFactura(true);
     }
 
     function closeModifyModal() {
-        setModifyingMarca(false);
-        setMarcaIdToModify(null);
-        setNombreMarcaModificar('');
+        setModifyingFactura(false);
+        setFacturaIdToModify(null);
+        setFechaFacturaModificar('');
+        setFechaCreacion('');
+        setErrorMessage('');
+        setIsDateValid(true);
     }
 
     function changePage(page) {
@@ -51,74 +56,74 @@ export default function PedidoTabla() {
         pageNumbers.push(i);
     }
 
-    function delMarcas(id) {
-        axios.post(route('marca.destroy', {id:id }))
-            .then((response) => {
-                getMarcas();
-            });
-    }
-
-    function modifyMarca(e) {
+    function modifyFactura(e) {
         e.preventDefault();
-        axios.post("/marca/update", { id: marcaIdToModify, nombre: nombreMarcaModificar })
-            .then((response) => {
-                getMarcas();
+        if (new Date(fechaFacturaModificar) < new Date(fechaCreacion)) {
+            setErrorMessage('La fecha de entrega no puede ser inferior a la fecha de creación.');
+            setIsDateValid(false);
+        } else {
+            axios.post(route('factura.update', { id: facturaIdToModify }), {
+                entrega_aproximada: fechaFacturaModificar
+            }).then((response) => {
+                getFacturas(currentPage);
                 closeModifyModal();
-            })
-            .catch((error) => {
-                console.error('Error al modificar la marca:', error);
+            }).catch((error) => {
+                console.error('Error al modificar Factura:', error);
+            });
+        }
+    }
+
+    function delFactura(id) {
+        axios.post(route('factura.destroy', { id: id }))
+            .then((response) => {
+                getFacturas(currentPage);
+            }).catch((error) => {
+                console.error('Error al borrar Factura:', error);
             });
     }
 
-    function createMarca(e) {
-        e.preventDefault();
-        axios.post("/marca/store",{nombre:nombreNuevaMarca})
-            .then((response) => {
-                getMarcas();
-                setCreatingMarca(false);
-                setNombreNuevaMarca('');
-            })
-            .catch((error) => {
-                console.error('Error al crear la marca:', error);
+    function costeTotal() {
+        let total = 0;
+        facturas.forEach((factura) => {
+            factura.articulos.forEach((articulo) => {
+                total += articulo.pivot.cantidad * articulo.precio;
             });
+        });
+        return total;
     }
 
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <button className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold' onClick={() => setCreatingMarca(true)}> Crear Marca </button>
-
-            <Modal show={creatingMarca} onClose={() => setCreatingMarca(false)}>
-                <form onSubmit={(e) => createMarca(e)} className="p-6">
-                    <h2 className="text-lg font-medium text-gray-900">Crear Marca</h2>
+            <Modal show={modifyingFactura} onClose={closeModifyModal}>
+                <form onSubmit={(e) => modifyFactura(e)} className="p-6">
+                    <h2 className="text-lg font-medium text-gray-900">Modificar Factura</h2>
                     <input
-                        type="text"
-                        placeholder="Nombre de la marca"
+                        type="date"
+                        placeholder="Nueva Fecha de envio"
                         required
-                        value={nombreNuevaMarca}
-                        onChange={(e) => setNombreNuevaMarca(e.target.value)}
+                        value={fechaFacturaModificar}
+                        onChange={(e) => {
+                            setFechaFacturaModificar(e.target.value);
+                            if (new Date(e.target.value) < new Date(fechaCreacion)) {
+                                setErrorMessage('La fecha de entrega no puede ser inferior a la fecha de creación.');
+                                setIsDateValid(false);
+                            } else {
+                                setErrorMessage('');
+                                setIsDateValid(true);
+                            }
+                        }}
                         className="mt-2 p-2 border rounded-md w-full"
                     />
-                    <div className="mt-4 flex justify-end">
-                        <SecondaryButton onClick={() => setCreatingMarca(false)}>Cancelar</SecondaryButton>
-                        <button className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold' type="submit" >Crear Marca</button>
-                    </div>
-                </form>
-            </Modal>
-
-            <Modal show={modifyingMarca} onClose={closeModifyModal}>
-                <form onSubmit={(e) => modifyMarca(e)} className="p-6">
-                    <h2 className="text-lg font-medium text-gray-900">Modificar Marca</h2>
-                    <input
-                        type="text"
-                        placeholder="Nombre de la marca"
-                        required
-                        value={nombreMarcaModificar}
-                        onChange={(e) => setNombreMarcaModificar(e.target.value)}
-                        className="mt-2 p-2 border rounded-md w-full"
-                    />
+                    {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
                     <div className="mt-4 flex justify-end">
                         <SecondaryButton onClick={closeModifyModal}>Cancelar</SecondaryButton>
-                        <button className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold' type="submit">Modificar Marca</button>
+                        <button
+                            className="bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold"
+                            type="submit"
+                            disabled={!isDateValid}
+                        >
+                            Modificar Factura
+                        </button>
                     </div>
                 </form>
             </Modal>
@@ -127,29 +132,66 @@ export default function PedidoTabla() {
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" className="px-6 py-3">
-                            <p className="text-center">Nombre de la marca</p>
+                            <p className="text-center">Usuario</p>
                         </th>
-
+                        <th scope="col" className="px-6 py-3">
+                            <p className="text-center">Direccion</p>
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            <p className="text-center">Provincia</p>
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            <p className="text-center">Fecha de Factura</p>
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            <p className="text-center">Fecha de Entrega Aproximada</p>
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            <p className="text-center">Articulos</p>
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            <p className="text-center">Coste total</p>
+                        </th>
                         <th scope="col" className="px-6 py-3">
                             <p className="text-center">Acciones</p>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {Marcas.map((marca) => (
-                        <tr key={marca.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                    {facturas.map((factura) => (
+                        <tr key={factura.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                             <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                <p className="text-center">{marca.nombre}</p>
+                                <p className="text-center">{factura.user.name}</p>
+                            </td>
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <p className="text-center">{factura.domicilio.direccion}</p>
+                            </td>
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <p className="text-center">{factura.domicilio.provincia.nombre}</p>
+                            </td>
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <p className="text-center">{factura.fecha_creacion}</p>
+                            </td>
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <p className="text-center">{factura.entrega_aproximada}</p>
+                            </td>
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {factura.articulos.map((art) => (
+                                <p key={art.id}>(x{art.pivot.cantidad}) {art.nombre}</p>
+                            ))}
+                            </td>
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <p className="text-center">{costeTotal()}€</p>
                             </td>
                             <td className="px-6 py-4 flex gap-2 justify-center items-center">
-                                <SecondaryButton onClick={() => openModifyModal(marca.id, marca.nombre)}>Editar</SecondaryButton>
-                                <DangerButton text="Borrar" onClick={() => delMarcas(marca.id)}></DangerButton>
+                                <SecondaryButton onClick={() => openModifyModal(factura.id, factura.entrega_aproximada, factura.fecha_creacion)}>Editar</SecondaryButton>
+                                <DangerButton text="Borrar" onClick={() => delFactura(factura.id)}></DangerButton>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <div className='flex justify-center  pt-10'>
+            <div className='flex justify-center pt-10'>
                 <button className='h-8 w-20 bg-black text-white rounded-l-lg' onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1}>Anterior</button>
                 {pageNumbers.map((pageNumber) => (
                     <button className={`border border-solid border-black h-8 w-8 ${pageNumber === currentPage ? 'bg-gray-700 text-white' : ''}`} key={pageNumber} onClick={() => changePage(pageNumber)} disabled={pageNumber === currentPage}>
