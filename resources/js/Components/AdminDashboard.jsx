@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import UsuariosTabla from '@/Components/TablasAdmin/UsuariosTabla';
 import ArticulosTabla from '@/Components/TablasAdmin/ArticulosTabla';
 import MarcasTabla from './TablasAdmin/MarcasTabla';
-
+import PedidoTabla from './TablasAdmin/PedidoTabla';
 
 export default function AdminDashboard({ }) {
     useEffect(() => {
@@ -48,9 +48,7 @@ export default function AdminDashboard({ }) {
             {tablaActual === 'Usuarios' && < UsuariosTabla/>}
             {tablaActual === 'Articulos' && < ArticulosTabla/>}
             {tablaActual === 'Marcas' && < MarcasTabla/>}
-
-
-
+            {tablaActual === 'Pedidos' && < PedidoTabla/>}
 
         </div>
     );

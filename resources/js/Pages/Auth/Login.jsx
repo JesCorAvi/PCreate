@@ -12,7 +12,10 @@ export default function Login({ status, canResetPassword }) {
         email: '',
         password: '',
         remember: false,
+        carrito: "",
+
     });
+    data.carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
     useEffect(() => {
         return () => {
