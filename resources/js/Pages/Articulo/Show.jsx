@@ -5,7 +5,7 @@ import Muestra from '@/Components/Muestra';
 
 import { Head } from '@inertiajs/react';
 
-export default function Show({ auth, categorias, articulo}) {
+export default function Show({user, auth, categorias, articulo}) {
     return (
         <>
             <LayoutLogueado
@@ -16,7 +16,7 @@ export default function Show({ auth, categorias, articulo}) {
             <Head title="Detalles" />
             <Muestra
                 articulo = {articulo}
-                user={auth.user}
+                user={user}
             ></Muestra>
             <Footer></Footer>
         </>

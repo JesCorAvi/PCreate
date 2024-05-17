@@ -63,6 +63,8 @@ Route::post('/factura/destroy', [FacturaController::class, 'destroy'])->name('fa
 
 
 Route::post('/tienda/comentarios/getComentario', [ComentarioController::class, 'getComentarios'])->name('comentario.getComentarios')->middleware('auth');
+Route::post('/tienda/comentarios/getComentarioWhere', [ComentarioController::class, 'getComentariosWhere'])->name('comentario.getComentariosWhere')->middleware('auth');
+
 Route::post('/tienda/comentario/store/{commentableType}/{commentableId}', [ComentarioController::class, 'store'])->name('comentario.store')->middleware('auth');
 Route::post('/tienda/comentario/destroy', [ComentarioController::class, 'destroy'])->name('comentario.destroy')->middleware('auth');
 

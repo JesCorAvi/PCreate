@@ -15,6 +15,12 @@ class ComentarioController extends Controller
         $Comentarios = Comentario::with('user')->orderBy('created_at', 'desc')->paginate(10);
         return response()->json($Comentarios);
     }
+    public function getComentariosWhere(Request $request)
+    {
+        $Comentarios = Comentario::with('user')->where("comentable_type", 'App\\Models\\' . $request->type)->where('comentable_id', $request->id)->orderBy('created_at', 'desc')->paginate(10);
+        return response()->json($Comentarios);
+    }
+
     /**
      * Display a listing of the resource.
      */

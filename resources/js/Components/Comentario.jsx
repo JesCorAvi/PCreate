@@ -2,7 +2,7 @@ import { Link } from '@inertiajs/react';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 
-export default function Comentario({id,usuario, nota, fecha, comentario, avatar, delComentarios, com_user, user }) {
+export default function Comentario({id,usuario,user, nota, fecha, comentario, avatar, delComentarios, com_user }) {
 
     function formatearFecha(date) {
 
@@ -46,7 +46,7 @@ export default function Comentario({id,usuario, nota, fecha, comentario, avatar,
                 <p className='p-2  pr-6'>{comentario}</p>
             </div>
 
-            {usuario.id == com_user && <button onClick={()=>delComentarios(id)} className="self-end pr-10">Borrar Comentario</button>}
+            {user.id == com_user && <button onClick={()=>delComentarios(id)} className="self-end pr-10">Borrar Comentario</button>}
         </div>
     );
 }

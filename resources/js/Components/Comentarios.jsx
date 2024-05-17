@@ -15,14 +15,20 @@ export default function Comentarios({ user, id }) {
     const [estrellasNuevaComentario, setEstrellasNuevaComentario] = useState(0);
     const [contenidoNuevaComentario, setContenidoNuevaComentario] = useState('');
     const [caracteres, setCaracteres] = useState(0);
+    const [userHasArticle, setUserHasArticle] = useState(user.facturas.some(factura =>
+        factura.articulos.some(articulo => articulo.id === id)
+    ));
+    const [userHasCommented, setUserHasCommented] = useState(user.comentarios.some(comentario =>
+        comentario.comentable_type === 'App\\Models\\Articulo' && comentario.comentable_id === id
+    ));
 
-
+    console.log(user);
     useEffect(() => {
-        getComentarios(currentPage);
+        getComentariosWhere(currentPage);
     }, [currentPage]);
 
-    function getComentarios(page) {
-        axios.post(route('comentario.getComentarios', { page: page }))
+    function getComentariosWhere(page) {
+        axios.post(route('comentario.getComentariosWhere', { page: page, id: id, type: 'Articulo' , commentableId: id }))
             .then((response) => {
                 setComentario(response.data.data);
                 setTotalPages(response.data.last_page);
@@ -44,7 +50,8 @@ export default function Comentarios({ user, id }) {
     function delComentarios(id) {
         axios.post(route('comentario.destroy', { id: id }))
             .then((response) => {
-                getComentarios();
+                getComentariosWhere();
+                setUserHasCommented(false);
             });
     }
 
@@ -54,10 +61,11 @@ export default function Comentarios({ user, id }) {
             estrellas: estrellasNuevaComentario,
             contenido: contenidoNuevaComentario
         }).then((response) => {
-            getComentarios();
+            getComentariosWhere();
             setCreatingComentario(false);
             setEstrellasNuevaComentario(0);
-            setCOntenidoNuevaComentario('');
+            setContenidoNuevaComentario('');
+            setUserHasCommented(true);
 
         })
             .catch((error) => {
@@ -69,7 +77,9 @@ export default function Comentarios({ user, id }) {
         <section className="flex-1 flex flex-col text-justify ">
             <div className='flex justify-between'>
                 <h2 className="font-bold text-2xl pt-10 ">Comentarios</h2>
-                <button onClick={() => setCreatingComentario(true)} className="font-semibold text-lg pt-10 xl:pr-10 underline">Añadir comentario</button>
+                {userHasArticle && !userHasCommented && (
+                    <button onClick={() => setCreatingComentario(true)}  className="font-semibold text-lg pt-10 xl:pr-10 underline">Añadir comentario</button>
+                )}
                 <Modal show={creatingComentario} onClose={() => setCreatingComentario(false)}>
                     <form onSubmit={(e) => createComentario(e)} className="p-6">
                         <h2 className="text-lg font-medium text-gray-900">Crear Comentario</h2>
@@ -120,6 +130,7 @@ export default function Comentarios({ user, id }) {
                         <Comentario
                             key={comentario.id}
                             id={comentario.id}
+                            user={user}
                             usuario={comentario.user.name}
                             avatar={comentario.user.avatar}
                             nota={comentario.estrellas}
@@ -142,7 +153,7 @@ export default function Comentarios({ user, id }) {
                     )}
                 </>
             ) : (
-                <h2 className='text-2xl px-5 font-semibold text-center'>No hay comentarios, ¡Sé el primero!</h2>
+                <h2 className='text-2xl px-5 py-10 font-semibold text-center'>No hay comentarios, ¡Sé el primero!</h2>
             )
             }
 

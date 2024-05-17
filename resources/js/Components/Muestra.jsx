@@ -17,7 +17,6 @@ export default function Pieza({user, active = false, classNameName = '', childre
     const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
     const { actualizarCantidadArticulosCookies } = useCarritoStore((state) => state);
 
-
     const imagenpr = articulo.fotos.find(foto => foto.orden === 1)?.imagen;
     const imagenSec1 = articulo.fotos.find(foto => foto.orden === 2)?.imagen;
     const imagenSec2 = articulo.fotos.find(foto => foto.orden === 3)?.imagen;

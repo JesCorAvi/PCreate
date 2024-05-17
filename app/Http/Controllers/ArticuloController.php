@@ -14,6 +14,7 @@ use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Socket;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -303,11 +304,11 @@ class ArticuloController extends Controller
     public function show(Request $request)
     {
         $articulo = Articulo::with('categoria', 'marca', 'fotos')->find($request->id);
-
-        return Inertia::render('Articulo/Show', ["articulo" => $articulo, "categorias" => Categoria::all()]);
+        $user = User::find(auth()->user()->id)->load("facturas.articulos", "comentarios");
+        return Inertia::render('Articulo/Show', ["user" => $user,  "articulo" => $articulo, "categorias" => Categoria::all()]);
     }
 
-    /**
+    /**P
      * Show the form for editing the specified resource.
      */
     public function edit(Request $request)
