@@ -7,6 +7,7 @@ use App\Http\Controllers\DomicilioController;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\PaypalController;
+use App\Http\Controllers\PCController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocketController;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,9 @@ Route::post('/tienda/editado/{id}', [ArticuloController::class, 'update'])->name
 Route::post('/tienda/destruir/{id}', [ArticuloController::class, 'destroy'])->name('articulo.destroy');
 Route::post('/articulos/getArticulos', [ArticuloController::class, 'getArticulos'])->name('articulo.getArticulos')->middleware('auth');
 
+Route::get('/configurador/crear', [PCController::class, 'create'])->name('pc.create');
+Route::post('/configurador/creado', [PCController::class, 'store'])->name('pc.store');
+Route::get('/pc/ver', [PCController::class, 'create'])->name('pc.show');
 
 Route::post('/carrito/store', [CarritoController::class, 'store'])->name('carrito.store')->middleware('auth');
 Route::post('/carrito/update', [CarritoController::class, 'update'])->name('carrito.update')->middleware('auth');

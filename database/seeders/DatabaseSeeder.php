@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             ProvinciaSeeder::class,
             ArticuloSeeder::class,
             UserSeeder::class,
+            SocketSeeder::class,
+
 
         ]);
         /*

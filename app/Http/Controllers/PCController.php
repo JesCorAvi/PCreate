@@ -6,6 +6,11 @@ use App\Models\Pc;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePcRequest;
 use App\Http\Requests\UpdatePcRequest;
+use App\Models\Articulo;
+use App\Models\Categoria;
+use App\Models\Marca;
+use Inertia\Inertia;
+use App\Models\Socket;
 
 class PcController extends Controller
 {
@@ -22,7 +27,23 @@ class PcController extends Controller
      */
     public function create()
     {
-        //
+        $articulos = [
+            "placas" => Articulo::where("categoria_id", 1)->with("fotos", "marca", "categoria")->get(),
+            "graficas" => Articulo::where("categoria_id", 2)->with("fotos", "marca", "categoria")->get(),
+            "ram" => Articulo::where("categoria_id", 3)->with("fotos", "marca", "categoria")->get(),
+            "fuentes" => Articulo::where("categoria_id", 4)->with("fotos", "marca", "categoria")->get(),
+            "cpu" => Articulo::where("categoria_id", 5)->with("fotos", "marca", "categoria")->get(),
+            "disipador" => Articulo::where("categoria_id", 6)->with("fotos", "marca", "categoria")->get(),
+            "cajas" => Articulo::where("categoria_id", 7)->with("fotos", "marca", "categoria")->get(),
+            "ventiladores" => Articulo::where("categoria_id", 8)->with("fotos", "marca", "categoria")->get(),
+            "almacenamientos" => Articulo::where("categoria_id", 9)->with("fotos", "marca", "categoria")->get(),
+        ];
+
+        return Inertia::render('PC/Create', [
+            'categorias' => Categoria::all(),
+            'sockets' => Socket::all(),
+            'articulos' => $articulos,
+        ]);
     }
 
     /**
