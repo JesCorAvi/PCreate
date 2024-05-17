@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('pcs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId("socket_id")->constrained();
             $table->foreignId("user_id")->constrained();
             $table->string("nombre");
             $table->timestamps();

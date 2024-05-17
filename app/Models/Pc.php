@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -24,5 +25,10 @@ class Pc extends Model
     public function socket(): BelongsTo
     {
         return $this->belongsTo(Socket::class);
+    }
+
+    public function comentarios(): MorphMany
+    {
+        return $this->morphMany(Comentario::class, 'comentable');
     }
 }
