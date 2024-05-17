@@ -20,8 +20,7 @@ use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use App\Rules\ImagenOCadena;
-
-
+use Illuminate\Support\Facades\Gate;
 
 class ArticuloController extends Controller
 {
@@ -99,6 +98,9 @@ class ArticuloController extends Controller
      */
     public function create()
     {
+        //if (! Gate::allows('create')) {
+        //    abort(403);
+        //}
         return Inertia::render('Articulo/Create', [
             "categorias" => Categoria::all(),
             "marcas" => Marca::all(),
@@ -313,6 +315,9 @@ class ArticuloController extends Controller
      */
     public function edit(Request $request)
     {
+        //if (!Gate::allows('update')) {
+        //abort(403);
+        //}
         $articulo = Articulo::with('categoria', 'marca', 'fotos')->find($request->id);
 
         return Inertia::render('Articulo/Edit', [

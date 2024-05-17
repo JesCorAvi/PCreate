@@ -27,17 +27,19 @@ class ArticuloPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(): bool
     {
-        //
+        //$user = auth()->user();
+        //return ($user->role === 'admin' || $user->id === 1);
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Articulo $articulo): bool
+    public function update(): bool
     {
-        //
+        //$user = auth()->user();
+        //return ($user->role === 'admin' || $user->id === 1);
     }
 
     /**
