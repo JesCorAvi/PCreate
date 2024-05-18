@@ -1,8 +1,12 @@
 import React from 'react';
 import Socket from './Socket';
 import Select from 'react-select';
+import { useState } from 'react';
+
 
 export default function Configurador({ sockets, articulos }) {
+    const [selectedSocket, setSelectedSocket] = useState(null);
+
     const CustomOption = ({ data, innerProps }) => (
         <div className='flex hover:bg-slate-200 align-middle cursor-pointer items-center p-2' {...innerProps}>
             {data.imagen && <img className='w-20 h-20' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + data.imagen} alt={data.label} />}
@@ -44,8 +48,11 @@ export default function Configurador({ sockets, articulos }) {
             padding: 0,
         }),
     };
-
     const noOptionsMessage = () => 'No hay opciones disponibles';
+
+    const handleSocketClick = (socketId) => {
+        setSelectedSocket(socketId);
+    };
 
     return (
         <div className="min-h-screen flex flex-col gap-7 mb-20">
@@ -53,13 +60,20 @@ export default function Configurador({ sockets, articulos }) {
                 <h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Configurador de PC:</h2>
                 <input className='w-56 h-10 self-center rounded-md' placeholder='Nombre para la configuración...'></input>
             </div>
-            <div className="flex gap-12 justify-center flex-wrap">
+            <div className="flex gap-12 justify-center flex-wrap mx-8">
                 {sockets.map((socket) => (
-                    <Socket nombre={socket.nombre} imagen={socket.imagen} key={socket.id} />
+                    <Socket
+                        id={socket.id}
+                        nombre={socket.nombre}
+                        imagen={socket.imagen}
+                        key={socket.id}
+                        onClick={setSelectedSocket}
+                        isSelected={selectedSocket === socket.id}
+                    />
                 ))}
             </div>
-            <div className='flex gap-14 max-w-all justify-center'>
-                <div className='rounded-lg w-2/6'>
+            <div className='flex flex-col lg:flex-row gap-14 max-w-all justify-center'>
+                <div className='rounded-lg w-all lg:w-2/6'>
                     <div>
                         <p className='font-semibold text-2xl py-4'>Placa base*</p>
                         <Select
@@ -160,7 +174,7 @@ export default function Configurador({ sockets, articulos }) {
                         />
                     </div>
                 </div>
-                <div className='border border-solid border-black rounded-lg my-5 p-5 w-2/6 '>
+                <div className='border border-solid border-black rounded-lg my-5 p-5 w-all lg:w-2/6 '>
                     <h1 className='text-center font-semibold text-2xl'>Información de Configuración</h1>
                 </div>
             </div>
