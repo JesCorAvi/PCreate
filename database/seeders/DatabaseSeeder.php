@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             CategoriaSeeder::class,
             MarcaSeeder::class,
             ProvinciaSeeder::class,
-            ArticuloSeeder::class,
+            //ArticuloSeeder::class,
             UserSeeder::class,
             SocketSeeder::class,
 

@@ -98,9 +98,10 @@ class ArticuloController extends Controller
      */
     public function create()
     {
-        //if (! Gate::allows('create')) {
-        //    abort(403);
-        //}
+        if (! Gate::allows('create', Articulo::class)) {
+            abort(403);
+        }
+
         return Inertia::render('Articulo/Create', [
             "categorias" => Categoria::all(),
             "marcas" => Marca::all(),
@@ -315,9 +316,10 @@ class ArticuloController extends Controller
      */
     public function edit(Request $request)
     {
-        //if (!Gate::allows('update')) {
-        //abort(403);
-        //}
+        if (! Gate::allows('update', Articulo::class)) {
+            abort(403);
+        }
+
         $articulo = Articulo::with('categoria', 'marca', 'fotos')->find($request->id);
 
         return Inertia::render('Articulo/Edit', [
