@@ -1,11 +1,76 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Socket from './Socket';
 import Select from 'react-select';
-import { useState } from 'react';
-
+import { useForm } from '@inertiajs/react';
 
 export default function Configurador({ sockets, articulos }) {
-    const [selectedSocket, setSelectedSocket] = useState(null);
+    console.log(articulos);
+    const { data, setData, post, errors } = useForm({
+        socket: null,
+        placa: null,
+        cpu: null,
+        disipador: null,
+        ram: null,
+        almacenamientoPrincipal: null,
+        almacenamientoSecundario: null,
+        grafica: null,
+        caja: null,
+        ventilacion: null,
+    });
+
+    const [filteredArticulos, setFilteredArticulos] = useState({
+        placas: [],
+        cpu: [],
+        disipador: [],
+        ram: [],
+        cajas: [],
+    });
+
+    useEffect(() => {
+        if (data.socket) {
+            const placasFiltradas = articulos.placas[data.socket] || [];
+            const cpuFiltradas = articulos.cpu[data.socket] || [];
+            const disipadorFiltradas = articulos.disipador[data.socket] || [];
+
+            setFilteredArticulos({
+                placas: placasFiltradas,
+                cpu: cpuFiltradas,
+                disipador: disipadorFiltradas,
+                ram: [],
+                cajas: [],
+            });
+        }
+    }, [data.socket]);
+
+    useEffect(() => {
+        if (data.placa) {
+            const placaSeleccionada = filteredArticulos.placas.find(placa => placa.id === data.placa);
+            console.log(placaSeleccionada.datos.ddrmax);
+
+            if (placaSeleccionada) {
+                const ddrmax = placaSeleccionada.datos.ddrmax;
+                const clase = placaSeleccionada.datos.clase;
+
+                const ramOptions = ddrmax === "5"
+                ? [...(articulos.ram.ddr4 || []), ...(articulos.ram.ddr5 || [])]
+                : (articulos.ram.ddr5 ? [articulos.ram.ddr5] : []);
+
+
+                    const cajaOptions = clase === 'micro_atx'
+                    ? [...(articulos.cajas.atx || []), ...(articulos.cajas.micro_atx || [])]
+                    : (articulos.cajas.atx ? [articulos.cajas.atx] : []);
+
+                setFilteredArticulos(prevState => ({
+                    ...prevState,
+                    ram: ramOptions,
+                    cajas: cajaOptions,
+                }),
+                console.log(ramOptions)
+
+                );
+            }
+        }
+    }, [data.placa]);
 
     const CustomOption = ({ data, innerProps }) => (
         <div className='flex hover:bg-slate-200 align-middle cursor-pointer items-center p-2' {...innerProps}>
@@ -48,11 +113,8 @@ export default function Configurador({ sockets, articulos }) {
             padding: 0,
         }),
     };
-    const noOptionsMessage = () => 'No hay opciones disponibles';
 
-    const handleSocketClick = (socketId) => {
-        setSelectedSocket(socketId);
-    };
+    const noOptionsMessage = () => 'No hay opciones disponibles';
 
     return (
         <div className="min-h-screen flex flex-col gap-7 mb-20">
@@ -67,8 +129,8 @@ export default function Configurador({ sockets, articulos }) {
                         nombre={socket.nombre}
                         imagen={socket.imagen}
                         key={socket.id}
-                        onClick={setSelectedSocket}
-                        isSelected={selectedSocket === socket.id}
+                        onClick={(id) => setData('socket', id)}
+                        isSelected={data.socket === socket.id}
                     />
                 ))}
             </div>
@@ -78,104 +140,125 @@ export default function Configurador({ sockets, articulos }) {
                         <p className='font-semibold text-2xl py-4'>Placa base*</p>
                         <Select
                             className='w-full rounded-md text-black'
-                            options={articulos.placas.map(placa => ({ value: placa.id, label: placa.nombre, imagen: placa.fotos[0]?.imagen }))}
+
+                            options={filteredArticulos.placas?.map(placa => ({ value: placa.id, label: placa.nombre, imagen: placa.fotos[0]?.imagen })) || []}
                             components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                             styles={customStyles}
                             placeholder='Selecciona una placa base...'
                             noOptionsMessage={noOptionsMessage}
+                            onChange={(selectedOption) => setData('placa', selectedOption.value)}
                         />
                     </div>
                     <div>
                         <p className='font-semibold text-2xl py-4'>Procesador*</p>
                         <Select
                             className='w-full rounded-md text-black'
-                            options={articulos.cpu.map(cpu => ({ value: cpu.id, label: cpu.nombre, imagen: cpu.fotos[0]?.imagen }))}
+                            options={filteredArticulos.cpu?.map(cpu => ({ value: cpu.id, label: cpu.nombre, imagen: cpu.fotos[0]?.imagen })) || []}
                             components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                             styles={customStyles}
                             placeholder='Selecciona un Procesador...'
                             noOptionsMessage={noOptionsMessage}
+                            onChange={(selectedOption) => setData('cpu', selectedOption.value)}
                         />
                     </div>
                     <div>
                         <p className='font-semibold text-2xl py-4'>Disipador Cpu*</p>
                         <Select
                             className='w-full rounded-md text-black'
-                            options={articulos.disipador.map(disipador => ({ value: disipador.id, label: disipador.nombre, imagen: disipador.fotos[0]?.imagen }))}
+                            options={filteredArticulos.disipador?.map(disipador => ({ value: disipador.id, label: disipador.nombre, imagen: disipador.fotos[0]?.imagen })) || []}
                             components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                             styles={customStyles}
                             placeholder='Selecciona un Disipador Cpu...'
                             noOptionsMessage={noOptionsMessage}
+                            onChange={(selectedOption) => setData('disipador', selectedOption.value)}
                         />
                     </div>
                     <div>
                         <p className='font-semibold text-2xl py-4'>RAM*</p>
                         <Select
                             className='w-full rounded-md text-black'
-                            options={articulos.ram.map(ram => ({ value: ram.id, label: ram.nombre, imagen: ram.fotos[0]?.imagen }))}
+                            options={filteredArticulos.ram?.map(ram => ({ value: ram.id, label: ram.nombre, imagen: ram.fotos[0]?.imagen })) || []}
                             components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                             styles={customStyles}
                             placeholder='Selecciona RAM...'
                             noOptionsMessage={noOptionsMessage}
+                            onChange={(selectedOption) => setData('ram', selectedOption.value)}
                         />
                     </div>
                     <div>
                         <p className='font-semibold text-2xl py-4'>Almacenamiento principal*</p>
                         <Select
                             className='w-full rounded-md text-black'
-                            options={articulos.almacenamientos.map(almacenamiento => ({ value: almacenamiento.id, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen }))}
+                            options={articulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
                             components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                             styles={customStyles}
                             placeholder='Selecciona un Almacenamiento principal...'
                             noOptionsMessage={noOptionsMessage}
+                            onChange={(selectedOption) => setData('almacenamientoPrincipal', selectedOption.value)}
                         />
                     </div>
                     <div>
                         <p className='font-semibold text-2xl py-4'>Almacenamiento secundario</p>
                         <Select
                             className='w-full rounded-md text-black'
-                            options={articulos.almacenamientos.map(almacenamiento => ({ value: almacenamiento.id, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen }))}
+                            options={articulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
                             components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                             styles={customStyles}
                             placeholder='Selecciona un Almacenamiento secundario...'
                             noOptionsMessage={noOptionsMessage}
+                            onChange={(selectedOption) => setData('almacenamientoSecundario', selectedOption.value)}
                         />
                     </div>
+                </div>
+                <div className='w-all lg:w-2/6'>
                     <div>
                         <p className='font-semibold text-2xl py-4'>Tarjeta Gráfica</p>
                         <Select
                             className='w-full rounded-md text-black'
-                            options={articulos.graficas.map(grafica => ({ value: grafica.id, label: grafica.nombre, imagen: grafica.fotos[0]?.imagen }))}
+                            options={articulos.graficas?.map(grafica => ({ value: grafica.id, label: grafica.nombre, imagen: grafica.fotos[0]?.imagen })) || []}
                             components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                             styles={customStyles}
                             placeholder='Selecciona una Tarjeta Gráfica...'
                             noOptionsMessage={noOptionsMessage}
+                            onChange={(selectedOption) => setData('grafica', selectedOption.value)}
                         />
                     </div>
                     <div>
                         <p className='font-semibold text-2xl py-4'>Caja</p>
                         <Select
                             className='w-full rounded-md text-black'
-                            options={articulos.cajas.map(caja => ({ value: caja.id, label: caja.nombre, imagen: caja.fotos[0]?.imagen }))}
+                            options={filteredArticulos.cajas?.map(caja => ({ value: caja.id, label: caja.nombre, imagen: caja.fotos[0]?.imagen })) || []}
                             components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                             styles={customStyles}
                             placeholder='Selecciona una Caja...'
                             noOptionsMessage={noOptionsMessage}
+                            onChange={(selectedOption) => setData('caja', selectedOption.value)}
                         />
                     </div>
                     <div>
-                        <p className='font-semibold text-2xl py-4'>Ventilación</p>
+                        <p className='font-semibold text-2xl py-4'>Ventiladores</p>
                         <Select
                             className='w-full rounded-md text-black'
-                            options={articulos.ventiladores.map(ventilador => ({ value: ventilador.id, label: ventilador.nombre, imagen: ventilador.fotos[0]?.imagen }))}
+                            options={articulos.ventiladores?.map(ventilador => ({ value: ventilador.id, label: ventilador.nombre, imagen: ventilador.fotos[0]?.imagen })) || []}
                             components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                             styles={customStyles}
-                            placeholder='Selecciona una Ventilación...'
+                            placeholder='Selecciona Ventiladores...'
                             noOptionsMessage={noOptionsMessage}
+                            onChange={(selectedOption) => setData('ventilacion', selectedOption.value)}
                         />
                     </div>
-                </div>
-                <div className='border border-solid border-black rounded-lg my-5 p-5 w-all lg:w-2/6 '>
-                    <h1 className='text-center font-semibold text-2xl'>Información de Configuración</h1>
+                    <div>
+                        <p className='font-semibold text-2xl py-4'>Fuente de alimentación</p>
+                        <Select
+                            className='w-full rounded-md text-black'
+                            options={articulos.fuentes?.map(fuente => ({ value: fuente.id, label: fuente.nombre, imagen: fuente.fotos[0]?.imagen })) || []}
+                            components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
+                            styles={customStyles}
+                            placeholder='Selecciona una Fuente de alimentación...'
+                            noOptionsMessage={noOptionsMessage}
+                            onChange={(selectedOption) => setData('fuente', selectedOption.value)}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

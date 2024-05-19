@@ -36,9 +36,9 @@ Route::post('/perfil/getUsers', [ProfileController::class, 'getUsers'])->name('p
 Route::post('/perfil/delUsers', [ProfileController::class, 'destroyId'])->name('profile.destroyId')->middleware('auth');
 
 
-Route::get('/tienda/crear', [ArticuloController::class, 'create'])->name('articulo.create');
-Route::post('/tienda/creado', [ArticuloController::class, 'store'])->name('articulo.store');
-Route::post('/socket/creado', [SocketController::class, 'store'])->name('socket.store');
+Route::get('/tienda/crear', [ArticuloController::class, 'create'])->name('articulo.create')->middleware('auth');
+Route::post('/tienda/creado', [ArticuloController::class, 'store'])->name('articulo.store')->middleware('auth');
+Route::post('/socket/creado', [SocketController::class, 'store'])->name('socket.store')->middleware('auth');
 Route::get('/tienda', [ArticuloController::class, 'Tienda'])->name('articulo.index');
 Route::get('/tienda/{id}',[ArticuloController::class, 'show'])->name('articulos.show');
 Route::get('/tienda/editar/{id}',[ArticuloController::class, 'edit'])->name('articulo.edit');

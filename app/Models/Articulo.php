@@ -17,6 +17,9 @@ class Articulo extends Model
 
     protected $fillable = ["nombre","categoria_id", "descripcion", "precio", "datos", "marca_id"];
 
+    protected $casts = [
+        'datos' => 'object',
+    ];
 
     public function pcs(): BelongsToMany
     {

@@ -27,7 +27,7 @@ export default function Pieza({user, active = false, classNameName = '', childre
     const [imagenSecundaria2] = useState(`http://127.0.0.1:8000/storage/uploads/articulos/${imagenSec2}`);
 
     const [lightboxVisible, setLightboxVisible] = useState(false);
-    const datos = JSON.parse(articulo.datos);
+    const datos = articulo.datos;
 
     function añadirAlCarrito() {
         handleAddToCartClick()
@@ -40,7 +40,7 @@ export default function Pieza({user, active = false, classNameName = '', childre
                 console.log(error);
             });
         }else{
-            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            let carrito = localStorage.getItem('carrito') || [];
             let articuloEncontrado = carrito.find(art => art.articulo_id === articulo.id);
             if (articuloEncontrado) {
                 articuloEncontrado.cantidad++;

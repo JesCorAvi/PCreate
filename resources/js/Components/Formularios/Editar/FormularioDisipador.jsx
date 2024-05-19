@@ -8,12 +8,12 @@ import validation from '../../../validation.json';
 export default function FormularioDisipador({  sockets, marcas, articulo  }) {
     const { data, setData, post, errors } = useForm({
         id: articulo.id,
-        socket_id: JSON.parse(articulo.datos).socket_id,
+        socket_id: articulo.datos.socket_id,
         marca_id: articulo.marca_id,
         nombre: articulo.nombre,
         descripcion: articulo.descripcion,
         precio: articulo.precio,
-        liquida: JSON.parse(articulo.datos).liquida,
+        liquida: articulo.datos.liquida,
         imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen,
         imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen,
         imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen,

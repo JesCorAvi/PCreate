@@ -145,7 +145,7 @@ class ArticuloController extends Controller
                     "clase" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "socket_id" => $request->socket_id,
                         "socket" => Socket::find($request->socket_id)->nombre,
                         "slotsm2" => $request->slotsm2,
@@ -153,7 +153,7 @@ class ArticuloController extends Controller
                         "ddrmax" => $request->ddrmax,
                         "mhzmax" => $request->mhzmax,
                         "clase" => $request->clase
-                    ]),
+                    ],
                 ];
                 break;
 
@@ -164,28 +164,28 @@ class ArticuloController extends Controller
                     "consumo" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "memoria" => $request->memoria,
                         "gddr" => $request->gddr,
                         "consumo" => $request->consumo,
-                    ]),
+                    ],
                 ];
                 break;
             case "CPU":
                 $request->validate([
                     "socket_id" => "required",
                     "nucleos" => "required|regex:/^\d+$/",
-                    "frecuencia" => "required|regex:/^\d+$/",
+                    "frecuencia" => "required|regex::/^\d*\.?\d*$/",
                     "consumo" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "socket_id" => $request->socket_id,
                         "socket" => Socket::find($request->socket_id)->nombre,
                         "nucleos" => $request->nucleos,
                         "frecuencia" => $request->frecuencia,
                         "consumo" => $request->consumo,
-                    ]),
+                    ],
                 ];
                 break;
 
@@ -197,12 +197,12 @@ class ArticuloController extends Controller
                     "ddr" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "cantidad" => $request->cantidad,
                         "memoria" => $request->memoria,
                         "frecuencia" => $request->frecuencia,
                         "ddr" => $request->ddr,
-                    ]),
+                    ],
                 ];
                 break;
 
@@ -212,11 +212,11 @@ class ArticuloController extends Controller
                     "liquida" => "required",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "socket_id" => $request->socket_id,
                         "socket" => Socket::find($request->socket_id)->nombre,
                         "liquida" => $request->boolean('liquida'),
-                    ]),
+                    ],
                 ];
                 break;
 
@@ -228,13 +228,13 @@ class ArticuloController extends Controller
                     "lectura" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "memoria" => $request->memoria,
                         "clase" => $request->clase,
                         "escritura" => $request->escritura,
                         "lectura" => $request->lectura,
 
-                    ]),
+                    ],
                 ];
                 break;
 
@@ -243,9 +243,9 @@ class ArticuloController extends Controller
                     "poder" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" =>[
                         "poder" => $request->poder,
-                    ]),
+                    ],
                 ];
                 break;
 
@@ -255,10 +255,10 @@ class ArticuloController extends Controller
                     "ventiladores" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "clase" => $request->clase,
                         "ventiladores" => $request->ventiladores,
-                    ]),
+                    ],
                 ];
                 break;
             case "Ventilador":
@@ -366,7 +366,7 @@ class ArticuloController extends Controller
                     "clase" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "socket_id" => $request->socket_id,
                         "socket" => Socket::find($request->socket_id)->nombre,
                         "slotsm2" => $request->slotsm2,
@@ -374,7 +374,7 @@ class ArticuloController extends Controller
                         "ddrmax" => $request->ddrmax,
                         "mhzmax" => $request->mhzmax,
                         "clase" => $request->clase
-                    ]),
+                    ],
                 ];
                 break;
 
@@ -385,28 +385,28 @@ class ArticuloController extends Controller
                     "consumo" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" =>[
                         "memoria" => $request->memoria,
                         "gddr" => $request->gddr,
                         "consumo" => $request->consumo,
-                    ]),
+                    ],
                 ];
                 break;
             case "CPU":
                 $request->validate([
                     "socket_id" => "required",
                     "nucleos" => "required|regex:/^\d+$/",
-                    "frecuencia" => "required|regex:/^\d+$/",
+                    "frecuencia" => "required|regex:/^\d*\.?\d*$/",
                     "consumo" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "socket_id" => $request->socket_id,
                         "socket" => Socket::find($request->socket_id)->nombre,
                         "nucleos" => $request->nucleos,
                         "frecuencia" => $request->frecuencia,
                         "consumo" => $request->consumo,
-                    ]),
+                    ],
                 ];
                 break;
 
@@ -418,12 +418,12 @@ class ArticuloController extends Controller
                     "ddr" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "cantidad" => $request->cantidad,
                         "memoria" => $request->memoria,
                         "frecuencia" => $request->frecuencia,
                         "ddr" => $request->ddr,
-                    ]),
+                    ],
                 ];
                 break;
 
@@ -433,11 +433,11 @@ class ArticuloController extends Controller
                     "liquida" => "required",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "socket_id" => $request->socket_id,
                         "socket" => Socket::find($request->socket_id)->nombre,
                         "liquida" => $request->liquida,
-                    ]),
+                    ],
                 ];
                 break;
 
@@ -449,13 +449,13 @@ class ArticuloController extends Controller
                     "lectura" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "memoria" => $request->memoria,
                         "clase" => $request->clase,
                         "escritura" => $request->escritura,
                         "lectura" => $request->lectura,
 
-                    ]),
+                    ],
                 ];
                 break;
 
@@ -464,9 +464,9 @@ class ArticuloController extends Controller
                     "poder" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "poder" => $request->poder,
-                    ]),
+                    ],
                 ];
                 break;
 
@@ -476,10 +476,10 @@ class ArticuloController extends Controller
                     "ventiladores" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" => json_encode([
+                    "datos" => [
                         "clase" => $request->clase,
                         "ventiladores" => $request->ventiladores,
-                    ]),
+                    ],
                 ];
                 break;
             case "Ventilador":

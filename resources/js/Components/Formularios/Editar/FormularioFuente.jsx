@@ -11,7 +11,7 @@ export default function FormularioFuente({ marcas, articulo  }) {
         nombre: articulo.nombre,
         descripcion: articulo.descripcion,
         precio: articulo.precio,
-        poder: JSON.parse(articulo.datos).poder,
+        poder: articulo.datos.poder,
         imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen,
         imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen,
         imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen,

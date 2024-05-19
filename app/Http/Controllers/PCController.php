@@ -27,16 +27,21 @@ class PcController extends Controller
      */
     public function create()
     {
+        // Obtener todos los artículos por categoría
+        $articulos = Articulo::with('fotos', 'marca', 'categoria')->get();
+        // Filtrar y subdividir los artículos
+        $articulosPorCategoria = $articulos->groupBy('categoria_id');
+
         $articulos = [
-            "placas" => Articulo::where("categoria_id", 1)->with("fotos", "marca", "categoria")->get(),
-            "graficas" => Articulo::where("categoria_id", 2)->with("fotos", "marca", "categoria")->get(),
-            "ram" => Articulo::where("categoria_id", 3)->with("fotos", "marca", "categoria")->get(),
-            "fuentes" => Articulo::where("categoria_id", 4)->with("fotos", "marca", "categoria")->get(),
-            "cpu" => Articulo::where("categoria_id", 5)->with("fotos", "marca", "categoria")->get(),
-            "disipador" => Articulo::where("categoria_id", 6)->with("fotos", "marca", "categoria")->get(),
-            "cajas" => Articulo::where("categoria_id", 7)->with("fotos", "marca", "categoria")->get(),
-            "ventiladores" => Articulo::where("categoria_id", 8)->with("fotos", "marca", "categoria")->get(),
-            "almacenamientos" => Articulo::where("categoria_id", 9)->with("fotos", "marca", "categoria")->get(),
+            "placas" => $this->subdividePorSocket($articulosPorCategoria->get(1)),
+            "graficas" => $articulosPorCategoria->get(2),
+            "ram" => $this->subdivideRam($articulosPorCategoria->get(3)),
+            "fuentes" => $articulosPorCategoria->get(4),
+            "cpu" => $this->subdividePorSocket($articulosPorCategoria->get(5)),
+            "disipador" => $this->subdividePorSocket($articulosPorCategoria->get(6)),
+            "cajas" => $this->subdivideCaja($articulosPorCategoria->get(7)),
+            "ventiladores" => $articulosPorCategoria->get(8),
+            "almacenamientos" => $articulosPorCategoria->get(9),
         ];
 
         return Inertia::render('PC/Create', [
@@ -46,6 +51,36 @@ class PcController extends Controller
         ]);
     }
 
+    private function subdividePorSocket($articulos)
+    {
+        return $articulos->groupBy(function ($articulo) {
+            return $articulo->datos->socket_id;
+        });
+    }
+    private function subdivideCaja($placas)
+    {
+
+        return [
+            'atx' => $placas->filter(function ($placa) {
+                return $placa->datos->clase == 'ATX';
+            }),
+            'micro_atx' => $placas->filter(function ($placa) {
+                return $placa->datos->clase == 'Micro-ATX';
+            })
+        ];
+    }
+
+    private function subdivideRam($ram)
+    {
+        return [
+            'ddr4' => $ram->filter(function ($ram) {
+                return $ram->datos->ddr == 4;
+            }),
+            'ddr5' => $ram->filter(function ($ram) {
+                return $ram->datos->ddr == 5;
+            })
+        ];
+    }
     /**
      * Store a newly created resource in storage.
      */
