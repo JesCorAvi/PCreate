@@ -57,16 +57,15 @@ class PcController extends Controller
             return $articulo->datos->socket_id;
         });
     }
-    private function subdivideCaja($placas)
+    private function subdivideCaja($cajas)
     {
-
         return [
-            'atx' => $placas->filter(function ($placa) {
-                return $placa->datos->clase == 'ATX';
-            }),
-            'micro_atx' => $placas->filter(function ($placa) {
-                return $placa->datos->clase == 'Micro-ATX';
-            })
+            'atx' => $cajas->filter(function ($caja) {
+                return strtolower($caja->datos->clase) === 'atx';
+            })->values(),
+            'micro_atx' => $cajas->filter(function ($caja) {
+                return strtolower($caja->datos->clase) === 'micro-atx';
+            })->values(),
         ];
     }
 
@@ -75,10 +74,10 @@ class PcController extends Controller
         return [
             'ddr4' => $ram->filter(function ($ram) {
                 return $ram->datos->ddr == 4;
-            }),
+            })->values(),
             'ddr5' => $ram->filter(function ($ram) {
                 return $ram->datos->ddr == 5;
-            })
+            })->values()
         ];
     }
     /**

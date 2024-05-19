@@ -45,7 +45,6 @@ export default function Configurador({ sockets, articulos }) {
     useEffect(() => {
         if (data.placa) {
             const placaSeleccionada = filteredArticulos.placas.find(placa => placa.id === data.placa);
-            console.log(placaSeleccionada.datos.ddrmax);
 
             if (placaSeleccionada) {
                 const ddrmax = placaSeleccionada.datos.ddrmax;
@@ -56,16 +55,15 @@ export default function Configurador({ sockets, articulos }) {
                 : (articulos.ram.ddr5 ? [articulos.ram.ddr5] : []);
 
 
-                    const cajaOptions = clase === 'micro_atx'
-                    ? [...(articulos.cajas.atx || []), ...(articulos.cajas.micro_atx || [])]
-                    : (articulos.cajas.atx ? [articulos.cajas.atx] : []);
+                const cajaOptions = clase === 'Micro-ATX'
+                ? [...(articulos.cajas.atx || []), ...(articulos.cajas.micro_atx || [])]
+                : (articulos.cajas.atx ? [articulos.cajas.atx] : []);
 
                 setFilteredArticulos(prevState => ({
                     ...prevState,
                     ram: ramOptions,
                     cajas: cajaOptions,
                 }),
-                console.log(ramOptions)
 
                 );
             }
@@ -227,8 +225,7 @@ export default function Configurador({ sockets, articulos }) {
                         <p className='font-semibold text-2xl py-4'>Caja</p>
                         <Select
                             className='w-full rounded-md text-black'
-                            options={filteredArticulos.cajas?.map(caja => ({ value: caja.id, label: caja.nombre, imagen: caja.fotos[0]?.imagen })) || []}
-                            components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
+                            options={filteredArticulos.cajas?.map(caja => ({ value: caja.id, label: caja.nombre, imagen: caja.fotos?.[0]?.imagen })) || []}                            components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                             styles={customStyles}
                             placeholder='Selecciona una Caja...'
                             noOptionsMessage={noOptionsMessage}
