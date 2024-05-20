@@ -3,6 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Socket from './Socket';
 import Select from 'react-select';
 import { useForm } from '@inertiajs/react';
+import BotonGrande from './BotonGrande';
 
 export default function Configurador({ user, sockets, articulos }) {
     console.log(articulos, sockets);
@@ -383,44 +384,44 @@ export default function Configurador({ user, sockets, articulos }) {
                         </div>
                         {data.caja && (
                             <div>
-                            <p className='font-semibold text-2xl py-4'>Ventilación</p>
-                            <div className='flex items-center'>
-                                <div className='w-full pr-5'>
-                                    <Select
-                                        className='w-full rounded-md text-black'
-                                        options={articulos.ventiladores?.map(ventilacion => ({ value: ventilacion.id, label: ventilacion.nombre, imagen: ventilacion.fotos[0]?.imagen })) || []}
-                                        components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
-                                        styles={customStyles}
-                                        placeholder='Selecciona un Sistema de ventilación...'
-                                        noOptionsMessage={noOptionsMessage}
-                                        value={data.ventilacion ? { value: data.ventilacion, label: articulos.ventiladores.find(ventilacion => ventilacion.id === data.ventilacion)?.nombre, imagen: articulos.ventiladores.find(ventilacion => ventilacion.id === data.ventilacion)?.fotos[0]?.imagen } : null}
-                                        onChange={(selectedOption) => setData('ventilacion', selectedOption.value)}
-                                    />
-                                </div>
-                                {data.ventilacion && (
-                                    <div className="flex items-center space-x-4">
-                                        <button
-                                            onClick={handleDecrement}
-                                            disabled={ventiladorCount === 0}
-                                            className={`px-3 py-1 ${ventiladorCount === 0 ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-700'} text-white font-bold rounded`}
-                                        >
-                                            -
-                                        </button>
-                                        <span>{ventiladorCount}</span>
-                                        <button
-                                            onClick={handleIncrement}
-                                            disabled={ventiladorCount === maxVentiladores}
-                                            className={`px-3 py-1 ${ventiladorCount === maxVentiladores ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-700'} text-white font-bold rounded`}
-                                        >
-                                            +
-                                        </button>
+                                <p className='font-semibold text-2xl py-4'>Ventilación</p>
+                                <div className='flex items-center'>
+                                    <div className='w-full pr-5'>
+                                        <Select
+                                            className='w-full rounded-md text-black'
+                                            options={articulos.ventiladores?.map(ventilacion => ({ value: ventilacion.id, label: ventilacion.nombre, imagen: ventilacion.fotos[0]?.imagen })) || []}
+                                            components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
+                                            styles={customStyles}
+                                            placeholder='Selecciona un Sistema de ventilación...'
+                                            noOptionsMessage={noOptionsMessage}
+                                            value={data.ventilacion ? { value: data.ventilacion, label: articulos.ventiladores.find(ventilacion => ventilacion.id === data.ventilacion)?.nombre, imagen: articulos.ventiladores.find(ventilacion => ventilacion.id === data.ventilacion)?.fotos[0]?.imagen } : null}
+                                            onChange={(selectedOption) => setData('ventilacion', selectedOption.value)}
+                                        />
                                     </div>
-                                )}
+                                    {data.ventilacion && (
+                                        <div className="flex items-center space-x-4">
+                                            <button
+                                                onClick={handleDecrement}
+                                                disabled={ventiladorCount === 0}
+                                                className={`px-3 py-1 ${ventiladorCount === 0 ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-700'} text-white font-bold rounded`}
+                                            >
+                                                -
+                                            </button>
+                                            <span>{ventiladorCount}</span>
+                                            <button
+                                                onClick={handleIncrement}
+                                                disabled={ventiladorCount === maxVentiladores}
+                                                className={`px-3 py-1 ${ventiladorCount === maxVentiladores ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-700'} text-white font-bold rounded`}
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
                         )}
                     </div>
-                    <div className='rounded-lg w-all lg:w-2/6 border shadow-md p-5 flex flex-col gap-4'>
+                    <div className='rounded-lg w-full lg:w-2/6 border shadow-md p-5 flex flex-col gap-4 h-auto'>
                         <h2 className="text-center font-semibold text-3xl p-5">Resumen</h2>
                         <div>
                             <h3 className="font-semibold text-xl">Socket</h3>
@@ -428,68 +429,90 @@ export default function Configurador({ user, sockets, articulos }) {
                         </div>
                         <div>
                             <h3 className="font-semibold text-xl">Placa base</h3>
-                            <p className='px-5'>{getArticuloInfo(articulos, data.placa, "nombre")} {getArticuloInfo(articulos, data.placa, "precio")}€</p>
+                            <div className="flex justify-between px-5">
+                                <p>{getArticuloInfo(articulos, data.placa, "nombre")}</p>
+                                <p>{getArticuloInfo(articulos, data.placa, "precio")}€</p>
+                            </div>
                         </div>
                         {data.cpu && (
-                        <div>
-                            <h3 className="font-semibold text-xl">CPU</h3>
-                            <p className='px-5'>{getArticuloInfo(articulos, data.cpu, "nombre")} {getArticuloInfo(articulos, data.cpu, "precio")}€</p>
-                        </div>
+                            <div>
+                                <h3 className="font-semibold text-xl">CPU</h3>
+                                <div className="flex justify-between px-5">
+                                    <p>{getArticuloInfo(articulos, data.cpu, "nombre")}</p>
+                                    <p>{getArticuloInfo(articulos, data.cpu, "precio")}€</p>
+                                </div>
+                            </div>
                         )}
                         {data.disipador && (
-                        <div>
-
-                            <h3 className="font-semibold text-xl">Disipador CPU</h3>
-                            <p className='px-5'>{getArticuloInfo(articulos, data.disipador, "nombre")} {getArticuloInfo(articulos, data.disipador, "precio")}€</p>
-                        </div>
+                            <div>
+                                <h3 className="font-semibold text-xl">Disipador CPU</h3>
+                                <div className="flex justify-between px-5">
+                                    <p>{getArticuloInfo(articulos, data.disipador, "nombre")}</p>
+                                    <p>{getArticuloInfo(articulos, data.disipador, "precio")}€</p>
+                                </div>
+                            </div>
                         )}
                         {data.ram && (
-                        <div>
-
-                            <h3 className="font-semibold text-xl">Modulos de RAM</h3>
-                            <p className='px-5'>{getArticuloInfo(articulos, data.ram, "nombre")} {getArticuloInfo(articulos, data.ram, "precio")}€</p>
-                        </div>
+                            <div>
+                                <h3 className="font-semibold text-xl">Modulos de RAM</h3>
+                                <div className="flex justify-between px-5">
+                                    <p>{getArticuloInfo(articulos, data.ram, "nombre")}</p>
+                                    <p>{getArticuloInfo(articulos, data.ram, "precio")}€</p>
+                                </div>
+                            </div>
                         )}
                         {data.almacenamientoPrincipal && (
-                        <div>
-
-                            <h3 className="font-semibold text-xl">Almacenamiento Principal</h3>
-                            <p className='px-5'>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "nombre")} {getArticuloInfo(articulos, data.almacenamientoPrincipal, "precio")}€</p>
-                        </div>
+                            <div>
+                                <h3 className="font-semibold text-xl">Almacenamiento Principal</h3>
+                                <div className="flex justify-between px-5">
+                                    <p>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "nombre")}</p>
+                                    <p>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "precio")}€</p>
+                                </div>
+                            </div>
                         )}
                         {data.almacenamientoSecundario && (
-                        <div>
-
-                            <h3 className="font-semibold text-xl">Almacenamiento Secundario</h3>
-                            <p className='px-5'>{getArticuloInfo(articulos, data.almacenamientoSecundario, "nombre")} {getArticuloInfo(articulos, data.almacenamientoSecundario, "precio")}€</p>
-                        </div>
+                            <div>
+                                <h3 className="font-semibold text-xl">Almacenamiento Secundario</h3>
+                                <div className="flex justify-between px-5">
+                                    <p>{getArticuloInfo(articulos, data.almacenamientoSecundario, "nombre")}</p>
+                                    <p>{getArticuloInfo(articulos, data.almacenamientoSecundario, "precio")}€</p>
+                                </div>
+                            </div>
                         )}
                         {data.grafica && (
-                        <div>
-
-                            <h3 className="font-semibold text-xl">Tarjeta Gráfica</h3>
-                            <p className='px-5'>{getArticuloInfo(articulos, data.grafica, "nombre")} {getArticuloInfo(articulos, data.grafica, "precio")}€</p>
-                        </div>
+                            <div>
+                                <h3 className="font-semibold text-xl">Tarjeta Gráfica</h3>
+                                <div className="flex justify-between px-5">
+                                    <p>{getArticuloInfo(articulos, data.grafica, "nombre")}</p>
+                                    <p>{getArticuloInfo(articulos, data.grafica, "precio")}€</p>
+                                </div>
+                            </div>
                         )}
                         {data.caja && (
-                        <div>
-
-                            <h3 className="font-semibold text-xl">Caja</h3>
-                            <p className='px-5'>{getArticuloInfo(articulos, data.caja, "nombre")} {getArticuloInfo(articulos, data.caja, "precio")}€</p>
-                        </div>
+                            <div>
+                                <h3 className="font-semibold text-xl">Caja</h3>
+                                <div className="flex justify-between px-5">
+                                    <p>{getArticuloInfo(articulos, data.caja, "nombre")}</p>
+                                    <p>{getArticuloInfo(articulos, data.caja, "precio")}€</p>
+                                </div>
+                            </div>
                         )}
                         {data.ventilacion && (
-                        <div>
-                            <h3 className="font-semibold text-xl">Ventilacion</h3>
-                            <p className='px-5'>x{ventiladorCount} {getArticuloInfo(articulos, data.ventilacion, "nombre")} {getArticuloInfo(articulos, data.ventilacion, "precio") * ventiladorCount}€</p>
-                        </div>
+                            <div>
+                                <h3 className="font-semibold text-xl">Ventilacion</h3>
+                                <div className="flex justify-between px-5">
+                                    <p>x{ventiladorCount} {getArticuloInfo(articulos, data.ventilacion, "nombre")}</p>
+                                    <p>{getArticuloInfo(articulos, data.ventilacion, "precio") * ventiladorCount}€</p>
+                                </div>
+                            </div>
                         )}
-                        <div>
-                            <p className="text-center font-semibold text-2xl">Total</p>
-                            <p className='text-center text-xl'>{precioTotal}€</p>
+                        <div className="mt-auto text-center">
+                            <p className="font-semibold text-2xl">Total</p>
+                            <p className='text-xl'>{precioTotal}€</p>
                         </div>
-
+                        <BotonGrande texto="Añadir al carrito"></BotonGrande>
                     </div>
+
                 </div>
             )}
         </div>
