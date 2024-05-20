@@ -12,6 +12,7 @@ export default function Create({ auth, categorias, sockets, articulos }) {
             >
             <Head title="Crear Artículo" />
             <Configurador
+                user = {auth.user}
                 sockets = {sockets}
                 articulos = {articulos}
             ></Configurador>

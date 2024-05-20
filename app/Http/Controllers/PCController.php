@@ -53,12 +53,24 @@ class PcController extends Controller
 
     private function subdividePorSocket($articulos)
     {
+        if ($articulos === null) {
+            return collect(); // Return an empty collection if $articulos is null
+        }
+
         return $articulos->groupBy(function ($articulo) {
             return $articulo->datos->socket_id;
         });
     }
+
     private function subdivideCaja($cajas)
     {
+        if ($cajas === null) {
+            return [
+                'atx' => collect(),
+                'micro_atx' => collect(),
+            ];
+        }
+
         return [
             'atx' => $cajas->filter(function ($caja) {
                 return strtolower($caja->datos->clase) === 'atx';
@@ -71,6 +83,13 @@ class PcController extends Controller
 
     private function subdivideRam($ram)
     {
+        if ($ram === null) {
+            return [
+                'ddr4' => collect(),
+                'ddr5' => collect(),
+            ];
+        }
+
         return [
             'ddr4' => $ram->filter(function ($ram) {
                 return $ram->datos->ddr == 4;

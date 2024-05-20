@@ -175,7 +175,7 @@ class ArticuloController extends Controller
                 $request->validate([
                     "socket_id" => "required",
                     "nucleos" => "required|regex:/^\d+$/",
-                    "frecuencia" => "required|regex::/^\d*\.?\d*$/",
+                    "frecuencia" => "required|regex:/^\d*\.?\d*$/",
                     "consumo" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
