@@ -4,6 +4,7 @@ import Socket from './Socket';
 import Select from 'react-select';
 import { useForm } from '@inertiajs/react';
 import BotonGrande from './BotonGrande';
+import Boton from './Boton';
 
 export default function Configurador({ user, sockets, articulos }) {
     console.log(articulos, sockets);
@@ -420,6 +421,8 @@ export default function Configurador({ user, sockets, articulos }) {
                                 </div>
                             </div>
                         )}
+                                                <Boton texto="Guardar Configuración" className="w-full"></Boton>
+
                     </div>
                     <div className='rounded-lg w-full lg:w-2/6 border shadow-md p-5 flex flex-col gap-4 h-auto'>
                         <h2 className="text-center font-semibold text-3xl p-5">Resumen</h2>
