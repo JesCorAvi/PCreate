@@ -46,8 +46,8 @@ Route::post('/tienda/editado/{id}', [ArticuloController::class, 'update'])->name
 Route::post('/tienda/destruir/{id}', [ArticuloController::class, 'destroy'])->name('articulo.destroy');
 Route::post('/articulos/getArticulos', [ArticuloController::class, 'getArticulos'])->name('articulo.getArticulos')->middleware('auth');
 
-Route::get('/configurador/crear', [PCController::class, 'create'])->name('pc.create');
-Route::post('/configurador/creado', [PCController::class, 'store'])->name('pc.store');
+Route::get('/configurador/crear', [PCController::class, 'create'])->name('pc.create')->middleware('auth');;
+Route::post('/configurador/creado', [PCController::class, 'store'])->name('pc.store')->middleware('auth');;
 Route::get('/pc/ver', [PCController::class, 'create'])->name('pc.show');
 
 Route::post('/carrito/store', [CarritoController::class, 'store'])->name('carrito.store')->middleware('auth');

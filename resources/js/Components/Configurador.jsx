@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Socket from './Socket';
 import Select from 'react-select';
 import { useForm } from '@inertiajs/react';
 
 export default function Configurador({ user, sockets, articulos }) {
     console.log(articulos, sockets);
+    const [ventiladorCount, setVentiladorCount] = useState(1);
+    const [maxVentiladores, setMaxVentiladores] = useState(0);
+    const [precioTotal, setPrecioTotal] = useState(0);
+    const [filteredArticulos, setFilteredArticulos] = useState({
+        placas: [],
+        cpu: [],
+        disipador: [],
+        ram: [],
+        cajas: [],
+    });
     const { data, setData, post, errors, reset } = useForm({
         nombre: "PC de " + user.name + " " + new Date().getTime(),
         socket: null,
@@ -19,13 +30,10 @@ export default function Configurador({ user, sockets, articulos }) {
         ventilacion: null,
     });
 
-    const [filteredArticulos, setFilteredArticulos] = useState({
-        placas: [],
-        cpu: [],
-        disipador: [],
-        ram: [],
-        cajas: [],
-    });
+    const limpiarSelect = (opcion) => {
+        setData(opcion, null);
+    };
+
 
     const calcularPrecioTotal = () => {
         let total = 0;
@@ -33,18 +41,21 @@ export default function Configurador({ user, sockets, articulos }) {
 
         componentes.forEach(componente => {
             if (data[componente]) {
-                total += parseFloat(getArticuloInfo(articulos, data[componente], "precio"));
+                if (componente === 'ventilacion') {
+                    total += parseFloat(getArticuloInfo(articulos, data[componente], "precio")) * ventiladorCount;
+                    return;
+                } else {
+                    total += parseFloat(getArticuloInfo(articulos, data[componente], "precio"));
+                }
             }
         });
 
         return total.toFixed(2);
     };
 
-    const [precioTotal, setPrecioTotal] = useState(calcularPrecioTotal());
-
     useEffect(() => {
         setPrecioTotal(calcularPrecioTotal());
-    }, [data]);
+    }, [data, ventiladorCount]);
 
     useEffect(() => {
         if (data.socket) {
@@ -153,6 +164,38 @@ export default function Configurador({ user, sockets, articulos }) {
             padding: 0,
         }),
     };
+
+    useEffect(() => {
+        if (data.caja) {
+            const cajaSeleccionada = articulos.cajas.atx.find(caja => caja.id === data.caja) || articulos.cajas.micro_atx.find(caja => caja.id === data.caja);
+            if (cajaSeleccionada) {
+                setMaxVentiladores(parseInt(cajaSeleccionada.datos.ventiladores));
+            }
+        } else {
+            setMaxVentiladores(0);
+        }
+    }, [data.caja]);
+
+    const handleIncrement = () => {
+        if (ventiladorCount < maxVentiladores) {
+            setVentiladorCount(prevCount => prevCount + 1);
+        }
+    };
+
+    const handleDecrement = () => {
+        if (ventiladorCount > 1) {
+            setVentiladorCount(prevCount => prevCount - 1);
+        } else if (ventiladorCount === 1) {
+            setVentiladorCount(0);
+            setData('ventilacion', null);
+        }
+    };
+
+    useEffect(() => {
+        if (ventiladorCount === 0) {
+            setData('ventilacion', null);
+        }
+    }, [ventiladorCount]);
 
     function getArticuloInfo(collection, id, infoType) {
         // Check if the collection is an array (sockets)
@@ -290,29 +333,40 @@ export default function Configurador({ user, sockets, articulos }) {
                         </div>
                         <div>
                             <p className='font-semibold text-2xl py-4'>Almacenamiento secundario</p>
-                            <Select
-                                className='w-full rounded-md text-black'
-                                options={articulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
-                                components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
-                                styles={customStyles}
-                                placeholder='Selecciona un Almacenamiento secundario...'
-                                noOptionsMessage={noOptionsMessage}
-                                value={data.almacenamientoSecundario ? { value: data.almacenamientoSecundario, label: articulos.almacenamientos.find(almacenamiento => almacenamiento.id === data.almacenamientoSecundario)?.nombre, imagen: articulos.almacenamientos.find(almacenamiento => almacenamiento.id === data.almacenamientoSecundario)?.fotos[0]?.imagen } : null}
-                                onChange={(selectedOption) => setData('almacenamientoSecundario', selectedOption.value)}
-                            />
+                            <div className='flex'>
+
+                                <Select
+                                    className='w-full rounded-md text-black'
+                                    options={articulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
+                                    components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
+                                    styles={customStyles}
+                                    placeholder='Selecciona un Almacenamiento secundario...'
+                                    noOptionsMessage={noOptionsMessage}
+                                    value={data.almacenamientoSecundario ? { value: data.almacenamientoSecundario, label: articulos.almacenamientos.find(almacenamiento => almacenamiento.id === data.almacenamientoSecundario)?.nombre, imagen: articulos.almacenamientos.find(almacenamiento => almacenamiento.id === data.almacenamientoSecundario)?.fotos[0]?.imagen } : null}
+                                    onChange={(selectedOption) => setData('almacenamientoSecundario', selectedOption.value)}
+                                />
+                                {data.almacenamientoSecundario && (
+                                    <button onClick={() => limpiarSelect("almacenamientoSecundario")} className='p-2 bg-red-500 text-white rounded'><DeleteIcon /></button>
+                                )}
+                            </div>
                         </div>
                         <div>
                             <p className='font-semibold text-2xl py-4'>Tarjeta gráfica</p>
-                            <Select
-                                className='w-full rounded-md text-black'
-                                options={articulos.graficas?.map(grafica => ({ value: grafica.id, label: grafica.nombre, imagen: grafica.fotos[0]?.imagen })) || []}
-                                components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
-                                styles={customStyles}
-                                placeholder='Selecciona una Tarjeta gráfica...'
-                                noOptionsMessage={noOptionsMessage}
-                                value={data.grafica ? { value: data.grafica, label: articulos.graficas.find(grafica => grafica.id === data.grafica)?.nombre, imagen: articulos.graficas.find(grafica => grafica.id === data.grafica)?.fotos[0]?.imagen } : null}
-                                onChange={(selectedOption) => setData('grafica', selectedOption.value)}
-                            />
+                            <div className='flex'>
+                                <Select
+                                    className='w-full rounded-md text-black'
+                                    options={articulos.graficas?.map(grafica => ({ value: grafica.id, label: grafica.nombre, imagen: grafica.fotos[0]?.imagen })) || []}
+                                    components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
+                                    styles={customStyles}
+                                    placeholder='Selecciona una Tarjeta gráfica...'
+                                    noOptionsMessage={noOptionsMessage}
+                                    value={data.grafica ? { value: data.grafica, label: articulos.graficas.find(grafica => grafica.id === data.grafica)?.nombre, imagen: articulos.graficas.find(grafica => grafica.id === data.grafica)?.fotos[0]?.imagen } : null}
+                                    onChange={(selectedOption) => setData('grafica', selectedOption.value)}
+                                />
+                                {data.grafica && (
+                                    <button onClick={() => limpiarSelect("grafica")} className='p-2 bg-red-500 text-white rounded'><DeleteIcon /></button>
+                                )}
+                            </div>
                         </div>
                         <div>
                             <p className='font-semibold text-2xl py-4'>Caja*</p>
@@ -327,73 +381,114 @@ export default function Configurador({ user, sockets, articulos }) {
                                 onChange={(selectedOption) => setData('caja', selectedOption.value)}
                             />
                         </div>
-                        <div>
+                        {data.caja && (
+                            <div>
                             <p className='font-semibold text-2xl py-4'>Ventilación</p>
-                            <Select
-                                className='w-full rounded-md text-black'
-                                options={articulos.ventiladores?.map(ventilacion => ({ value: ventilacion.id, label: ventilacion.nombre, imagen: ventilacion.fotos[0]?.imagen })) || []}
-                                components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
-                                styles={customStyles}
-                                placeholder='Selecciona un Sistema de ventilación...'
-                                noOptionsMessage={noOptionsMessage}
-                                value={data.ventilacion ? { value: data.ventilacion, label: articulos.ventiladores.find(ventilacion => ventilacion.id === data.ventilacion)?.nombre, imagen: articulos.ventiladores.find(ventilacion => ventilacion.id === data.ventilacion)?.fotos[0]?.imagen } : null}
-                                onChange={(selectedOption) => setData('ventilacion', selectedOption.value)}
-                            />
+                            <div className='flex items-center'>
+                                <div className='w-full pr-5'>
+                                    <Select
+                                        className='w-full rounded-md text-black'
+                                        options={articulos.ventiladores?.map(ventilacion => ({ value: ventilacion.id, label: ventilacion.nombre, imagen: ventilacion.fotos[0]?.imagen })) || []}
+                                        components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
+                                        styles={customStyles}
+                                        placeholder='Selecciona un Sistema de ventilación...'
+                                        noOptionsMessage={noOptionsMessage}
+                                        value={data.ventilacion ? { value: data.ventilacion, label: articulos.ventiladores.find(ventilacion => ventilacion.id === data.ventilacion)?.nombre, imagen: articulos.ventiladores.find(ventilacion => ventilacion.id === data.ventilacion)?.fotos[0]?.imagen } : null}
+                                        onChange={(selectedOption) => setData('ventilacion', selectedOption.value)}
+                                    />
+                                </div>
+                                {data.ventilacion && (
+                                    <div className="flex items-center space-x-4">
+                                        <button
+                                            onClick={handleDecrement}
+                                            disabled={ventiladorCount === 0}
+                                            className={`px-3 py-1 ${ventiladorCount === 0 ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-700'} text-white font-bold rounded`}
+                                        >
+                                            -
+                                        </button>
+                                        <span>{ventiladorCount}</span>
+                                        <button
+                                            onClick={handleIncrement}
+                                            disabled={ventiladorCount === maxVentiladores}
+                                            className={`px-3 py-1 ${ventiladorCount === maxVentiladores ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-700'} text-white font-bold rounded`}
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
+                        )}
                     </div>
                     <div className='rounded-lg w-all lg:w-2/6 border shadow-md p-5 flex flex-col gap-4'>
-                        <h2 className="text-center font-semibold text-2xl p-5">Resumen</h2>
+                        <h2 className="text-center font-semibold text-3xl p-5">Resumen</h2>
                         <div>
                             <h3 className="font-semibold text-xl">Socket</h3>
-                            <p>{getArticuloInfo(sockets, data.socket, "nombre")}</p>
+                            <p className='px-5'>{getArticuloInfo(sockets, data.socket, "nombre")}</p>
                         </div>
                         <div>
                             <h3 className="font-semibold text-xl">Placa base</h3>
-                            <p>{getArticuloInfo(articulos, data.placa, "nombre")} {getArticuloInfo(articulos, data.placa, "precio")}€</p>
+                            <p className='px-5'>{getArticuloInfo(articulos, data.placa, "nombre")} {getArticuloInfo(articulos, data.placa, "precio")}€</p>
                         </div>
+                        {data.cpu && (
                         <div>
                             <h3 className="font-semibold text-xl">CPU</h3>
-                            <p>{getArticuloInfo(articulos, data.cpu, "nombre")} {getArticuloInfo(articulos, data.cpu, "precio")}€</p>
+                            <p className='px-5'>{getArticuloInfo(articulos, data.cpu, "nombre")} {getArticuloInfo(articulos, data.cpu, "precio")}€</p>
                         </div>
+                        )}
+                        {data.disipador && (
                         <div>
 
                             <h3 className="font-semibold text-xl">Disipador CPU</h3>
-                            <p>{getArticuloInfo(articulos, data.disipador, "nombre")} {getArticuloInfo(articulos, data.disipador, "precio")}€</p>
+                            <p className='px-5'>{getArticuloInfo(articulos, data.disipador, "nombre")} {getArticuloInfo(articulos, data.disipador, "precio")}€</p>
                         </div>
+                        )}
+                        {data.ram && (
                         <div>
 
                             <h3 className="font-semibold text-xl">Modulos de RAM</h3>
-                            <p>{getArticuloInfo(articulos, data.ram, "nombre")} {getArticuloInfo(articulos, data.ram, "precio")}€</p>
+                            <p className='px-5'>{getArticuloInfo(articulos, data.ram, "nombre")} {getArticuloInfo(articulos, data.ram, "precio")}€</p>
                         </div>
+                        )}
+                        {data.almacenamientoPrincipal && (
                         <div>
 
                             <h3 className="font-semibold text-xl">Almacenamiento Principal</h3>
-                            <p>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "nombre")} {getArticuloInfo(articulos, data.almacenamientoPrincipal, "precio")}€</p>
+                            <p className='px-5'>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "nombre")} {getArticuloInfo(articulos, data.almacenamientoPrincipal, "precio")}€</p>
                         </div>
+                        )}
+                        {data.almacenamientoSecundario && (
                         <div>
 
                             <h3 className="font-semibold text-xl">Almacenamiento Secundario</h3>
-                            <p>{getArticuloInfo(articulos, data.almacenamientoSecundario, "nombre")} {getArticuloInfo(articulos, data.almacenamientoSecundario, "precio")}€</p>
+                            <p className='px-5'>{getArticuloInfo(articulos, data.almacenamientoSecundario, "nombre")} {getArticuloInfo(articulos, data.almacenamientoSecundario, "precio")}€</p>
                         </div>
+                        )}
+                        {data.grafica && (
                         <div>
 
                             <h3 className="font-semibold text-xl">Tarjeta Gráfica</h3>
-                            <p>{getArticuloInfo(articulos, data.grafica, "nombre")} {getArticuloInfo(articulos, data.grafica, "precio")}€</p>
+                            <p className='px-5'>{getArticuloInfo(articulos, data.grafica, "nombre")} {getArticuloInfo(articulos, data.grafica, "precio")}€</p>
                         </div>
+                        )}
+                        {data.caja && (
                         <div>
 
                             <h3 className="font-semibold text-xl">Caja</h3>
-                            <p>{getArticuloInfo(articulos, data.caja, "nombre")} {getArticuloInfo(articulos, data.caja, "precio")}€</p>
+                            <p className='px-5'>{getArticuloInfo(articulos, data.caja, "nombre")} {getArticuloInfo(articulos, data.caja, "precio")}€</p>
                         </div>
+                        )}
+                        {data.ventilacion && (
                         <div>
-
                             <h3 className="font-semibold text-xl">Ventilacion</h3>
-                            <p>{getArticuloInfo(articulos, data.ventilacion, "nombre")} {getArticuloInfo(articulos, data.ventilacion, "precio")}€</p>
+                            <p className='px-5'>x{ventiladorCount} {getArticuloInfo(articulos, data.ventilacion, "nombre")} {getArticuloInfo(articulos, data.ventilacion, "precio") * ventiladorCount}€</p>
                         </div>
+                        )}
                         <div>
                             <p className="text-center font-semibold text-2xl">Total</p>
                             <p className='text-center text-xl'>{precioTotal}€</p>
                         </div>
+
                     </div>
                 </div>
             )}
