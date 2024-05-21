@@ -7,7 +7,6 @@ import BotonGrande from './BotonGrande';
 import Boton from './Boton';
 
 export default function Configurador({ user, sockets, articulos }) {
-    console.log(articulos, sockets);
     const [ventiladorCount, setVentiladorCount] = useState(1);
     const [maxVentiladores, setMaxVentiladores] = useState(0);
     const [precioTotal, setPrecioTotal] = useState(0);
@@ -19,8 +18,7 @@ export default function Configurador({ user, sockets, articulos }) {
         cajas: [],
     });
     const { data, setData, post, errors, reset } = useForm({
-        nombre: "PC de " + user.name + " " + new Date().getTime(),
-        socket: null,
+        nombre: "PC de " + user.name + " Nº" + new Date().getTime().toString().slice(-4),        socket: null,
         placa: null,
         cpu: null,
         disipador: null,
@@ -32,47 +30,32 @@ export default function Configurador({ user, sockets, articulos }) {
         ventilacion: null,
     });
 
-    const limpiarSelect = (opcion) => {
-        setData(opcion, null);
-    };
-
+    const limpiarSelect = (opcion) => setData(opcion, null);
 
     const calcularPrecioTotal = () => {
         let total = 0;
         const componentes = ['placa', 'cpu', 'disipador', 'ram', 'almacenamientoPrincipal', 'almacenamientoSecundario', 'grafica', 'caja', 'ventilacion'];
-
         componentes.forEach(componente => {
             if (data[componente]) {
-                if (componente === 'ventilacion') {
-                    total += parseFloat(getArticuloInfo(articulos, data[componente], "precio")) * ventiladorCount;
-                    return;
-                } else {
-                    total += parseFloat(getArticuloInfo(articulos, data[componente], "precio"));
-                }
+                const precio = parseFloat(getArticuloInfo(articulos, data[componente], "precio"));
+                total += (componente === 'ventilacion') ? precio * ventiladorCount : precio;
             }
         });
-
         return total.toFixed(2);
     };
 
-    useEffect(() => {
-        setPrecioTotal(calcularPrecioTotal());
-    }, [data, ventiladorCount]);
+    useEffect(() => setPrecioTotal(calcularPrecioTotal()), [data, ventiladorCount]);
 
     useEffect(() => {
         if (data.socket) {
-            const placasFiltradas = articulos.placas[data.socket] || [];
-            const cpuFiltradas = articulos.cpu[data.socket] || [];
-            const disipadorFiltradas = articulos.disipador[data.socket] || [];
-
+            const { placas = [], cpu = [], disipador = [] } = articulos;
             setFilteredArticulos({
-                placas: placasFiltradas,
-                cpu: cpuFiltradas,
-                disipador: disipadorFiltradas,
+                placas: placas[data.socket] || [],
+                cpu: cpu[data.socket] || [],
+                disipador: disipador[data.socket] || [],
                 ram: [],
                 cajas: [],
             });
-
             setData(prevData => ({
                 ...prevData,
                 placa: null,
@@ -91,25 +74,13 @@ export default function Configurador({ user, sockets, articulos }) {
     useEffect(() => {
         if (data.placa) {
             const placaSeleccionada = filteredArticulos.placas.find(placa => placa.id === data.placa);
-
             if (placaSeleccionada) {
-                const ddrmax = placaSeleccionada.datos.ddrmax;
-                const clase = placaSeleccionada.datos.clase;
-
-                const ramOptions = ddrmax === "5"
-                    ? [...(articulos.ram.ddr4 || []), ...(articulos.ram.ddr5 || [])].flat()
-                    : (articulos.ram.ddr4 ? articulos.ram.ddr4 : []);
-
-                const cajaOptions = clase === 'Micro-ATX'
-                    ? [...(articulos.cajas.atx || []), ...(articulos.cajas.micro_atx || [])].flat()
-                    : (articulos.cajas.atx ? articulos.cajas.atx : []);
-
+                const { ddrmax, clase } = placaSeleccionada.datos;
                 setFilteredArticulos(prevState => ({
                     ...prevState,
-                    ram: ramOptions,
-                    cajas: cajaOptions,
+                    ram: (ddrmax === "5" ? [...(articulos.ram.ddr4 || []), ...(articulos.ram.ddr5 || [])] : articulos.ram.ddr4) || [],
+                    cajas: (clase === 'Micro-ATX' ? [...(articulos.cajas.atx || []), ...(articulos.cajas.micro_atx || [])] : articulos.cajas.atx) || [],
                 }));
-
                 setData(prevData => ({
                     ...prevData,
                     cpu: null,
@@ -140,101 +111,59 @@ export default function Configurador({ user, sockets, articulos }) {
     );
 
     const customStyles = {
-        control: (provided) => ({
-            ...provided,
-            display: 'flex',
-            alignItems: 'center',
-            padding: '0.25rem',
-            minHeight: '2.5rem',
-        }),
-        singleValue: (provided) => ({
-            ...provided,
-            display: 'flex',
-            alignItems: 'center',
-            padding: '0.25rem',
-            margin: 0,
-        }),
-        valueContainer: (provided) => ({
-            ...provided,
-            display: 'flex',
-            alignItems: 'center',
-            padding: '0',
-        }),
-        input: (provided) => ({
-            ...provided,
-            margin: 0,
-            padding: 0,
-        }),
+        control: (provided) => ({ ...provided, display: 'flex', alignItems: 'center', padding: '0.25rem', minHeight: '2.5rem' }),
+        singleValue: (provided) => ({ ...provided, display: 'flex', alignItems: 'center', padding: '0.25rem', margin: 0 }),
+        valueContainer: (provided) => ({ ...provided, display: 'flex', alignItems: 'center', padding: '0' }),
+        input: (provided) => ({ ...provided, margin: 0, padding: 0 }),
     };
 
     useEffect(() => {
         if (data.caja) {
             const cajaSeleccionada = articulos.cajas.atx.find(caja => caja.id === data.caja) || articulos.cajas.micro_atx.find(caja => caja.id === data.caja);
-            if (cajaSeleccionada) {
-                setMaxVentiladores(parseInt(cajaSeleccionada.datos.ventiladores));
-            }
+            if (cajaSeleccionada) setMaxVentiladores(parseInt(cajaSeleccionada.datos.ventiladores));
         } else {
             setMaxVentiladores(0);
         }
     }, [data.caja]);
 
     const handleIncrement = () => {
-        if (ventiladorCount < maxVentiladores) {
-            setVentiladorCount(prevCount => prevCount + 1);
-        }
+        if (ventiladorCount < maxVentiladores) setVentiladorCount(prevCount => prevCount + 1);
     };
 
     const handleDecrement = () => {
         if (ventiladorCount > 1) {
             setVentiladorCount(prevCount => prevCount - 1);
-        } else if (ventiladorCount === 1) {
+        } else {
             setVentiladorCount(0);
             setData('ventilacion', null);
         }
     };
 
     useEffect(() => {
-        if (ventiladorCount === 0) {
-            setData('ventilacion', null);
-        }
+        if (ventiladorCount === 0) setData('ventilacion', null);
     }, [ventiladorCount]);
 
     function getArticuloInfo(collection, id, infoType) {
-        // Check if the collection is an array (sockets)
         if (Array.isArray(collection)) {
-            for (const item of collection) {
-                if (item.id === id) {
-                    return item[infoType];
-                }
-            }
-        } else {
-            // Handle the nested objects in articulos
-            for (const categoria in collection) {
-                if (collection[categoria] && typeof collection[categoria] === 'object') {
-                    for (const subCategoria in collection[categoria]) {
-                        if (Array.isArray(collection[categoria][subCategoria])) {
-                            for (const articulo of collection[categoria][subCategoria]) {
-                                if (articulo.id === id) {
-                                    return articulo[infoType];
-                                }
-                            }
-                        }
-                    }
-                    if (Array.isArray(collection[categoria])) {
-                        for (const articulo of collection[categoria]) {
-                            if (articulo.id === id) {
-                                return articulo[infoType];
-                            }
-                        }
-                    }
+            return collection.find(item => item.id === id)?.[infoType] || null;
+        }
+        for (const categoria in collection) {
+            const subCategoria = collection[categoria];
+            if (Array.isArray(subCategoria)) {
+                const item = subCategoria.find(item => item.id === id);
+                if (item) return item[infoType];
+            } else if (typeof subCategoria === 'object') {
+                for (const subSubCategoria in subCategoria) {
+                    const item = subCategoria[subSubCategoria].find(item => item.id === id);
+                    if (item) return item[infoType];
                 }
             }
         }
         return null;
     }
 
-
     const noOptionsMessage = () => 'No hay opciones disponibles';
+
 
     return (
         <div className="min-h-screen flex flex-col gap-7 mb-20">
@@ -421,7 +350,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 </div>
                             </div>
                         )}
-                                                <Boton texto="Guardar Configuración" className="w-full"></Boton>
+                        <Boton texto="Guardar Configuración" className="w-full"></Boton>
 
                     </div>
                     <div className='rounded-lg w-full lg:w-2/6 border shadow-md p-5 flex flex-col gap-4 h-auto'>
