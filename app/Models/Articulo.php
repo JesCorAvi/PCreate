@@ -15,7 +15,7 @@ class Articulo extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ["nombre","categoria_id", "descripcion", "precio", "datos", "marca_id"];
+    protected $fillable = ["nombre","categoria_id", "descripcion", "precio", "datos", "marca_id", "puntuacion", "puntuacionPrecio"];
 
     protected $casts = [
         'datos' => 'object',

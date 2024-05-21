@@ -32,7 +32,6 @@ class ArticuloController extends Controller
     }
 
 
-
     public function Tienda(Request $request)
     {
         $categoria = $request->input('categoria');
@@ -40,7 +39,6 @@ class ArticuloController extends Controller
         $precioMinimo = $request->input('precioMinimo');
         $precioMaximo = $request->input('precioMaximo');
         $palabrasClave = $request->input('palabras');
-        // Realizar el filtrado de acuerdo a los parámetros recibidos
         $query = Articulo::with(['fotos' => function ($query) {
             $query->where('orden', 0);
         }]);
@@ -136,6 +134,7 @@ class ArticuloController extends Controller
 
         switch ($request->tipo) {
             case "Placa base":
+                $puntuacion = $request->slotsm2 * 10 + $request->slotsram * 5 + $request->ddrmax * 10 + $request->mhzmax/200;
                 $request->validate([
                     "socket_id" => "required",
                     "slotsm2" => "required|regex:/^\d+$/",
@@ -158,6 +157,14 @@ class ArticuloController extends Controller
                 break;
 
             case "Tarjeta gráfica":
+                $puntuacion = $request->memoria * 10;
+
+                if (strpos($request->gddr, 'x') !== false) {
+                    $gddr = str_replace('x', '', $request->gddr);
+                    $puntuacion *= $gddr + 0.5;
+                } else {
+                    $puntuacion *= $request->gddr;
+                }
                 $request->validate([
                     "memoria" => "required|regex:/^\d+$/",
                     "gddr" => "required|regex:/^[0-9]+[xX]?$/",
@@ -172,6 +179,8 @@ class ArticuloController extends Controller
                 ];
                 break;
             case "CPU":
+                $puntuacion = $request->nucleos * 10 + $request->frecuencia * 50 ;
+
                 $request->validate([
                     "socket_id" => "required",
                     "nucleos" => "required|regex:/^\d+$/",
@@ -190,6 +199,7 @@ class ArticuloController extends Controller
                 break;
 
             case "RAM":
+                $puntuacion = $request->cantidad * 2 + $request->memoria * 10 + $request->frecuencia / 400;
                 $request->validate([
                     "cantidad" => "required|regex:/^\d+$/",
                     "memoria" => "required|regex:/^\d+$/",
@@ -207,6 +217,7 @@ class ArticuloController extends Controller
                 break;
 
             case "Disipador de CPU":
+                $puntuacion = $request->liquida ? 100 : 50;
                 $request->validate([
                     "socket_id" => "required",
                     "liquida" => "required",
@@ -221,6 +232,7 @@ class ArticuloController extends Controller
                 break;
 
             case "Almacenamiento":
+                $puntuacion = ($request->lectura) / 50;
                 $request->validate([
                     "memoria" => "required|regex:/^\d+$/",
                     "clase" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
@@ -239,6 +251,7 @@ class ArticuloController extends Controller
                 break;
 
             case "Fuente de alimentación":
+                $puntuacion = $request->poder / 20;
                 $request->validate([
                     "poder" => "required|regex:/^\d+$/",
                 ]);
@@ -250,6 +263,7 @@ class ArticuloController extends Controller
                 break;
 
             case "Caja":
+                $puntuacion = $request->ventiladores * 15;
                 $request->validate([
                     "clase" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
                     "ventiladores" => "required|regex:/^\d+$/",
@@ -262,6 +276,7 @@ class ArticuloController extends Controller
                 ];
                 break;
             case "Ventilador":
+                $puntuacion = 10;
                 $datosEspecificos = []; // No hay datos específicos
                 break;
 
@@ -269,6 +284,8 @@ class ArticuloController extends Controller
                 // Manejar caso no previsto
                 break;
         }
+        $datosComunes['puntuacion'] = intval($puntuacion);
+        $datosComunes['puntuacionPrecio'] = $puntuacion / $request->precio;
 
         $articulo = Articulo::create(array_merge($datosComunes, $datosEspecificos));
         // Validar y almacenar la imagen
@@ -357,6 +374,7 @@ class ArticuloController extends Controller
 
         switch ($request->tipo) {
             case "Placa base":
+                $puntuacion = $request->slotsm2 * 10 + $request->slotsram * 5 + $request->ddrmax * 10 + $request->mhzmax/200;
                 $request->validate([
                     "socket_id" => "required",
                     "slotsm2" => "required|regex:/^\d+$/",
@@ -379,11 +397,20 @@ class ArticuloController extends Controller
                 break;
 
             case "Tarjeta gráfica":
+                $puntuacion = $request->memoria * 10;
+
+                if (strpos($request->gddr, 'x') !== false) {
+                    $gddr = str_replace('x', '', $request->gddr);
+                    $puntuacion *= $gddr + 0.5;
+                } else {
+                    $puntuacion *= $request->gddr;
+                }
                 $request->validate([
                     "memoria" => "required|regex:/^\d+$/",
                     "gddr" => "required|regex:/^[0-9]+[xX]?$/",
                     "consumo" => "required|regex:/^\d+$/",
                 ]);
+
                 $datosEspecificos = [
                     "datos" =>[
                         "memoria" => $request->memoria,
@@ -393,6 +420,7 @@ class ArticuloController extends Controller
                 ];
                 break;
             case "CPU":
+                $puntuacion = $request->nucleos * 10 + $request->frecuencia * 50 ;
                 $request->validate([
                     "socket_id" => "required",
                     "nucleos" => "required|regex:/^\d+$/",
@@ -411,6 +439,7 @@ class ArticuloController extends Controller
                 break;
 
             case "RAM":
+                $puntuacion = $request->cantidad * 2 + $request->memoria * 10 + $request->frecuencia / 400;
                 $request->validate([
                     "cantidad" => "required|regex:/^\d+$/",
                     "memoria" => "required|regex:/^\d+$/",
@@ -428,6 +457,7 @@ class ArticuloController extends Controller
                 break;
 
             case "Disipador de CPU":
+                $puntuacion = $request->liquida ? 100 : 50;
                 $request->validate([
                     "socket_id" => "required",
                     "liquida" => "required",
@@ -442,6 +472,7 @@ class ArticuloController extends Controller
                 break;
 
             case "Almacenamiento":
+                $puntuacion = ($request->lectura) / 50;
                 $request->validate([
                     "memoria" => "required|regex:/^\d+$/",
                     "clase" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
@@ -460,6 +491,7 @@ class ArticuloController extends Controller
                 break;
 
             case "Fuente de alimentación":
+                $puntuacion = $request->poder / 20;
                 $request->validate([
                     "poder" => "required|regex:/^\d+$/",
                 ]);
@@ -471,6 +503,7 @@ class ArticuloController extends Controller
                 break;
 
             case "Caja":
+                $puntuacion = $request->ventiladores * 15;
                 $request->validate([
                     "clase" => "required|regex:/^(?!.*\b\w{31,}\b).*$/",
                     "ventiladores" => "required|regex:/^\d+$/",
@@ -483,6 +516,7 @@ class ArticuloController extends Controller
                 ];
                 break;
             case "Ventilador":
+                $puntuacion = 10;
                 $datosEspecificos = []; // No hay datos específicos
                 break;
 
@@ -490,6 +524,8 @@ class ArticuloController extends Controller
                 // Manejar caso no previsto
                 break;
         }
+        $datosComunes['puntuacion'] = intval($puntuacion);
+        $datosComunes['puntuacionPrecio'] = $puntuacion / $request->precio;
 
         $articulo->update(array_merge($datosComunes, $datosEspecificos));
         // Validar y almacenar la imagen

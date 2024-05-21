@@ -10,7 +10,9 @@ export default function Configurador({ user, sockets, articulos }) {
     const [ventiladorCount, setVentiladorCount] = useState(1);
     const [maxVentiladores, setMaxVentiladores] = useState(0);
     const [precioTotal, setPrecioTotal] = useState(0);
-    const [filteredArticulos, setFilteredArticulos] = useState({
+    const [puntuacionTotal, setPuntuacionTotal] = useState(0);
+
+        const [filteredArticulos, setFilteredArticulos] = useState({
         placas: [],
         cpu: [],
         disipador: [],
@@ -44,7 +46,19 @@ export default function Configurador({ user, sockets, articulos }) {
         return total.toFixed(2);
     };
 
-    useEffect(() => setPrecioTotal(calcularPrecioTotal()), [data, ventiladorCount]);
+    const calcularPuntuacionTotal = () => {
+        let total = 0;
+        const componentes = ['placa', 'cpu', 'disipador', 'ram', 'almacenamientoPrincipal', 'almacenamientoSecundario', 'grafica', 'caja', 'ventilacion'];
+        componentes.forEach(componente => {
+            if (data[componente]) {
+                const puntuacion = parseFloat(getArticuloInfo(articulos, data[componente], "puntuacion"));
+                total += (componente === 'ventilacion') ? puntuacion * ventiladorCount : puntuacion;
+            }
+        });
+        return total;
+    };
+
+    useEffect(() => [setPrecioTotal(calcularPrecioTotal()), setPuntuacionTotal(calcularPuntuacionTotal())][data, ventiladorCount]);
 
     useEffect(() => {
         if (data.socket) {
@@ -438,6 +452,12 @@ export default function Configurador({ user, sockets, articulos }) {
                                 </div>
                             </div>
                         )}
+                        <div className="mt-auto text-center">
+                            <p className="font-semibold text-2xl">Puntuacion</p>
+                            <p className='text-xl'>{puntuacionTotal} Pts</p>
+                            <p className='text-xl'>{(puntuacionTotal/precioTotal).toFixed(2)} Pts/€</p>
+
+                        </div>
                         <div className="mt-auto text-center">
                             <p className="font-semibold text-2xl">Total</p>
                             <p className='text-xl'>{precioTotal}€</p>
