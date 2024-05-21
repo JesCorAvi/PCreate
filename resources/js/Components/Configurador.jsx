@@ -111,9 +111,16 @@ export default function Configurador({ user, sockets, articulos }) {
     }, [data.placa]);
 
     const CustomOption = ({ data, innerProps }) => (
-        <div className='flex hover:bg-slate-200 align-middle cursor-pointer items-center p-2' {...innerProps}>
-            {data.imagen && <img className='w-20 h-20' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + data.imagen} alt={data.label} />}
-            <p className='ml-2'>{data.label}</p>
+        <div className='flex justify-between hover:bg-slate-200 align-middle cursor-pointer items-center p-2' {...innerProps}>
+            <div className='flex items-center'>
+                {data.imagen && <img className='w-20 h-20' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + data.imagen} alt={data.label} />}
+                <p className='ml-2'>{data.label}</p>
+            </div>
+            <div className='flex items-center'>
+                <p className='ml-2 text-right'>{data.puntuacion} Pts({data.puntuacionPrecio} Pts/€)</p>
+                <p className='ml-2 text-right font-semibold'>{data.precio}€</p>
+
+            </div>
         </div>
     );
 
@@ -209,7 +216,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <p className='font-semibold text-2xl py-4'>Placa base*</p>
                             <Select
                                 className='w-full rounded-md text-black'
-                                options={filteredArticulos.placas?.map(placa => ({ value: placa.id, label: placa.nombre, imagen: placa.fotos[0]?.imagen })) || []}
+                                options={filteredArticulos.placas?.map(placa => ({ value: placa.id, precio: placa.precio, puntuacion: placa.puntuacion, puntuacionPrecio: placa.puntuacionPrecio , label: placa.nombre, imagen: placa.fotos[0]?.imagen })) || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
                                 placeholder='Selecciona una placa base...'
