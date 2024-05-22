@@ -1,12 +1,11 @@
 import { Head } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
 
-
 export default function Pedido({ factura }) {
     function Total() {
         let total = 0;
         factura.articulos.forEach(articulo => {
-            total += articulo.precio * articulo.pivot.cantidad;
+            total += articulo.pivot.precio * articulo.pivot.cantidad;
         });
         return total.toFixed(2);
     }
@@ -33,21 +32,22 @@ export default function Pedido({ factura }) {
                     <p>{Total()}€</p>
                 </div>
                 <div className="ml-auto">
-                    <p ><strong>PEDIDO Nº</strong> {factura.id}</p>
+                    <p><strong>PEDIDO Nº</strong> {factura.id}</p>
                     <a href="#" className='underline'>Ver los detalles de los pedidos</a>
                 </div>
             </div>
             <div className='px-2 py-1'>
                 <p><strong>Fecha de entrega:</strong> {formatDate(factura.entrega_aproximada)}</p>
-                <p><strong>Direccion:</strong> {factura.domicilio.direccion}, {factura.domicilio.ciudad}, {factura.domicilio.cpostal}, {factura.domicilio.provincia.nombre}</p>
+                <p><strong>Dirección:</strong> {factura.domicilio.direccion}, {factura.domicilio.ciudad}, {factura.domicilio.cpostal}, {factura.domicilio.provincia.nombre}</p>
 
                 <div className='flex flex-col gap-4'>
                     {factura.articulos.map((articulo, index) => (
                         <div key={index} className="flex items-center">
                             <img className='w-20 h-20 rounded-md' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + articulo.fotos[0].imagen}></img>
                             <div>
-                            <Link href={route("articulos.show", { id: articulo.id })} className="text-sm ml-2 underline">{articulo.nombre} </Link>
-                            <p className='ml-2 font-semibold'>{articulo.precio}€</p>
+                                <Link href={route("articulos.show", { id: articulo.id })} className="text-sm ml-2 underline">{articulo.nombre} </Link>
+                                <p className='ml-2 font-semibold'>{articulo.pivot.precio}€</p> {/* Precio almacenado en la tabla pivote */}
+                                <p className='ml-2'>Cantidad: {articulo.pivot.cantidad}</p>
                             </div>
                         </div>
                     ))}

@@ -70,6 +70,8 @@ export default function FormularioCpu({  sockets, marcas, articulo }) {
                         name="socket_id"
                         onChange={(e) => setData('socket_id', e.target.value)}
                         required
+                        value={data.socket_id}
+
                     >
                         <option> Seleccione un Socket</option>
                         {sockets.map((soc) => (

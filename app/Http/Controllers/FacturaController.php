@@ -69,13 +69,17 @@ class FacturaController extends Controller
         ]);
 
         foreach ($articulos as $articulo) {
-            $factura->articulos()->attach($articulo->id, ['cantidad' => $articulo->pivot->cantidad]);
+            $factura->articulos()->attach($articulo->id, [
+                'cantidad' => $articulo->pivot->cantidad,
+                'precio' => $articulo->precio, // Guardar el precio del producto en el momento de la compra
+            ]);
         }
 
         $carrito->delete();
 
         return redirect()->route('articulo.index')->with('success', 'Compra realizada exitosamente.');
     }
+
 
     /**
      * Display the specified resource.

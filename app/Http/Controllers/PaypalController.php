@@ -61,7 +61,10 @@ class PaypalController extends Controller
             ]);
 
             foreach ($articulos as $articulo) {
-                $factura->articulos()->attach($articulo->id, ['cantidad' => $articulo->pivot->cantidad]);
+                $factura->articulos()->attach($articulo->id, [
+                    'cantidad' => $articulo->pivot->cantidad,
+                    'precio' => $articulo->precio,
+                ]);
             }
 
             $carrito->delete();

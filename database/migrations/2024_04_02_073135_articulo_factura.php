@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId("factura_id")->constrained();
             $table->integer("cantidad")->default(1);
             $table->unique(["articulo_id", "factura_id"]);
+            $table->decimal('precio', 10, 2);
             $table->timestamps();
             $table->softDeletes();
 
