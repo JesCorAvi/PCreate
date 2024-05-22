@@ -54,7 +54,7 @@ export default function Compra({ user, domicilios, articulos }) {
                             setData('domicilio_id', domicilio.id);
                         }} // Establecer la dirección seleccionada al hacer clic
                     >
-                        <p className='text-xl font-semibold'>{domicilio.direccion} {domicilio.numero}</p>
+                        <p className='text-xl font-semibold'>{domicilio.direccion}, {domicilio.nombre}, {domicilio.telefono}</p>
                         <p className='text-xl'>{domicilio.ciudad}, {domicilio.provincia.nombre}, {domicilio.cpostal}</p>
                     </div>
                 ))}

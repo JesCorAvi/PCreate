@@ -133,7 +133,7 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                     <div className="border-b-2 border-solid border-black">
                         <div className="flex flex-col sm:flex-row items-center">
                             <input
-                                className='w-1/3 sm:w-1/4'
+                                className='w-full sm:w-1/4'
                                 name='nombre'
                                 placeholder='Nombre'
                                 value={data.nombre}
@@ -190,10 +190,11 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                                 ))}
                             </select>
 
-                            <div className="flex xs:flex-col md:flex-col">
+
+                        </div>
+                        <div className="flex xs:flex-col md:flex-col">
                                 <button className="w-full h-10 hover:bg-slate-600 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-800 hover:to-purple-800 font-semibold text-white">Guardar</button>
                             </div>
-                        </div>
                         <div className="flex items-center mt-2">
                             {favorito ? (
                                 <p className="text-blue-700 font-semibold ml-2 text-center w-full">Direccion Predeterminada</p>

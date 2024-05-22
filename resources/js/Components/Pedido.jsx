@@ -39,6 +39,8 @@ export default function Pedido({ factura }) {
             </div>
             <div className='px-2 py-1'>
                 <p><strong>Fecha de entrega:</strong> {formatDate(factura.entrega_aproximada)}</p>
+                <p><strong>Direccion:</strong> {factura.domicilio.direccion}, {factura.domicilio.ciudad}, {factura.domicilio.cpostal}, {factura.domicilio.provincia.nombre}</p>
+
                 <div className='flex flex-col gap-4'>
                     {factura.articulos.map((articulo, index) => (
                         <div key={index} className="flex items-center">
