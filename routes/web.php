@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
 Route::post('/perfil/store', [DomicilioController::class, 'store'])->name('domicilio.store');
 Route::put('/perfil/update', [DomicilioController::class, 'update'])->name('domicilio.update');
 Route::post('/perfil/destroy', [DomicilioController::class, 'destroy'])->name('domicilio.destroy');
+Route::post('/perfil/set-favorito', [DomicilioController::class, 'setFavorito'])->name('domicilio.setFavorito');
 Route::post('/perfil/getUsers', [ProfileController::class, 'getUsers'])->name('profile.getUsers')->middleware('auth');
 Route::post('/perfil/delUsers', [ProfileController::class, 'destroyId'])->name('profile.destroyId')->middleware('auth');
 

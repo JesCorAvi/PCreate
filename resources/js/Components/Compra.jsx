@@ -9,11 +9,13 @@ export default function Compra({ user, domicilios, articulos }) {
     });
 
     useEffect(() => {
-      if (domicilios.length > 0 && !direccionSeleccionada) {
-        setDireccionSeleccionada(domicilios[0].id);
-        setData('domicilio_id', domicilios[0].id);
-      }
-    }, [domicilios, direccionSeleccionada]);
+        if (domicilios.length > 0) {
+            const favorito = domicilios.find(domicilio => domicilio.favorito);
+            const defaultDomicilio = favorito ? favorito : domicilios[0];
+            setDireccionSeleccionada(defaultDomicilio.id);
+            setData('domicilio_id', defaultDomicilio.id);
+        }
+    }, [domicilios]);
 
     const comprar = (e) => {
       e.preventDefault();
@@ -36,7 +38,6 @@ export default function Compra({ user, domicilios, articulos }) {
         return cantidad;
     }
 
-
     return (
         <div className='min-h-screen lg:flex w-full gap-16 lg:p-20'>
             <div className='flex flex-col justify-start items-center w-full lg:w-3/5 p-5'>
@@ -48,7 +49,10 @@ export default function Compra({ user, domicilios, articulos }) {
                         className={`w-full p-5 border-b-2 border-t-2 m-3 border-gray-300 hover:bg-blue-100 cursor-pointer ${
                             direccionSeleccionada === domicilio.id ? 'bg-blue-200' : '' // Condición para aplicar el estilo cuando se selecciona la dirección
                         }`}
-                        onClick={() => setDireccionSeleccionada(domicilio.id)} // Establecer la dirección seleccionada al hacer clic
+                        onClick={() => {
+                            setDireccionSeleccionada(domicilio.id);
+                            setData('domicilio_id', domicilio.id);
+                        }} // Establecer la dirección seleccionada al hacer clic
                     >
                         <p className='text-xl font-semibold'>{domicilio.direccion} {domicilio.numero}</p>
                         <p className='text-xl'>{domicilio.ciudad}, {domicilio.provincia.nombre}, {domicilio.cpostal}</p>

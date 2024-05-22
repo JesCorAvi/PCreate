@@ -26,7 +26,7 @@ class ProfileController extends Controller
             'status' => session('status'),
             'avatar' => auth()->user()->avatar,
             'categorias' => Categoria::all(),
-            "domicilios" => Auth::user()->domicilios->load('provincia'),
+            "domicilios" => Auth::user()->domicilios->load('provincia')->sortBy('direccion')->values(),
             "provincias" => Provincia::all(),
             "facturas" => Auth::user()->facturas->sortByDesc('id')->values()->load(['domicilio.provincia', 'articulos' => function ($query) {
                 $query->withTrashed()->with(['fotos' => function ($query) {

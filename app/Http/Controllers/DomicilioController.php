@@ -3,33 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Domicilio;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreDomicilioRequest;
-use App\Http\Requests\UpdateDomicilioRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class DomicilioController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -38,39 +17,27 @@ class DomicilioController extends Controller
             'cpostal' => 'required|integer|digits:5',
             'provincia_id' => 'required',
             'telefono' => 'required',
-
+            'nombre' => 'required'
         ]);
-        Domicilio::create([
+
+        $user_id = Auth::user()->id;
+
+        $favorito = Domicilio::where('user_id', $user_id)->exists() ? false : true;
+
+        $domicilio = Domicilio::create([
             "direccion" => $request->direccion,
             "ciudad" => $request->ciudad,
             "cpostal" => $request->cpostal,
             "provincia_id" => $request->provincia_id,
             "telefono" => $request->telefono,
-            "user_id" => Auth::user()->id
+            "user_id" => $user_id,
+            "nombre" => $request->nombre,
+            "favorito" => $favorito
         ]);
+
         return redirect()->back()->with('success', 'Dirección creada exitosamente.');
-
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Domicilio $domicilio)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Domicilio $domicilio)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request)
     {
         $request->validate([
@@ -79,7 +46,9 @@ class DomicilioController extends Controller
             'cpostal' => 'required|integer|digits:5',
             'telefono' => 'required',
             'provincia_id' => 'required',
+            'nombre' => 'required'
         ]);
+
         $domicilio = Domicilio::find($request->id);
 
         $domicilio->update([
@@ -88,17 +57,39 @@ class DomicilioController extends Controller
             "cpostal" => $request->cpostal,
             "telefono" => $request->telefono,
             "provincia_id" => $request->provincia_id,
+            "nombre" => $request->nombre,
         ]);
-        return redirect()->back()->with('success', 'Dirección modificada exitosamente.');
 
+        return redirect()->back()->with('success', 'Dirección modificada exitosamente.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request)
     {
-        Domicilio::destroy($request->id);
+        $domicilio = Domicilio::find($request->id);
+        $domicilio->delete();
+
         return redirect()->back()->with('success', 'Dirección borrada exitosamente.');
+    }
+
+    public function setFavorito(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:domicilios,id',
+        ]);
+
+        $user_id = Auth::user()->id;
+
+        // Desactivar el favorito actual del usuario
+        Domicilio::where('user_id', $user_id)
+            ->where('favorito', true)
+            ->update(['favorito' => false]);
+
+        // Establecer el nuevo favorito
+        $domicilio = Domicilio::find($request->id);
+        $domicilio->favorito = true;
+        $domicilio->save();
+
+        // Redirigir de nuevo a la página con un mensaje de éxito
+        return redirect()->back()->with('success', 'Dirección predeterminada actualizada exitosamente.');
     }
 }

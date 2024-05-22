@@ -37,7 +37,12 @@ class AuthenticatedSessionController extends Controller
         $carrito = auth()->user()->carritos->first();
         if($carrito){
             foreach($articulos as $articulo){
-                $carrito->articulos()->attach($articulo["id"], ['cantidad' => $articulo["pivot"]["cantidad"]]);
+                if ($carrito->articulos()->where('id', $articulo["id"])->exists()) {
+                    $cantidadActual = $carrito->articulos()->where('id', $articulo["id"])->first()->pivot->cantidad;
+                    $carrito->articulos()->updateExistingPivot($articulo["id"], ['cantidad' => $cantidadActual + $articulo["pivot"]["cantidad"]]);
+                } else {
+                    $carrito->articulos()->attach($articulo["id"], ['cantidad' => $articulo["pivot"]["cantidad"]]);
+                }
             }
         }
         else{
@@ -48,7 +53,6 @@ class AuthenticatedSessionController extends Controller
                 $carrito->articulos()->attach($articulo["id"], ['cantidad' => $articulo["pivot"]["cantidad"]]);
             }
         }
-
 
         return redirect('/tienda')->with('borrarLocalStorage', true);
     }

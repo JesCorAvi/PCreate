@@ -1,13 +1,5 @@
 import { Head } from '@inertiajs/react';
 import Direccion from './Direccion';
-import { Collapse, IconButton, Alert } from '@mui/material';
-import { usePage } from '@inertiajs/react';
-import { useState } from 'react';
-import CloseIcon from '@mui/icons-material/Close';
-import { useEffect } from 'react';
-
-
-
 
 export default function Direcciones({ auth, domicilios, provincias }) {
 
@@ -21,6 +13,7 @@ export default function Direcciones({ auth, domicilios, provincias }) {
 
                         <div key={direccion.id}>
                             <Direccion
+                                nombre = {direccion.nombre}
                                 id={direccion.id}
                                 direccion={direccion.direccion}
                                 ciudad={direccion.ciudad}
@@ -29,6 +22,8 @@ export default function Direcciones({ auth, domicilios, provincias }) {
                                 provincias={provincias}
                                 initialIsEditing={true}
                                 telefono={direccion.telefono}
+                                favorito={direccion.favorito}
+
                             />
                         </div>
                     ))

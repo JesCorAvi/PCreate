@@ -42,7 +42,7 @@ class FacturaController extends Controller
     public function create()
     {
         $user = auth()->user();
-        $domicilios = $user->domicilios->load("provincia");
+        $domicilios = $user->domicilios->load("provincia")->sortByDesc('favorito')->values();
         $carrito = auth()->user()->carritos->first();
         $articulos = $carrito->articulos()->get();
         $provincias = Provincia::all();

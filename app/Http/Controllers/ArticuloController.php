@@ -34,28 +34,31 @@ class ArticuloController extends Controller
 
     public function Tienda(Request $request)
     {
-        $categoria = $request->input('categoria');
-        $marca = $request->input('marca');
+        $categorias = $request->input('categoria');
+        $marcas = $request->input('marca');
         $precioMinimo = $request->input('precioMinimo');
         $precioMaximo = $request->input('precioMaximo');
         $palabrasClave = $request->input('palabras');
+
         $query = Articulo::with(['fotos' => function ($query) {
             $query->where('orden', 0);
         }]);
 
-        if ($categoria !== "null" && $categoria !== '' && $categoria !== null) {
-            $query->where('categoria_id', $categoria);
+        if ($categorias) {
+            $categoriaArray = explode(',', $categorias);
+            $query->whereIn('categoria_id', $categoriaArray);
         }
 
-        if ($marca !== "null" && $marca !== '' && $marca !== null) {
-            $query->where('marca_id', $marca);
+        if ($marcas) {
+            $marcaArray = explode(',', $marcas);
+            $query->whereIn('marca_id', $marcaArray);
         }
 
-        if ($precioMinimo !== "null" && $precioMinimo !== null) {
+        if ($precioMinimo !== null && $precioMinimo !== '') {
             $query->where('precio', '>=', $precioMinimo);
         }
 
-        if ($precioMaximo !== "null" && $precioMaximo !== null) {
+        if ($precioMaximo !== null && $precioMaximo !== '') {
             $query->where('precio', '<=', $precioMaximo);
         }
 
@@ -63,19 +66,19 @@ class ArticuloController extends Controller
             $query->where('nombre', 'ilike', '%' . $palabrasClave . '%');
         }
 
-        // Obtener los resultados filtrados
         $cantidad = $query->count();
         $articulosFiltrados = $query->paginate(12);
-        if ($categoria !== "null" && $categoria !== '' && $categoria !== null) {
-            $articulosFiltrados->appends('categoria', $categoria);
+
+        if ($categorias) {
+            $articulosFiltrados->appends('categoria', $categorias);
         }
-        if ($marca !== "null" && $marca !== '' && $marca !== null) {
-            $articulosFiltrados->appends('marca', $marca);
+        if ($marcas) {
+            $articulosFiltrados->appends('marca', $marcas);
         }
-        if ($precioMinimo !== "null" && $precioMinimo !== null) {
+        if ($precioMinimo !== null) {
             $articulosFiltrados->appends('precioMinimo', $precioMinimo);
         }
-        if ($precioMaximo !== "null" && $precioMaximo !== null) {
+        if ($precioMaximo !== null) {
             $articulosFiltrados->appends('precioMaximo', $precioMaximo);
         }
         if ($palabrasClave) {
@@ -90,7 +93,6 @@ class ArticuloController extends Controller
             "cantidad" => $cantidad
         ]);
     }
-
     /**
      * Show the form for creating a new resource.
      */
