@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
@@ -12,9 +12,11 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
-        carrito: "",
+        carrito: '',
     });
     data.carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+    const [validationErrors, setValidationErrors] = useState({});
 
     useEffect(() => {
         return () => {
@@ -22,10 +24,46 @@ export default function Register() {
         };
     }, []);
 
+    const validateField = (name, value) => {
+        let error;
+        switch (name) {
+            case 'email':
+                error = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+                    ? ''
+                    : 'El correo electrónico no tiene un formato válido';
+                break;
+            case 'password':
+                error = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value)
+                    ? ''
+                    : 'La contraseña debe tener al menos una mayúscula, una minúscula, un número y un carácter especial';
+                break;
+            case 'password_confirmation':
+                error = value === data.password
+                    ? ''
+                    : 'Las contraseñas no coinciden';
+                break;
+            default:
+                error = '';
+        }
+        setValidationErrors(prevErrors => ({ ...prevErrors, [name]: error }));
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setData(name, value);
+    };
+
+    const handleBlur = (e) => {
+        const { name, value } = e.target;
+        validateField(name, value);
+    };
+
     const submit = (e) => {
         e.preventDefault();
+        if (Object.values(validationErrors).some(error => error)) {
+            return;
+        }
         post(route('register'));
-
     };
 
     return (
@@ -35,7 +73,7 @@ export default function Register() {
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="name" value="Nombre" />
-                    <input type="hidden" value={data.carrito} name="carrito"/>
+                    <input type="hidden" value={data.carrito} name="carrito" />
                     <TextInput
                         id="name"
                         name="name"
@@ -43,7 +81,7 @@ export default function Register() {
                         className="mt-1 block w-full"
                         autoComplete="name"
                         isFocused={true}
-                        onChange={(e) => setData('name', e.target.value)}
+                        onChange={handleChange}
                         required
                     />
 
@@ -60,11 +98,12 @@ export default function Register() {
                         value={data.email}
                         className="mt-1 block w-full"
                         autoComplete="username"
-                        onChange={(e) => setData('email', e.target.value)}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
                         required
                     />
 
-                    <InputError message={errors.email} className="mt-2" />
+                    <InputError message={errors.email || validationErrors.email} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
@@ -77,11 +116,12 @@ export default function Register() {
                         value={data.password}
                         className="mt-1 block w-full"
                         autoComplete="new-password"
-                        onChange={(e) => setData('password', e.target.value)}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
                         required
                     />
 
-                    <InputError message={errors.password} className="mt-2" />
+                    <InputError message={errors.password || validationErrors.password} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
@@ -94,11 +134,12 @@ export default function Register() {
                         value={data.password_confirmation}
                         className="mt-1 block w-full"
                         autoComplete="new-password"
-                        onChange={(e) => setData('password_confirmation', e.target.value)}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
                         required
                     />
 
-                    <InputError message={errors.password_confirmation} className="mt-2" />
+                    <InputError message={errors.password_confirmation || validationErrors.password_confirmation} className="mt-2" />
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
@@ -113,6 +154,8 @@ export default function Register() {
                         Registrarse
                     </PrimaryButton>
                 </div>
+
+
             </form>
         </GuestLayout>
     );
