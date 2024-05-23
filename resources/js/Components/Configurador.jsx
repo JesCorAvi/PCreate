@@ -7,12 +7,16 @@ import BotonGrande from './BotonGrande';
 import Boton from './Boton';
 
 export default function Configurador({ user, sockets, articulos }) {
+    console.log(articulos)
+    const [showCoolingWarning, setShowCoolingWarning] = useState(false);
+    const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
+
     const [ventiladorCount, setVentiladorCount] = useState(1);
     const [maxVentiladores, setMaxVentiladores] = useState(0);
     const [precioTotal, setPrecioTotal] = useState(0);
     const [puntuacionTotal, setPuntuacionTotal] = useState(0);
 
-        const [filteredArticulos, setFilteredArticulos] = useState({
+    const [filteredArticulos, setFilteredArticulos] = useState({
         placas: [],
         cpu: [],
         disipador: [],
@@ -20,7 +24,7 @@ export default function Configurador({ user, sockets, articulos }) {
         cajas: [],
     });
     const { data, setData, post, errors, reset } = useForm({
-        nombre: "PC de " + user.name + " Nº" + new Date().getTime().toString().slice(-4),        socket: null,
+        nombre: "PC de " + user.name + " Nº" + new Date().getTime().toString().slice(-4), socket: null,
         placa: null,
         cpu: null,
         disipador: null,
@@ -59,6 +63,28 @@ export default function Configurador({ user, sockets, articulos }) {
     };
 
     useEffect(() => [setPrecioTotal(calcularPrecioTotal()), setPuntuacionTotal(calcularPuntuacionTotal())][data, ventiladorCount]);
+
+    useEffect(() => {
+        if (data.cpu && data.disipador) {
+            const cpuSeleccionado = filteredArticulos.cpu.find(cpu => cpu.id === data.cpu);
+            const disipadorSeleccionado = filteredArticulos.disipador.find(disipador => disipador.id === data.disipador);
+            if (cpuSeleccionado && disipadorSeleccionado && parseInt(cpuSeleccionado.datos.consumo) >= 140 && disipadorSeleccionado.datos.liquida === false) {
+                setShowCoolingWarning(true);
+            } else {
+                setShowCoolingWarning(false);
+            }
+        }
+    }, [data.cpu, data.disipador]);
+    useEffect(() => {
+        if (data.almacenamientoPrincipal) {
+            const almacenamientoPrSeleccionado = articulos.almacenamientos.find(almacenamiento => almacenamiento.id === data.almacenamientoPrincipal);
+            if (almacenamientoPrSeleccionado.datos.clase === "Mecánico") {
+                setShowAlmacenamientoPrincipalWarning(true);
+            } else {
+                setShowAlmacenamientoPrincipalWarning(false);
+            }
+        }
+    }, [data.almacenamientoPrincipal]);
 
     useEffect(() => {
         if (data.socket) {
@@ -117,7 +143,7 @@ export default function Configurador({ user, sockets, articulos }) {
                 <p className='ml-2'>{data.label}</p>
             </div>
             <div className='flex items-center'>
-                <p className='ml-2 text-right'>{data.puntuacion} Pts({data.puntuacionPrecio} Pts/€)</p>
+                <p className='ml-2 text-right'>{data.puntuacion} Ptos({data.puntuacionPrecio} Ptos/€)</p>
                 <p className='ml-2 text-right font-semibold'>{data.precio}€</p>
 
             </div>
@@ -183,6 +209,32 @@ export default function Configurador({ user, sockets, articulos }) {
         return null;
     }
 
+    const ProgressBar = ({ puntuacionTotal }) => {
+        const maxScore = 2500;
+        const percentage = (puntuacionTotal / maxScore) * 100;
+
+        let progressBarClass = '';
+        if (percentage <= 20) {
+            progressBarClass = 'bg-red-500';
+        } else if (percentage <= 40) {
+            progressBarClass = 'bg-yellow-500';
+        } else if (percentage <= 70) {
+            progressBarClass = 'bg-amber-400';
+        } else {
+            progressBarClass = 'bg-green-500';
+        }
+
+        return (
+            <div className="w-full bg-gray-200 rounded-full h-4">
+                <div className={`${progressBarClass} h-full rounded-full`} style={{ width: `${percentage}%` }}></div>
+            </div>
+        );
+    };
+
+    const areEssentialComponentsSelected = () => {
+        const essentialComponents = ['placa', 'cpu', 'disipador', 'ram', 'almacenamientoPrincipal', 'caja'];
+        return essentialComponents.every(componente => data[componente] !== null);
+    };
     const noOptionsMessage = () => 'No hay opciones disponibles';
 
 
@@ -216,7 +268,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <p className='font-semibold text-2xl py-4'>Placa base*</p>
                             <Select
                                 className='w-full rounded-md text-black'
-                                options={filteredArticulos.placas?.map(placa => ({ value: placa.id, precio: placa.precio, puntuacion: placa.puntuacion, puntuacionPrecio: placa.puntuacionPrecio , label: placa.nombre, imagen: placa.fotos[0]?.imagen })) || []}
+                                options={filteredArticulos.placas?.map(placa => ({ value: placa.id, precio: placa.precio, puntuacion: placa.puntuacion, puntuacionPrecio: placa.puntuacionPrecio, label: placa.nombre, imagen: placa.fotos[0]?.imagen })) || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
                                 placeholder='Selecciona una placa base...'
@@ -371,10 +423,24 @@ export default function Configurador({ user, sockets, articulos }) {
                                 </div>
                             </div>
                         )}
-                        <Boton texto="Guardar Configuración" className="w-full"></Boton>
 
+                        {areEssentialComponentsSelected() ? (
+                        <Boton texto="Guardar Configuración" className="w-full"></Boton>
+                    ) : (
+                            <p className='text-xl py-5'>Configure los elementos obligatorios para poder guardar su configuración.</p>
+                        )}
                     </div>
                     <div className='rounded-lg w-full lg:w-2/6 border shadow-md p-5 flex flex-col gap-4 h-auto'>
+                        <div className=" text-center">
+                            <p className="font-semibold text-2xl p-5">Potencial PCreate™ </p>
+                            <ProgressBar puntuacionTotal={areEssentialComponentsSelected() ? puntuacionTotal : 0} />
+
+                            {areEssentialComponentsSelected() ? (
+                                <p className='text-xl py-5'>{puntuacionTotal}Ptos ({(puntuacionTotal / precioTotal).toFixed(2)} Ptos/€)</p>
+                            ) : (
+                                <p className='text-xl py-5'>Configure los elementos obligatorios para ver su Potencial.</p>
+                            )}
+                        </div>
                         <h2 className="text-center font-semibold text-3xl p-5">Resumen</h2>
                         <div>
                             <h3 className="font-semibold text-xl">Socket</h3>
@@ -384,7 +450,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <h3 className="font-semibold text-xl">Placa base</h3>
                             <div className="flex justify-between px-5">
                                 <p>{getArticuloInfo(articulos, data.placa, "nombre")}</p>
-                                <p>{getArticuloInfo(articulos, data.placa, "precio")}€</p>
+                                <p>{getArticuloInfo(articulos, data.placa, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.placa, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.placa, "precio")}€</strong></p>
                             </div>
                         </div>
                         {data.cpu && (
@@ -392,7 +458,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 <h3 className="font-semibold text-xl">CPU</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.cpu, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.cpu, "precio")}€</p>
+                                    <p>{getArticuloInfo(articulos, data.cpu, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.cpu, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.cpu, "precio")}€</strong></p>
                                 </div>
                             </div>
                         )}
@@ -401,8 +467,13 @@ export default function Configurador({ user, sockets, articulos }) {
                                 <h3 className="font-semibold text-xl">Disipador CPU</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.disipador, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.disipador, "precio")}€</p>
+                                    <p>{getArticuloInfo(articulos, data.disipador, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.disipador, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.disipador, "precio")}€</strong></p>
                                 </div>
+                                {showCoolingWarning &&
+                                    <div className="bg-orange-500 text-white p-2 rounded">
+                                        Advertencia: Debería elegir un modelo de refrigeración líquida para el procesador seleccionado debido a su alto consumo.
+                                    </div>
+                                }
                             </div>
                         )}
                         {data.ram && (
@@ -410,7 +481,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 <h3 className="font-semibold text-xl">Modulos de RAM</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.ram, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.ram, "precio")}€</p>
+                                    <p>{getArticuloInfo(articulos, data.ram, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.ram, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.ram, "precio")}€</strong></p>
                                 </div>
                             </div>
                         )}
@@ -419,8 +490,13 @@ export default function Configurador({ user, sockets, articulos }) {
                                 <h3 className="font-semibold text-xl">Almacenamiento Principal</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "precio")}€</p>
+                                    <p>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.almacenamientoPrincipal, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "precio")}€</strong></p>
                                 </div>
+                                {showAlmacenamientoPrincipalWarning &&
+                                    <div className="bg-orange-500 text-white p-2 rounded">
+                                        Advertencia: Debería considerar elegir un modelo SSD para agilizar su navegación con el equipo.
+                                    </div>
+                                }
                             </div>
                         )}
                         {data.almacenamientoSecundario && (
@@ -428,7 +504,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 <h3 className="font-semibold text-xl">Almacenamiento Secundario</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.almacenamientoSecundario, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.almacenamientoSecundario, "precio")}€</p>
+                                    <p>{getArticuloInfo(articulos, data.almacenamientoSecundario, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.almacenamientoSecundario, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.almacenamientoSecundario, "precio")}€</strong></p>
                                 </div>
                             </div>
                         )}
@@ -437,7 +513,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 <h3 className="font-semibold text-xl">Tarjeta Gráfica</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.grafica, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.grafica, "precio")}€</p>
+                                    <p>{getArticuloInfo(articulos, data.grafica, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.grafica, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.grafica, "precio")}€</strong></p>
                                 </div>
                             </div>
                         )}
@@ -446,7 +522,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 <h3 className="font-semibold text-xl">Caja</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.caja, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.caja, "precio")}€</p>
+                                    <p>{getArticuloInfo(articulos, data.caja, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.caja, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.caja, "precio")}€</strong></p>
                                 </div>
                             </div>
                         )}
@@ -455,21 +531,20 @@ export default function Configurador({ user, sockets, articulos }) {
                                 <h3 className="font-semibold text-xl">Ventilacion</h3>
                                 <div className="flex justify-between px-5">
                                     <p>x{ventiladorCount} {getArticuloInfo(articulos, data.ventilacion, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.ventilacion, "precio") * ventiladorCount}€</p>
+                                    <p>{getArticuloInfo(articulos, data.ventilacion, "puntuacion") * ventiladorCount}Ptos ({getArticuloInfo(articulos, data.ventilacion, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.ventilacion, "precio") * ventiladorCount}€</strong></p>
                                 </div>
                             </div>
                         )}
-                        <div className="mt-auto text-center">
-                            <p className="font-semibold text-2xl">Puntuacion</p>
-                            <p className='text-xl'>{puntuacionTotal} Pts</p>
-                            <p className='text-xl'>{(puntuacionTotal/precioTotal).toFixed(2)} Pts/€</p>
 
-                        </div>
                         <div className="mt-auto text-center">
                             <p className="font-semibold text-2xl">Total</p>
                             <p className='text-xl'>{precioTotal}€</p>
                         </div>
-                        <BotonGrande texto="Añadir al carrito"></BotonGrande>
+                        {areEssentialComponentsSelected() ? (
+                            <BotonGrande texto="Añadir al carrito"></BotonGrande>
+                        ) : (
+                            <p className='text-xl py-5 text-center'>Configure los elementos obligatorios para poder añadir al carrito.</p>
+                        )}
                     </div>
 
                 </div>

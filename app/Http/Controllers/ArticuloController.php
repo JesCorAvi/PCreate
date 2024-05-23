@@ -608,14 +608,13 @@ function subirImagen($image, $ruta)
     // Generar un nombre único para la imagen
     $name = hash('sha256', Str::random(15) . time()) . ".png";
 
-    // Guardar la imagen en el directorio especificado
     $image->storeAs($ruta, $name, 'public');
 
     // Procesar la imagen
 
     $manager = new ImageManager(new Driver());
     $imageR = $manager->read(Storage::disk('public')->get('uploads/articulos/' . $name));
-    $imageR->scaleDown(1000); // Ajusta esto según tus necesidades
+    $imageR->scaleDown(1000); // Ajusta segun e tamaño de la imagen
 
     // Guardar la imagen procesada
     $imageR->save(public_path('storage/uploads/articulos/' . $name));
