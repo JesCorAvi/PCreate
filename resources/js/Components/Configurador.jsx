@@ -287,7 +287,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <p className='font-semibold text-2xl py-4'>Procesador*</p>
                             <Select
                                 className='w-full rounded-md text-black'
-                                options={filteredArticulos.cpu?.map(cpu => ({ value: cpu.id, label: cpu.nombre, imagen: cpu.fotos[0]?.imagen })) || []}
+                                options={filteredArticulos.cpu?.map(cpu => ({ value: cpu.id, precio: cpu.precio, puntuacion: cpu.puntuacion, puntuacionPrecio: cpu.puntuacionPrecio, label: cpu.nombre, imagen: cpu.fotos[0]?.imagen })) || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
                                 placeholder='Selecciona un Procesador...'
@@ -300,7 +300,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <p className='font-semibold text-2xl py-4'>Disipador Cpu*</p>
                             <Select
                                 className='w-full rounded-md text-black'
-                                options={filteredArticulos.disipador?.map(disipador => ({ value: disipador.id, label: disipador.nombre, imagen: disipador.fotos[0]?.imagen })) || []}
+                                options={filteredArticulos.disipador?.map(disipador => ({ value: disipador.id, precio: disipador.precio, puntuacion: disipador.puntuacion, puntuacionPrecio: disipador.puntuacionPrecio, label: disipador.nombre, imagen: disipador.fotos[0]?.imagen })) || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
                                 placeholder='Selecciona un Disipador Cpu...'
@@ -313,7 +313,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <p className='font-semibold text-2xl py-4'>RAM*</p>
                             <Select
                                 className='w-full rounded-md text-black'
-                                options={filteredArticulos.ram?.map(ram => ({ value: ram.id, label: ram.nombre, imagen: ram.fotos[0]?.imagen })) || []}
+                                options={filteredArticulos.ram?.map(ram => ({ value: ram.id, precio: ram.precio, puntuacion: ram.puntuacion, puntuacionPrecio: ram.puntuacionPrecio, label: ram.nombre, imagen: ram.fotos[0]?.imagen })) || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
                                 placeholder='Selecciona RAM...'
@@ -326,7 +326,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <p className='font-semibold text-2xl py-4'>Almacenamiento principal*</p>
                             <Select
                                 className='w-full rounded-md text-black'
-                                options={articulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
+                                options={articulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, precio: almacenamiento.precio, puntuacion: almacenamiento.puntuacion, puntuacionPrecio: almacenamiento.puntuacionPrecio, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
                                 placeholder='Selecciona un Almacenamiento principal...'
@@ -341,7 +341,7 @@ export default function Configurador({ user, sockets, articulos }) {
 
                                 <Select
                                     className='w-full rounded-md text-black'
-                                    options={articulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
+                                    options={articulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, precio: almacenamiento.precio, puntuacion: almacenamiento.puntuacion, puntuacionPrecio: almacenamiento.puntuacionPrecio, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
                                     components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                     styles={customStyles}
                                     placeholder='Selecciona un Almacenamiento secundario...'
@@ -359,7 +359,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <div className='flex'>
                                 <Select
                                     className='w-full rounded-md text-black'
-                                    options={articulos.graficas?.map(grafica => ({ value: grafica.id, label: grafica.nombre, imagen: grafica.fotos[0]?.imagen })) || []}
+                                    options={articulos.graficas?.map(grafica => ({ value: grafica.id, precio: grafica.precio, puntuacion: grafica.puntuacion, puntuacionPrecio: grafica.puntuacionPrecio, label: grafica.nombre, imagen: grafica.fotos[0]?.imagen })) || []}
                                     components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                     styles={customStyles}
                                     placeholder='Selecciona una Tarjeta gráfica...'
@@ -376,7 +376,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <p className='font-semibold text-2xl py-4'>Caja*</p>
                             <Select
                                 className='w-full rounded-md text-black'
-                                options={filteredArticulos.cajas?.map(caja => ({ value: caja.id, label: caja.nombre, imagen: caja.fotos[0]?.imagen })) || []}
+                                options={filteredArticulos.cajas?.map(caja => ({ value: caja.id, precio: caja.precio, puntuacion: caja.puntuacion, puntuacionPrecio: caja.puntuacionPrecio, label: caja.nombre, imagen: caja.fotos[0]?.imagen })) || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
                                 placeholder='Selecciona una Caja...'
@@ -392,7 +392,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                     <div className='w-full pr-5'>
                                         <Select
                                             className='w-full rounded-md text-black'
-                                            options={articulos.ventiladores?.map(ventilacion => ({ value: ventilacion.id, label: ventilacion.nombre, imagen: ventilacion.fotos[0]?.imagen })) || []}
+                                            options={articulos.ventiladores?.map(ventilador => ({ value: ventilador.id, precio: ventilador.precio, puntuacion: ventilador.puntuacion, puntuacionPrecio: ventilador.puntuacionPrecio, label: ventilador.nombre, imagen: ventilador.fotos[0]?.imagen })) || []}
                                             components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                             styles={customStyles}
                                             placeholder='Selecciona un Sistema de ventilación...'
