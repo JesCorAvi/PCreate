@@ -7,7 +7,6 @@ import BotonGrande from './BotonGrande';
 import Boton from './Boton';
 
 export default function Configurador({ user, sockets, articulos }) {
-    console.log(articulos)
     const [showCoolingWarning, setShowCoolingWarning] = useState(false);
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
 
@@ -35,6 +34,19 @@ export default function Configurador({ user, sockets, articulos }) {
         caja: null,
         ventilacion: null,
     });
+    function porcentaje(){
+        return ((puntuacionTotal / 2500) * 100).toFixed(2);
+    }
+    function calidadPrecio(){
+        var calidad = puntuacionTotal / precioTotal;
+        if (calidad >= 0 && calidad < 0.7){
+            return <p className="text-red-700 font-semibold">Calidad/Precio Mala</p>;
+        }else if (calidad >= 0.7 && calidad < 1.4){
+            return <p className="text-yellow-400 font-semibold">Calidad/Precio Media</p>;
+        }else if (calidad >= 1.4 && calidad < 2.1){
+            return <p className="text-green-500 font-semibold">Calidad/Precio Buena</p>;
+        }
+    }
 
     const limpiarSelect = (opcion) => setData(opcion, null);
 
@@ -432,11 +444,16 @@ export default function Configurador({ user, sockets, articulos }) {
                     </div>
                     <div className='rounded-lg w-full lg:w-2/6 border shadow-md p-5 flex flex-col gap-4 h-auto'>
                         <div className=" text-center">
-                            <p className="font-semibold text-2xl p-5">Potencial PCreate™ </p>
+                            <p className="font-semibold text-2xl pt-5 pb-3">Potencial PCreate™ </p>
+                            {areEssentialComponentsSelected() ? (
+                                <p className='text-xl'>{porcentaje()}%</p>
+                            ) : (
+                                ""
+                            )}
                             <ProgressBar puntuacionTotal={areEssentialComponentsSelected() ? puntuacionTotal : 0} />
 
                             {areEssentialComponentsSelected() ? (
-                                <p className='text-xl py-5'>{puntuacionTotal}Ptos ({(puntuacionTotal / precioTotal).toFixed(2)} Ptos/€)</p>
+                                <p className='text-xl py-5'>{calidadPrecio()}</p>
                             ) : (
                                 <p className='text-xl py-5'>Configure los elementos obligatorios para ver su Potencial.</p>
                             )}
@@ -470,8 +487,8 @@ export default function Configurador({ user, sockets, articulos }) {
                                     <p>{getArticuloInfo(articulos, data.disipador, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.disipador, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.disipador, "precio")}€</strong></p>
                                 </div>
                                 {showCoolingWarning &&
-                                    <div className="bg-orange-500 text-white p-2 rounded">
-                                        Advertencia: Debería elegir un modelo de refrigeración líquida para el procesador seleccionado debido a su alto consumo.
+                                    <div className="bg-orange-500 text-white p-2 rounded font-bold">
+                                        <p className='justify-center text-center'>Advertencia: Debería elegir un modelo de refrigeración líquida para el procesador seleccionado debido a su alto consumo.</p>
                                     </div>
                                 }
                             </div>
@@ -493,8 +510,8 @@ export default function Configurador({ user, sockets, articulos }) {
                                     <p>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.almacenamientoPrincipal, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "precio")}€</strong></p>
                                 </div>
                                 {showAlmacenamientoPrincipalWarning &&
-                                    <div className="bg-orange-500 text-white p-2 rounded">
-                                        Advertencia: Debería considerar elegir un modelo SSD para agilizar su navegación con el equipo.
+                                    <div className="bg-orange-500 text-white p-2 rounded font-semibold justify-normal px-5 ">
+                                        <p className='justify-center text-center'>Advertencia: Debería considerar elegir un modelo SSD para agilizar su navegación con el equipo.</p>
                                     </div>
                                 }
                             </div>
