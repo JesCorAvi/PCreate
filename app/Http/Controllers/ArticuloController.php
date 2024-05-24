@@ -98,7 +98,7 @@ class ArticuloController extends Controller
      */
     public function create()
     {
-        if (! Gate::allows('create', Articulo::class)) {
+        if (!Gate::allows('create', Articulo::class)) {
             abort(403);
         }
 
@@ -115,14 +115,14 @@ class ArticuloController extends Controller
      */
     public function store(Request $request)
     {
-            $request->validate([
-                'imagenpr' => 'required|image',
-                'imagensec1' => 'required|image',
-                'imagensec2' => 'required|image',
-                "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:120",
-                "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/s",
-                "precio" => "required|regex:/^\d*\.?\d*$/",
-            ]);
+        $request->validate([
+            'imagenpr' => 'required|image',
+            'imagensec1' => 'required|image',
+            'imagensec2' => 'required|image',
+            "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:120",
+            "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/s",
+            "precio" => "required|regex:/^\d*\.?\d*$/",
+        ]);
 
 
 
@@ -136,7 +136,7 @@ class ArticuloController extends Controller
 
         switch ($request->tipo) {
             case "Placa base":
-                $puntuacion = $request->slotsm2 * 10 + $request->slotsram * 5 + $request->ddrmax * 10 + $request->mhzmax/200;
+                $puntuacion = $request->slotsm2 * 10 + $request->slotsram * 5 + $request->ddrmax * 10 + $request->mhzmax / 200;
                 $request->validate([
                     "socket_id" => "required",
                     "slotsm2" => "required|regex:/^\d+$/",
@@ -181,7 +181,7 @@ class ArticuloController extends Controller
                 ];
                 break;
             case "CPU":
-                $puntuacion = $request->nucleos * 10 + $request->frecuencia * 50 ;
+                $puntuacion = $request->nucleos * 10 + $request->frecuencia * 50;
 
                 $request->validate([
                     "socket_id" => "required",
@@ -258,7 +258,7 @@ class ArticuloController extends Controller
                     "poder" => "required|regex:/^\d+$/",
                 ]);
                 $datosEspecificos = [
-                    "datos" =>[
+                    "datos" => [
                         "poder" => $request->poder,
                     ],
                 ];
@@ -326,7 +326,12 @@ class ArticuloController extends Controller
     public function show(Request $request)
     {
         $articulo = Articulo::with('categoria', 'marca', 'fotos')->find($request->id);
-        $user = User::find(auth()->user()->id)->load("facturas.articulos", "comentarios");
+        $user = null;
+
+        if (auth()->check()) {
+            $user = User::find(auth()->user()->id)->load("facturas.articulos", "comentarios");
+        }
+
         return Inertia::render('Articulo/Show', ["user" => $user,  "articulo" => $articulo, "categorias" => Categoria::all()]);
     }
 
@@ -335,7 +340,7 @@ class ArticuloController extends Controller
      */
     public function edit(Request $request)
     {
-        if (! Gate::allows('update', Articulo::class)) {
+        if (!Gate::allows('update', Articulo::class)) {
             abort(403);
         }
 
@@ -355,14 +360,14 @@ class ArticuloController extends Controller
     public function update(Request $request)
     {
         //problemas en la validacion de las imagenes, si se envia cadena peta
-            $request->validate([
-                'imagenpr' =>  [new ImagenOCadena],
-                'imagensec1' =>  [new ImagenOCadena],
-                'imagensec2' =>  [new ImagenOCadena],
-                "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:120",
-                "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/s",
-                "precio" => "required|regex:/^\d*\.?\d*$/",
-            ]);
+        $request->validate([
+            'imagenpr' =>  [new ImagenOCadena],
+            'imagensec1' =>  [new ImagenOCadena],
+            'imagensec2' =>  [new ImagenOCadena],
+            "nombre" => "required|regex:/^(?!.*\b\w{31,}\b).*$/|max:120",
+            "descripcion" => "required|regex:/^(?!.*\b\w{31,}\b).*$/s",
+            "precio" => "required|regex:/^\d*\.?\d*$/",
+        ]);
 
 
         $articulo = Articulo::find($request->id);
@@ -376,7 +381,7 @@ class ArticuloController extends Controller
 
         switch ($request->tipo) {
             case "Placa base":
-                $puntuacion = $request->slotsm2 * 10 + $request->slotsram * 5 + $request->ddrmax * 10 + $request->mhzmax/200;
+                $puntuacion = $request->slotsm2 * 10 + $request->slotsram * 5 + $request->ddrmax * 10 + $request->mhzmax / 200;
                 $request->validate([
                     "socket_id" => "required",
                     "slotsm2" => "required|regex:/^\d+$/",
@@ -414,7 +419,7 @@ class ArticuloController extends Controller
                 ]);
 
                 $datosEspecificos = [
-                    "datos" =>[
+                    "datos" => [
                         "memoria" => $request->memoria,
                         "gddr" => $request->gddr,
                         "consumo" => $request->consumo,
@@ -422,7 +427,7 @@ class ArticuloController extends Controller
                 ];
                 break;
             case "CPU":
-                $puntuacion = $request->nucleos * 10 + $request->frecuencia * 50 ;
+                $puntuacion = $request->nucleos * 10 + $request->frecuencia * 50;
                 $request->validate([
                     "socket_id" => "required",
                     "nucleos" => "required|regex:/^\d+$/",

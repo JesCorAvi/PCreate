@@ -53,7 +53,7 @@ Route::get('/pc/ver', [PCController::class, 'create'])->name('pc.show');
 
 Route::post('/carrito/store', [CarritoController::class, 'store'])->name('carrito.store')->middleware('auth');
 Route::post('/carrito/update', [CarritoController::class, 'update'])->name('carrito.update')->middleware('auth');
-Route::post('/carrito/destroy', [CarritoController::class, 'destroy'])->name('carrito.destroy')->middleware('auth');
+Route::delete('/carrito/destroy', [CarritoController::class, 'destroy'])->name('carrito.destroy')->middleware('auth');
 Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index');
 Route::get('/carritoActualizar', [CarritoController::class, 'articulos'])->name('carrito.articulos')->middleware('auth');
 
@@ -67,8 +67,8 @@ Route::post('/factura/update', [FacturaController::class, 'update'])->name('fact
 Route::post('/factura/destroy', [FacturaController::class, 'destroy'])->name('factura.destroy')->middleware('auth');
 
 
-Route::post('/tienda/comentarios/getComentario', [ComentarioController::class, 'getComentarios'])->name('comentario.getComentarios')->middleware('auth');
-Route::post('/tienda/comentarios/getComentarioWhere', [ComentarioController::class, 'getComentariosWhere'])->name('comentario.getComentariosWhere')->middleware('auth');
+Route::post('/tienda/comentarios/getComentario', [ComentarioController::class, 'getComentarios'])->name('comentario.getComentarios');
+Route::post('/tienda/comentarios/getComentarioWhere', [ComentarioController::class, 'getComentariosWhere'])->name('comentario.getComentariosWhere');
 
 Route::post('/tienda/comentario/store/{commentableType}/{commentableId}', [ComentarioController::class, 'store'])->name('comentario.store')->middleware('auth');
 Route::post('/tienda/comentario/destroy', [ComentarioController::class, 'destroy'])->name('comentario.destroy')->middleware('auth');

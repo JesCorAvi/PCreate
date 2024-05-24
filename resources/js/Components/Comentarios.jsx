@@ -15,12 +15,12 @@ export default function Comentarios({ user, id }) {
     const [estrellasNuevaComentario, setEstrellasNuevaComentario] = useState(0);
     const [contenidoNuevaComentario, setContenidoNuevaComentario] = useState('');
     const [caracteres, setCaracteres] = useState(0);
-    const [userHasArticle, setUserHasArticle] = useState(user.facturas.some(factura =>
+    const [userHasArticle, setUserHasArticle] = useState(user ? user.facturas.some(factura =>
         factura.articulos.some(articulo => articulo.id === id)
-    ));
-    const [userHasCommented, setUserHasCommented] = useState(user.comentarios.some(comentario =>
+    ) : false);
+    const [userHasCommented, setUserHasCommented] = useState(user ? user.comentarios.some(comentario =>
         comentario.comentable_type === 'App\\Models\\Articulo' && comentario.comentable_id === id
-    ));
+    ) : false);
 
     console.log(user);
     useEffect(() => {

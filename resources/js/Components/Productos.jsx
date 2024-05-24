@@ -85,7 +85,7 @@ export default function Productos({ user, articulos, categorias, marcas, cantida
                                 <Pieza
                                     key={art.id}
                                     nombre={acortar(art.nombre, 50)}
-                                    imagen={"http://127.0.0.1:8000/storage/uploads/articulos/" + art.fotos.find(foto => foto.orden === 0)?.imagen}
+                                    imagen={ art.fotos.find(foto => foto.orden === 0)?.imagen}
                                     precio={art.precio}
                                     ruta={route("articulos.show", { id: art.id })}
                                     id={art.id}

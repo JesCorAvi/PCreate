@@ -147,6 +147,5 @@ class CarritoController extends Controller
     {
         $carrito = Carrito::where('user_id', auth()->id())->first();
         $carrito->articulos()->detach($request->articulo_id);
-
     }
 }

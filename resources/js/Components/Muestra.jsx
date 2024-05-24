@@ -39,17 +39,17 @@ export default function Pieza({user, active = false, classNameName = '', childre
             }).catch(error => {
                 console.log(error);
             });
-        }else{
-            let carrito = localStorage.getItem('carrito') || [];
-            let articuloEncontrado = carrito.find(art => art.articulo_id === articulo.id);
+        } else {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            let articuloEncontrado = carrito.find(art => art.id === articulo.id);
             if (articuloEncontrado) {
-                articuloEncontrado.cantidad++;
+                articuloEncontrado.pivot.cantidad++;
             } else {
                 carrito.push({
                     id: articulo.id,
                     nombre: articulo.nombre,
                     precio: articulo.precio,
-                    fotos:[{imagen: articulo.fotos[0].imagen}],
+                    fotos: [{ imagen: articulo.fotos[0].imagen }],
                     pivot: { cantidad: 1 },
                 });
             }
@@ -102,7 +102,7 @@ export default function Pieza({user, active = false, classNameName = '', childre
                     <section className="flex-1 text-justify xl:px-10 flex flex-col justify-between " >
                         <h1 className="font-bold text-4xl pt-10 ">{articulo.nombre}</h1>
                         <p className='py-10 xl:py-20 xl:px-10 max-w-2xl overflow-hidden whitespace-pre-wrap'>
-                            {acortar(articulo.descripcion, 400)}
+                            {acortar(articulo.descripcion, 400)}<br></br>
                             <a href="#descripcion-completa" className='underline'>Seguir leyendo</a>
                         </p>
 
