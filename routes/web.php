@@ -11,7 +11,8 @@ use App\Http\Controllers\PCController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocketController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use Inertia\Inertia;use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return redirect()->route('articulo.index');
@@ -29,6 +30,24 @@ Route::middleware('auth')->group(function () {
     Route::patch('/perfil', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/perfil', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+Route::get('/email/verify', function () {
+    return Inertia::render('Auth/VerifyEmail');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect('/tienda')->with('borrarLocalStorage', true);
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/resend', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
 Route::post('/perfil/store', [DomicilioController::class, 'store'])->name('domicilio.store');
 Route::put('/perfil/update', [DomicilioController::class, 'update'])->name('domicilio.update');
 Route::post('/perfil/destroy', [DomicilioController::class, 'destroy'])->name('domicilio.destroy');
@@ -70,15 +89,14 @@ Route::post('/factura/destroy', [FacturaController::class, 'destroy'])->name('fa
 Route::post('/tienda/comentarios/getComentario', [ComentarioController::class, 'getComentarios'])->name('comentario.getComentarios');
 Route::post('/tienda/comentarios/getComentarioWhere', [ComentarioController::class, 'getComentariosWhere'])->name('comentario.getComentariosWhere');
 
-Route::post('/tienda/comentario/store/{commentableType}/{commentableId}', [ComentarioController::class, 'store'])->name('comentario.store')->middleware('auth');
-Route::post('/tienda/comentario/destroy', [ComentarioController::class, 'destroy'])->name('comentario.destroy')->middleware('auth');
+Route::post('/tienda/comentario/store/{commentableType}/{commentableId}', [ComentarioController::class, 'store'])->name('comentario.store')->middleware(['auth', 'verified']);
+Route::post('/tienda/comentario/destroy', [ComentarioController::class, 'destroy'])->name('comentario.destroy')->middleware(['auth', 'verified']);
 
-Route::get('/comprar', [FacturaController::class, 'create'])->name('factura.create')->middleware('auth');
+Route::get('/comprar', [FacturaController::class, 'create'])->name('factura.create')->middleware(['auth', 'verified']);
+Route::post('/comprar/listo', [FacturaController::class, 'store'])->name('factura.store')->middleware(['auth', 'verified']);
 
-Route::post('/comprar/listo', [FacturaController::class, 'store'])->name('factura.store')->middleware('auth');
-
-Route::post("/paypal/pago", [PaypalController::class, 'payment'])->name('paypal.pago')->middleware('auth');
-Route::get("/paypal/listo", [PaypalController::class, 'success'])->name('paypal.listo')->middleware('auth');
-Route::get("/paypal/cancelar", [PaypalController::class, 'cancel'])->name('paypal.cancelar')->middleware('auth');
+Route::post("/paypal/pago", [PaypalController::class, 'payment'])->name('paypal.pago')->middleware(['auth', 'verified']);
+Route::get("/paypal/listo", [PaypalController::class, 'success'])->name('paypal.listo')->middleware(['auth', 'verified']);
+Route::get("/paypal/cancelar", [PaypalController::class, 'cancel'])->name('paypal.cancelar')->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';

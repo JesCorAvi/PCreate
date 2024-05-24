@@ -57,6 +57,8 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect('/tienda')->with('borrarLocalStorage', true);
+        return redirect()->route('verification.notice');
+
+        //return redirect('/tienda')->with('borrarLocalStorage', true);
         }
 }
