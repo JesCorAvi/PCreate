@@ -18,8 +18,6 @@ Route::get('/', function () {
     return redirect()->route('articulo.index');
 });
 
-
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

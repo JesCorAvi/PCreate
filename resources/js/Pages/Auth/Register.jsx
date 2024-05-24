@@ -5,6 +5,8 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -17,6 +19,7 @@ export default function Register() {
     data.carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
     const [validationErrors, setValidationErrors] = useState({});
+    const [showPasswordHint, setShowPasswordHint] = useState(false);
 
     useEffect(() => {
         return () => {
@@ -35,7 +38,7 @@ export default function Register() {
             case 'password':
                 error = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value)
                     ? ''
-                    : 'La contraseña debe tener al menos una mayúscula, una minúscula, un número y un carácter especial';
+                    : 'La contraseña debe tener al menos una mayúscula, una minúscula, un número, un carácter especial y 8 carácteres';
                 break;
             case 'password_confirmation':
                 error = value === data.password
@@ -56,6 +59,10 @@ export default function Register() {
     const handleBlur = (e) => {
         const { name, value } = e.target;
         validateField(name, value);
+    };
+
+    const togglePasswordHint = () => {
+        setShowPasswordHint(!showPasswordHint);
     };
 
     const submit = (e) => {
@@ -106,23 +113,30 @@ export default function Register() {
                     <InputError message={errors.email || validationErrors.email} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 relative flex items-center">
                     <InputLabel htmlFor="password" value="Contraseña" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        required
-                    />
-
-                    <InputError message={errors.password || validationErrors.password} className="mt-2" />
+                    <Tooltip title="Al menos una mayúscula, un número y un carácter especial y 8 carácteres">
+                        <HelpOutlineIcon
+                            className={`text-gray-400 h-5 w-5 cursor-pointer ml-1 ${showPasswordHint ? 'text-gray-600' : ''}`}
+                            onMouseEnter={togglePasswordHint}
+                            onMouseLeave={togglePasswordHint}
+                        />
+                    </Tooltip>
                 </div>
+
+                <TextInput
+                    id="password"
+                    type="password"
+                    name="password"
+                    value={data.password}
+                    className="mt-1 block w-full"
+                    autoComplete="new-password"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    required
+                />
+
+                <InputError message={errors.password || validationErrors.password} className="mt-2" />
 
                 <div className="mt-4">
                     <InputLabel htmlFor="password_confirmation" value="Repita la Contraseña" />
@@ -154,8 +168,6 @@ export default function Register() {
                         Registrarse
                     </PrimaryButton>
                 </div>
-
-
             </form>
         </GuestLayout>
     );
