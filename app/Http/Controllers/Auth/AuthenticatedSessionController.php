@@ -54,7 +54,7 @@ class AuthenticatedSessionController extends Controller
             }
         }
 
-        return redirect('/articulo.index')->with('borrarLocalStorage', true);
+        return redirect('/tienda')->with('borrarLocalStorage', true);
     }
 
     /**
