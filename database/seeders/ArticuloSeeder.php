@@ -119,7 +119,7 @@ class ArticuloSeeder extends Seeder
                         'cantidad' => "1",
                         'memoria' => "4",
                         'frecuencia' => "2400",
-                        'ddr' => "4",
+                        'ddr' => 4,
                     ],
                 ],
                 [
@@ -133,7 +133,7 @@ class ArticuloSeeder extends Seeder
                         'cantidad' => "2",
                         'memoria' => "16",
                         'frecuencia' => "3200",
-                        'ddr' => "4",
+                        'ddr' => 4,
                     ],
                 ],
                 [
@@ -147,7 +147,7 @@ class ArticuloSeeder extends Seeder
                         'cantidad' => "4",
                         'memoria' => "32",
                         'frecuencia' => "4000",
-                        'ddr' => "5",
+                        'ddr' => 5,
                     ],
                 ],
             ],

@@ -5,16 +5,21 @@ import Select from 'react-select';
 import { useForm } from '@inertiajs/react';
 import BotonGrande from './BotonGrande';
 import Boton from './Boton';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function Configurador({ user, sockets, articulos }) {
+    console.log(articulos)
     const [showCoolingWarning, setShowCoolingWarning] = useState(false);
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
-
+    const [showInfoPotencial, setShowInfoPotencial] = useState(false);
     const [ventiladorCount, setVentiladorCount] = useState(1);
     const [maxVentiladores, setMaxVentiladores] = useState(0);
     const [precioTotal, setPrecioTotal] = useState(0);
     const [puntuacionTotal, setPuntuacionTotal] = useState(0);
-
+    const cambioInfoPotencial = () => {
+        setShowInfoPotencial(!showInfoPotencial);
+    };
     const [filteredArticulos, setFilteredArticulos] = useState({
         placas: [],
         cpu: [],
@@ -34,17 +39,17 @@ export default function Configurador({ user, sockets, articulos }) {
         caja: null,
         ventilacion: null,
     });
-    function porcentaje(){
+    function porcentaje() {
         return ((puntuacionTotal / 2500) * 100).toFixed(2);
     }
-    function calidadPrecio(){
+    function calidadPrecio() {
         var calidad = puntuacionTotal / precioTotal;
-        if (calidad >= 0 && calidad < 0.7){
-            return <p className="text-red-700 font-semibold">Calidad/Precio Mala</p>;
-        }else if (calidad >= 0.7 && calidad < 1.4){
+        if (calidad >= 0 && calidad < 0.7) {
+            return <p className="text-red-700 font-semibold">Calidad/Precio Reducida</p>;
+        } else if (calidad >= 0.7 && calidad < 1.4) {
             return <p className="text-yellow-400 font-semibold">Calidad/Precio Media</p>;
-        }else if (calidad >= 1.4 && calidad < 2.1){
-            return <p className="text-green-500 font-semibold">Calidad/Precio Buena</p>;
+        } else if (calidad >= 1.4 && calidad < 2.1) {
+            return <p className="text-green-500 font-semibold">Calidad/Precio Alta</p>;
         }
     }
 
@@ -130,7 +135,7 @@ export default function Configurador({ user, sockets, articulos }) {
                 const { ddrmax, clase } = placaSeleccionada.datos;
                 setFilteredArticulos(prevState => ({
                     ...prevState,
-                    ram: (ddrmax === "5" ? [...(articulos.ram.ddr4 || []), ...(articulos.ram.ddr5 || [])] : articulos.ram.ddr4) || [],
+                    ram: (ddrmax === 5 ? [...(articulos.ram.ddr4 || []), ...(articulos.ram.ddr5 || [])] : articulos.ram.ddr4) || [],
                     cajas: (clase === 'Micro-ATX' ? [...(articulos.cajas.atx || []), ...(articulos.cajas.micro_atx || [])] : articulos.cajas.atx) || [],
                 }));
                 setData(prevData => ({
@@ -195,6 +200,7 @@ export default function Configurador({ user, sockets, articulos }) {
         } else {
             setVentiladorCount(0);
             setData('ventilacion', null);
+            setVentiladorCount(1)
         }
     };
 
@@ -437,14 +443,23 @@ export default function Configurador({ user, sockets, articulos }) {
                         )}
 
                         {areEssentialComponentsSelected() ? (
-                        <Boton texto="Guardar Configuración" className="w-full"></Boton>
-                    ) : (
+                            <Boton texto="Guardar Configuración" className="w-full"></Boton>
+                        ) : (
                             <p className='text-xl py-5'>Configure los elementos obligatorios para poder guardar su configuración.</p>
                         )}
                     </div>
                     <div className='rounded-lg w-full lg:w-2/6 border shadow-md p-5 flex flex-col gap-4 h-auto'>
-                        <div className=" text-center">
-                            <p className="font-semibold text-2xl pt-5 pb-3">Potencial PCreate™ </p>
+                        <div className="flex flex-col justify-center items-center">
+                            <div className="mt-4 relative flex items-center">
+                                <p className="font-semibold text-2xl pt-5 pb-3">Potencial PCreate™</p>
+                                <Tooltip title="Potencial PCreate™ indica cómo de cerca está su dispositivo de alcanzar el máximo posible de potencia establecido por nuestra empresa.">
+                                    <HelpOutlineIcon
+                                        className={`text-gray-400 h-5 w-5 cursor-pointer ml-1 ${showInfoPotencial ? 'text-gray-600' : ''}`}
+                                        onMouseEnter={cambioInfoPotencial}
+                                        onMouseLeave={cambioInfoPotencial}
+                                    />
+                                </Tooltip>
+                            </div>
                             {areEssentialComponentsSelected() ? (
                                 <p className='text-xl'>{porcentaje()}%</p>
                             ) : (
@@ -500,6 +515,11 @@ export default function Configurador({ user, sockets, articulos }) {
                                     <p>{getArticuloInfo(articulos, data.ram, "nombre")}</p>
                                     <p>{getArticuloInfo(articulos, data.ram, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.ram, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.ram, "precio")}€</strong></p>
                                 </div>
+                                {filteredArticulos.ram.find(ram => ram.id === data.ram)?.datos.ddr < filteredArticulos.placas.find(placa => placa.id === data.placa)?.datos.ddrmax && (
+                                    <div className="bg-orange-500 text-white p-2 rounded font-bold">
+                                        <p className='justify-center text-center'>Advertencia: El tipo de RAM es inferior a la máxima soportada por su placa. Considere cambiar su placa a una inferior o su RAM a una superior.</p>
+                                    </div>
+                                )}
                             </div>
                         )}
                         {data.almacenamientoPrincipal && (
@@ -555,7 +575,7 @@ export default function Configurador({ user, sockets, articulos }) {
 
                         <div className="mt-auto text-center">
                             <p className="font-semibold text-2xl">Total</p>
-                            <p className='text-xl'>{precioTotal}€</p>
+                            <p className='text-3xl pt-5'>{precioTotal}€</p>
                         </div>
                         {areEssentialComponentsSelected() ? (
                             <BotonGrande texto="Añadir al carrito"></BotonGrande>
