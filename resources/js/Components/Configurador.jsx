@@ -567,7 +567,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <div>
                                 <h3 className="font-semibold text-xl">Ventilacion</h3>
                                 <div className="flex justify-between px-5">
-                                    <p>x{ventiladorCount} {getArticuloInfo(articulos, data.ventilacion, "nombre")}</p>
+                                    <p>{getArticuloInfo(articulos, data.ventilacion, "nombre")} <strong>x{ventiladorCount}</strong></p>
                                     <p>{getArticuloInfo(articulos, data.ventilacion, "puntuacion") * ventiladorCount}Ptos ({getArticuloInfo(articulos, data.ventilacion, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.ventilacion, "precio") * ventiladorCount}€</strong></p>
                                 </div>
                             </div>

@@ -27,13 +27,10 @@ export default function Pedido({ factura }) {
                     <p className='font-bold'>PEDIDO REALIZADO</p>
                     <p>{formatDate(factura.fecha_creacion)}</p>
                 </div>
-                <div>
-                    <p className='font-bold'>Total</p>
-                    <p>{Total()}€</p>
-                </div>
+
                 <div className="ml-auto">
                     <p><strong>PEDIDO Nº</strong> {factura.id}</p>
-                    <a href="#" className='underline'>Ver los detalles de los pedidos</a>
+                    <a href="#" className='underline'>Descargar Factura</a>
                 </div>
             </div>
             <div className='px-2 py-1'>
@@ -44,16 +41,21 @@ export default function Pedido({ factura }) {
                     {factura.articulos.map((articulo, index) => (
                         <div key={index} className="flex items-center">
                             <img className='w-20 h-20 rounded-md' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + articulo.fotos[0].imagen}></img>
-                            <div>
-                                <Link href={route("articulos.show", { id: articulo.id })} className="text-sm ml-2 underline">{articulo.nombre} </Link>
-                                <p className='ml-2 font-semibold'>{articulo.pivot.precio}€</p> {/* Precio almacenado en la tabla pivote */}
+                            <div className='flex-1 ml-2'>
+                                <div className='flex justify-between'>
+                                    <Link href={route("articulos.show", { id: articulo.id })} className="text-sm underline">{articulo.nombre}</Link>
+                                    <p className='font-semibold px-10'>{articulo.pivot.precio}€</p>
+                                </div>
                                 <p className='ml-2'>Cantidad: {articulo.pivot.cantidad}</p>
                             </div>
                         </div>
                     ))}
                 </div>
-
             </div>
+            <div className="border-t-2 px-2 py-1 border-solid border-black flex justify-between">
+                    <p className='font-bold text-2xl px-5'>Total:</p>
+                    <p className='text-2xl px-10'>{Total()}€</p>
+                </div>
         </div>
     );
 }
