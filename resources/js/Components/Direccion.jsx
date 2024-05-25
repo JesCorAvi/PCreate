@@ -9,6 +9,7 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
     const [isEditing, setIsEditing] = useState(!!id);
     const [lightboxVisible, setLightboxVisible] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+    const [validationErrors, setValidationErrors] = useState({});
 
     const handleCloseModal = () => {
         setIsDeleteModalVisible(false);
@@ -36,8 +37,39 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
         setAllDirecciones(updatedDirecciones);
     };
 
+    const validateField = (name, value) => {
+        let error;
+        switch (name) {
+            case 'nombre':
+            case 'ciudad':
+                error = /^[a-zA-Z\s]+$/.test(value) ? '' : 'El nombre y la ciudad solo pueden contener letras y espacios';
+                break;
+            case 'telefono':
+                error = /^(\+?\d{1,12}|\d{9})$/.test(value) ? '' : 'Número de teléfono no válido';
+                break;
+            case 'cpostal':
+                error = /^\d+$/.test(value) ? '' : 'El código postal solo puede contener números';
+                break;
+            case 'direccion':
+                error = /^[a-zA-Z0-9º\.,\s]+$/.test(value) ? '' : 'La dirección contiene caracteres no válidos';
+                break;
+            default:
+                error = '';
+        }
+        setValidationErrors({ ...validationErrors, [name]: error });
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setData(name, value);
+        validateField(name, value);
+    };
+
     function crearDireccion(e) {
         e.preventDefault();
+        if (Object.values(validationErrors).some(error => error)) {
+            return;
+        }
         if (isEditing) {
             put(route('domicilio.update', id), {
                 ...data,
@@ -68,12 +100,14 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
             }
         });
     }
+
     function setFavorito(e) {
         e.preventDefault();
         post(route('domicilio.setFavorito'), {
             id,
         });
     }
+
     return (
         <form method='post' onSubmit={crearDireccion}>
             <Modal className="p-6" show={isDeleteModalVisible} onClose={handleCloseModal}>
@@ -104,7 +138,7 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                                 placeholder='Nombre'
                                 value={data.nombre}
                                 required
-                                onChange={(e) => setData('nombre', e.target.value)}
+                                onChange={handleChange}
                             />
                             <input
                                 className='w-full sm:w-3/4'
@@ -112,7 +146,7 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                                 placeholder='Direccion'
                                 value={data.direccion}
                                 required
-                                onChange={(e) => setData('direccion', e.target.value)}
+                                onChange={handleChange}
                             />
                         </div>
                         <div className='flex flex-col sm:flex-row items-center justify-between'>
@@ -121,30 +155,30 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                                 required
                                 placeholder='Ciudad'
                                 value={data.ciudad}
-                                onChange={(e) => setData('ciudad', e.target.value)}
+                                onChange={handleChange}
                             />
                             <input className='w-full'
-                                type="number"
+                                type="text"
                                 maxLength={5}
                                 minLength={5}
                                 name='cpostal'
                                 required
                                 placeholder='Código Postal'
                                 value={data.cpostal}
-                                onChange={(e) => setData('cpostal', e.target.value)}
+                                onChange={handleChange}
                             />
                             <input className='w-full'
-                                maxLength={11}
-                                minLength={9}
+                                type="text"
+                                maxLength={12}
                                 name='telefono'
                                 required
                                 placeholder='Numero de telefono'
                                 value={data.telefono}
-                                onChange={(e) => setData('telefono', e.target.value)}
+                                onChange={handleChange}
                             />
                             <select className='w-full'
                                 name='provincia_id'
-                                onChange={(e) => setData('provincia_id', e.target.value)}
+                                onChange={handleChange}
                                 value={data.provincia_id}
                                 required
                             >
@@ -156,21 +190,23 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                                 ))}
                             </select>
 
-                            <div className="flex xs:flex-col md:flex-col">
-                                <button className="w-full h-10  hover:bg-slate-600  bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-800  hover:to-purple-800  font-semibold text-white">Guardar</button>
-                            </div>
                         </div>
+
+                        <div className="flex xs:flex-col md:flex-col">
+                                <button className="w-full h-10 hover:bg-slate-600 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-800 hover:to-purple-800 font-semibold text-white">Guardar</button>
+                            </div>
                         <div className="flex items-center mt-2">
                             {favorito ? (
                                 <p className="text-blue-700 font-semibold ml-2 text-center w-full">Direccion Predeterminada</p>
                             ) : (
-                                <a className="underline ml-2 text-center w-full cursor-pointer" onClick={setFavorito}>Establecer como Direccion predeterminada</a>                            )}
+                                <a className="underline ml-2 text-center w-full cursor-pointer" onClick={setFavorito}>Establecer como Direccion predeterminada</a>
+                            )}
                         </div>
                     </div>
                 </div>
-                <p className="text-red-800 py-2">{errors.direccion && <div>{errors.direccion}</div>}</p>
-                <p className="text-red-800 py-2">{errors.ciudad && <div>{errors.ciudad}</div>}</p>
-                <p className="text-red-800 py-2">{errors.cpostal && <div>{errors.cpostal}</div>}</p>
+                <div className="text-red-800 py-2">
+                    {Object.values(validationErrors).map((error, index) => error && <div key={index}>{error}</div>)}
+                </div>
             </div>
         </form>
     );
