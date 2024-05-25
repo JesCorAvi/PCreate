@@ -64,13 +64,13 @@ export default function Filtro({ categorias, marcas, filtrar }) {
         <>
             <aside
                 id="default-sidebar"
-                className={`md:block ${plegado ? 'hidden' : 'fixed top-[70px] left-0 w-full h-screen bg-white z-40 flex flex-col justify-start items-start p-4 transition duration-300 ease-in-out'} pl-10 min-w-80 overflow-y-auto`}
+                className={` md:block ${plegado ? 'hidden' : 'fixed top-[70px] left-0 w-full h-screen bg-white z-40 flex flex-col justify-start items-start p-4 transition duration-300 ease-in-out'} lg:pl-10 min-w-80 overflow-y-auto`}
                 aria-label="Sidebar"
             >
-                <form action="" onSubmit={handleSubmit}>
-                    <h2 className="font-bold text-2xl">Categorias</h2>
-                    <div className="my-3 max-h-52 lg:max-h-72 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-                        <fieldset>
+                <form className="px-20 lg:px-0" action="" onSubmit={handleSubmit}>
+                    <h2 className="text-center lg:text-left font-bold text-2xl pb-2">Categorias</h2>
+                    <div className="my-3 max-h-52 lg:max-h-72 overflow-y-auto  dark:bg-gray-800p-">
+                        <fieldset className="p-2">
                             <ul className="space-y-2 font-medium xs:max-w-42">
                                 {categorias.map((cat) => (
                                     <li key={cat.id}>
@@ -81,7 +81,7 @@ export default function Filtro({ categorias, marcas, filtrar }) {
                                             name="categoria"
                                             type="checkbox"
                                         />
-                                        <label className="items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                                        <label className="items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700 group">
                                             {cat.nombre}
                                         </label>
                                     </li>
@@ -89,8 +89,8 @@ export default function Filtro({ categorias, marcas, filtrar }) {
                             </ul>
                         </fieldset>
                     </div>
-                    <h2 className="font-bold text-2xl pb-3">Precio</h2>
-                    <div className="my-3 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+                    <h2 className="text-center lg:text-left font-bold text-2xl py-2">Precio</h2>
+                    <div className="my-3 overflow-y-auto flex gap-3 align-middle justify-center  md:justify-start dark:bg-gray-800">
                         <label htmlFor="">de </label>
                         <input
                             type="text"
@@ -112,9 +112,9 @@ export default function Filtro({ categorias, marcas, filtrar }) {
                             placeholder="Max"
                         />
                     </div>
-                    <h2 className="font-bold text-2xl pb-3">Marcas</h2>
-                    <div className="my-3 max-h-52 lg:max-h-72 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-                        <fieldset>
+                    <h2 className="text-center lg:text-left font-bold text-2xl py-2">Marcas</h2>
+                    <div className="my-3 max-h-52 lg:max-h-72 py-4 overflow-y-auto  dark:bg-gray-800">
+                        <fieldset className="p-2">
                             <ul className="space-y-2 font-medium">
                                 {marcas.map((marc) => (
                                     <li key={marc.id}>
@@ -125,7 +125,7 @@ export default function Filtro({ categorias, marcas, filtrar }) {
                                             name="marcas"
                                             type="checkbox"
                                         />
-                                        <label className="items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                                        <label className="items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700 group">
                                             {marc.nombre}
                                         </label>
                                     </li>
@@ -133,7 +133,7 @@ export default function Filtro({ categorias, marcas, filtrar }) {
                             </ul>
                         </fieldset>
                     </div>
-                    <div className="block md:flex md:flex-col">
+                    <div className="block md:flex md:flex-col content-center">
                         <Boton tipo="submit" texto="Filtrar"></Boton>
                         <Boton onClick={borrarFiltros} texto="Borrar Filtros"></Boton>
                     </div>

@@ -195,6 +195,7 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                         <div className="flex xs:flex-col md:flex-col">
                                 <button className="w-full h-10 hover:bg-slate-600 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-800 hover:to-purple-800 font-semibold text-white">Guardar</button>
                             </div>
+                        {isEditing &&
                         <div className="flex items-center mt-2">
                             {favorito ? (
                                 <p className="text-blue-700 font-semibold ml-2 text-center w-full">Direccion Predeterminada</p>
@@ -202,6 +203,7 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                                 <a className="underline ml-2 text-center w-full cursor-pointer" onClick={setFavorito}>Establecer como Direccion predeterminada</a>
                             )}
                         </div>
+                        }
                     </div>
                 </div>
                 <div className="text-red-800 py-2">

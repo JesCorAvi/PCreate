@@ -410,7 +410,7 @@ export default function Configurador({ user, sockets, articulos }) {
                         <div>
                             <p className='font-semibold text-2xl py-4'>Placa base*</p>
                             <Select
-                                className='w-full rounded-md text-black'
+                                className='w-full rounded-md text-black border shadow-lg'
                                 options={filteredArticulos.placas?.map(
                                     placa => ({
                                         value: placa.id,
@@ -444,7 +444,7 @@ export default function Configurador({ user, sockets, articulos }) {
                         <div>
                             <p className='font-semibold text-2xl py-4'>Procesador*</p>
                             <Select
-                                className='w-full rounded-md text-black'
+                                className='w-full rounded-md text-black shadow-lg'
                                 options={filteredArticulos.cpu?.map(cpu => ({ value: cpu.id, precio: cpu.precio, puntuacion: cpu.puntuacion, puntuacionPrecio: cpu.puntuacionPrecio, label: cpu.nombre, imagen: cpu.fotos[0]?.imagen })) || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
@@ -457,7 +457,7 @@ export default function Configurador({ user, sockets, articulos }) {
                         <div>
                             <p className='font-semibold text-2xl py-4'>Disipador Cpu*</p>
                             <Select
-                                className='w-full rounded-md text-black'
+                                className='w-full rounded-md text-black shadow-lg'
                                 options={filteredArticulos.disipador?.map(disipador => ({ value: disipador.id, precio: disipador.precio, puntuacion: disipador.puntuacion, puntuacionPrecio: disipador.puntuacionPrecio, label: disipador.nombre, imagen: disipador.fotos[0]?.imagen })) || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
@@ -470,7 +470,7 @@ export default function Configurador({ user, sockets, articulos }) {
                         <div>
                             <p className='font-semibold text-2xl py-4'>RAM*</p>
                             <Select
-                                className='w-full rounded-md text-black'
+                                className='w-full rounded-md text-black shadow-lg'
                                 options={filteredArticulos.ram?.map(ram => ({ value: ram.id, precio: ram.precio, puntuacion: ram.puntuacion, puntuacionPrecio: ram.puntuacionPrecio, label: ram.nombre, imagen: ram.fotos[0]?.imagen })) || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
@@ -483,7 +483,7 @@ export default function Configurador({ user, sockets, articulos }) {
                         <div>
                             <p className='font-semibold text-2xl py-4'>Almacenamiento principal*</p>
                             <Select
-                                className='w-full rounded-md text-black'
+                                className='w-full rounded-md text-black shadow-lg'
                                 options={filteredArticulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, precio: almacenamiento.precio, puntuacion: almacenamiento.puntuacion, puntuacionPrecio: almacenamiento.puntuacionPrecio, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
@@ -498,7 +498,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <div className='flex'>
 
                                 <Select
-                                    className='w-full rounded-md text-black'
+                                    className='w-full rounded-md text-black shadow-lg'
                                     options={filteredArticulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, precio: almacenamiento.precio, puntuacion: almacenamiento.puntuacion, puntuacionPrecio: almacenamiento.puntuacionPrecio, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
                                     components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                     styles={customStyles}
@@ -516,7 +516,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <p className='font-semibold text-2xl py-4'>Tarjeta gráfica</p>
                             <div className='flex'>
                                 <Select
-                                    className='w-full rounded-md text-black'
+                                    className='w-full rounded-md text-black shadow-lg'
                                     options={articulos.graficas?.map(grafica => ({ value: grafica.id, precio: grafica.precio, puntuacion: grafica.puntuacion, puntuacionPrecio: grafica.puntuacionPrecio, label: grafica.nombre, imagen: grafica.fotos[0]?.imagen })) || []}
                                     components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                     styles={customStyles}
@@ -533,7 +533,7 @@ export default function Configurador({ user, sockets, articulos }) {
                         <div>
                             <p className='font-semibold text-2xl py-4'>Caja*</p>
                             <Select
-                                className='w-full rounded-md text-black'
+                                className='w-full rounded-md text-black shadow-lg'
                                 options={filteredArticulos.cajas?.map(caja => ({ value: caja.id, precio: caja.precio, puntuacion: caja.puntuacion, puntuacionPrecio: caja.puntuacionPrecio, label: caja.nombre, imagen: caja.fotos[0]?.imagen })) || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
@@ -549,7 +549,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 <div className='flex items-center'>
                                     <div className='w-full pr-5'>
                                         <Select
-                                            className='w-full rounded-md text-black'
+                                            className='w-full rounded-md text-black shadow-lg'
                                             options={articulos.ventiladores?.map(ventilador => ({ value: ventilador.id, precio: ventilador.precio, puntuacion: ventilador.puntuacion, puntuacionPrecio: ventilador.puntuacionPrecio, label: ventilador.nombre, imagen: ventilador.fotos[0]?.imagen })) || []}
                                             components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                             styles={customStyles}
@@ -588,7 +588,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <p className='text-xl py-5'>Configure los elementos obligatorios para poder guardar su configuración.</p>
                         )}
                     </div>
-                    <div className='rounded-lg w-full lg:w-2/6 border shadow-md p-5 flex flex-col gap-4 h-auto'>
+                    <div className='rounded-lg w-full lg:w-2/6 border shadow-xl p-5 flex flex-col gap-4 h-auto'>
                         <div className="flex flex-col justify-center items-center">
                             <div className="mt-4 relative flex items-center">
                                 <p className="font-semibold text-2xl pt-5 pb-3">Potencial PCreate™</p>

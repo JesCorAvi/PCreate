@@ -3,7 +3,7 @@ import DoneIcon from '@mui/icons-material/Done';
 function Socket({ id, nombre, imagen, onClick, isSelected }) {
     return (
         <div
-            className={`relative flex flex-col rounded-lg h-42 w-72 justify-center cursor-pointer ${isSelected ? 'border-blue-700 border-4 border-solid' : 'shadow-lg'}`}
+            className={`relative flex flex-col rounded-lg h-42 w-72 justify-center cursor-pointer ${isSelected ? 'border-blue-700 border-4 border-solid' : "shadow-xl"}`}
             onClick={() => onClick(id)}
         >
             {isSelected && <DoneIcon style={{ color: 'blue', position: 'absolute', top: 0, right: 0 }} />}

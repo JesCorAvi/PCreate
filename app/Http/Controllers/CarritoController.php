@@ -18,15 +18,14 @@ class CarritoController extends Controller
         $carrito = Carrito::with('articulos')->where('user_id', auth()->id())->first();
         $totalArticulos = 0;
 
-        if($carrito){
+        if ($carrito) {
             $articulos = $carrito->articulos()->orderBy('nombre', 'asc')->get()->load(['fotos' => function ($query) {
                 $query->where('orden', 0);
             }]);
-            foreach($articulos as $articulo){
+            foreach ($articulos as $articulo) {
                 $totalArticulos += $articulo->pivot->cantidad;
             }
-        }
-        else{
+        } else {
             $articulos = null;
         }
 
@@ -43,15 +42,14 @@ class CarritoController extends Controller
         $carrito = auth()->user()->carritos->first();
         $totalArticulos = 0;
 
-        if($carrito){
+        if ($carrito) {
             $articulos = $carrito->articulos()->orderBy('nombre', 'asc')->get()->load(['fotos' => function ($query) {
                 $query->where('orden', 0);
             }]);
-            foreach($articulos as $articulo){
+            foreach ($articulos as $articulo) {
                 $totalArticulos += $articulo->pivot->cantidad;
             }
-        }
-        else{
+        } else {
             $articulos = null;
         }
 
@@ -76,22 +74,22 @@ class CarritoController extends Controller
      */
     public function store(Request $request)
     {
-            $carrito = auth()->user()->carritos->first();
+        $carrito = auth()->user()->carritos->first();
 
-            if (!$carrito) {
-                $carrito = Carrito::create([
-                    'user_id' => auth()->id(),
-                ]);
-            }
-            if ($carrito->articulos->contains($request->articulo_id)) {
-                $carrito->articulos()->updateExistingPivot($request->articulo_id, [
-                    'cantidad' => $carrito->articulos->find($request->articulo_id)->pivot->cantidad + 1
-                ]);
-            } else {
-                $carrito->articulos()->attach($request->articulo_id);
-            }
+        if (!$carrito) {
+            $carrito = Carrito::create([
+                'user_id' => auth()->id(),
+            ]);
+        }
+        if ($carrito->articulos->contains($request->articulo_id)) {
+            $carrito->articulos()->updateExistingPivot($request->articulo_id, [
+                'cantidad' => $carrito->articulos->find($request->articulo_id)->pivot->cantidad + 1
+            ]);
+        } else {
+            $carrito->articulos()->attach($request->articulo_id);
+        }
 
-            return redirect()->back();
+        return redirect()->back();
     }
 
     /**
@@ -118,22 +116,27 @@ class CarritoController extends Controller
         $carrito = Carrito::where('user_id', auth()->id())->first();
         $nuevaCantidad = 0;
 
-        if ($request->tipo == "+"){
+        if ($request->tipo == "+") {
             $nuevaCantidad = $carrito->articulos->find($request->articulo_id)->pivot->cantidad + 1;
             $carrito->articulos()->updateExistingPivot($request->articulo_id, [
                 'cantidad' => $nuevaCantidad
             ]);
-        }
-        else if ($request->tipo == "-"){
+        } else if ($request->tipo == "-") {
             $nuevaCantidad = $carrito->articulos->find($request->articulo_id)->pivot->cantidad - 1;
             $carrito->articulos()->updateExistingPivot($request->articulo_id, [
                 'cantidad' => $nuevaCantidad
             ]);
-            if ($nuevaCantidad == 0){
+
+            if ($nuevaCantidad == 0) {
                 $carrito->articulos()->detach($request->articulo_id);
-                if ($carrito->articulos->count() == 0){
+                if ($carrito->articulos->count() == 0) {
                     $carrito->delete();
                 }
+            }
+        } else {
+            $carrito->articulos()->detach($request->articulo_id);
+            if ($carrito->articulos->count() == 0) {
+                $carrito->delete();
             }
         }
 

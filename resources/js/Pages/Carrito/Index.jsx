@@ -24,7 +24,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
         let carrito = JSON.parse(localStorage.getItem('carrito'));
         setArticulos(carrito);
         let total = 0;
-        carrito.forEach(e => {
+        carrito?.forEach(e => {
             total += e.pivot.cantidad;
         });
         setCantidadTotal(total);
@@ -79,7 +79,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
                 header={<>
                     <h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Carrito</h2>
                     <p className=" text-gray-800 leading-tight text-center">Tienes {cantidadTotal} carticulos en la cesta</p>
-                    <button onClick={borrarCarrito} className='text-red-600 leading-tight text-center font-semibold w-full underline'>Borrar carrito</button>
+                    {cantidadTotal > 0 && <button onClick={borrarCarrito} className='text-red-600 leading-tight text-center font-semibold w-full underline'>Borrar carrito</button>}
                 </>}
                 categorias={categorias}
 
