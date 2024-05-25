@@ -9,17 +9,20 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Tooltip from '@mui/material/Tooltip';
 
 export default function Configurador({ user, sockets, articulos }) {
-    console.log(articulos)
+    // Estado para mostrar advertencias
     const [showCoolingWarning, setShowCoolingWarning] = useState(false);
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
     const [showInfoPotencial, setShowInfoPotencial] = useState(false);
+
+    // Estado para la cantidad de ventiladores y su límite
     const [ventiladorCount, setVentiladorCount] = useState(1);
     const [maxVentiladores, setMaxVentiladores] = useState(0);
+
+    // Estado para el precio y puntuación total
     const [precioTotal, setPrecioTotal] = useState(0);
     const [puntuacionTotal, setPuntuacionTotal] = useState(0);
-    const cambioInfoPotencial = () => {
-        setShowInfoPotencial(!showInfoPotencial);
-    };
+
+    // Estado para los artículos filtrados según el socket seleccionado
     const [filteredArticulos, setFilteredArticulos] = useState({
         placas: [],
         cpu: [],
@@ -27,8 +30,11 @@ export default function Configurador({ user, sockets, articulos }) {
         ram: [],
         cajas: [],
     });
+
+    // Inicialización del formulario
     const { data, setData, post, errors, reset } = useForm({
-        nombre: "PC de " + user.name + " Nº" + new Date().getTime().toString().slice(-4), socket: null,
+        nombre: `PC de ${user.name} Nº${new Date().getTime().toString().slice(-4)}`,
+        socket: null,
         placa: null,
         cpu: null,
         disipador: null,
@@ -39,9 +45,13 @@ export default function Configurador({ user, sockets, articulos }) {
         caja: null,
         ventilacion: null,
     });
+
+    // Función para calcular el porcentaje de la puntuación total
     function porcentaje() {
         return ((puntuacionTotal / 2500) * 100).toFixed(2);
     }
+
+    // Función para determinar la relación calidad/precio
     function calidadPrecio() {
         var calidad = puntuacionTotal / precioTotal;
         if (calidad >= 0 && calidad < 0.7) {
@@ -53,9 +63,18 @@ export default function Configurador({ user, sockets, articulos }) {
         }
     }
 
-    const limpiarSelect = (opcion) => setData(opcion, null);
+    // Funcion para alterar mostrar y ocultar la información del potencial
 
-    const calcularPrecioTotal = () => {
+    const cambioInfoPotencial = () => {
+        setShowInfoPotencial(!showInfoPotencial);
+    };
+    // Función para limpiar la selección de un componente
+    function limpiarSelect(opcion){
+        setData(opcion, null);
+    }
+
+    // Función para calcular el precio total de los componentes seleccionados
+    function calcularPrecioTotal(){
         let total = 0;
         const componentes = ['placa', 'cpu', 'disipador', 'ram', 'almacenamientoPrincipal', 'almacenamientoSecundario', 'grafica', 'caja', 'ventilacion'];
         componentes.forEach(componente => {
@@ -67,7 +86,8 @@ export default function Configurador({ user, sockets, articulos }) {
         return total.toFixed(2);
     };
 
-    const calcularPuntuacionTotal = () => {
+    // Función para calcular la puntuación total de los componentes seleccionados
+    function calcularPuntuacionTotal(){
         let total = 0;
         const componentes = ['placa', 'cpu', 'disipador', 'ram', 'almacenamientoPrincipal', 'almacenamientoSecundario', 'grafica', 'caja', 'ventilacion'];
         componentes.forEach(componente => {
@@ -79,8 +99,10 @@ export default function Configurador({ user, sockets, articulos }) {
         return total;
     };
 
+    // Actualización del precio y puntuación total al cambiar los datos o la cantidad de ventiladores
     useEffect(() => [setPrecioTotal(calcularPrecioTotal()), setPuntuacionTotal(calcularPuntuacionTotal())][data, ventiladorCount]);
 
+    // Comprobación de compatibilidad entre el CPU y el disipador seleccionado
     useEffect(() => {
         if (data.cpu && data.disipador) {
             const cpuSeleccionado = filteredArticulos.cpu.find(cpu => cpu.id === data.cpu);
@@ -92,6 +114,8 @@ export default function Configurador({ user, sockets, articulos }) {
             }
         }
     }, [data.cpu, data.disipador]);
+
+    // Advertencia si el almacenamiento principal es mecánico
     useEffect(() => {
         if (data.almacenamientoPrincipal) {
             const almacenamientoPrSeleccionado = articulos.almacenamientos.find(almacenamiento => almacenamiento.id === data.almacenamientoPrincipal);
@@ -103,6 +127,7 @@ export default function Configurador({ user, sockets, articulos }) {
         }
     }, [data.almacenamientoPrincipal]);
 
+    // Filtrado de artículos según el socket seleccionado
     useEffect(() => {
         if (data.socket) {
             const { placas = [], cpu = [], disipador = [] } = articulos;
@@ -128,6 +153,7 @@ export default function Configurador({ user, sockets, articulos }) {
         }
     }, [data.socket]);
 
+    // Filtrado de RAM y cajas según la placa seleccionada
     useEffect(() => {
         if (data.placa) {
             const placaSeleccionada = filteredArticulos.placas.find(placa => placa.id === data.placa);
@@ -153,6 +179,7 @@ export default function Configurador({ user, sockets, articulos }) {
         }
     }, [data.placa]);
 
+    // Componente de opción personalizada para Select
     const CustomOption = ({ data, innerProps }) => (
         <div className='flex justify-between hover:bg-slate-200 align-middle cursor-pointer items-center p-2' {...innerProps}>
             <div className='flex items-center'>
@@ -162,11 +189,11 @@ export default function Configurador({ user, sockets, articulos }) {
             <div className='flex items-center'>
                 <p className='ml-2 text-right'>{data.puntuacion} Ptos({data.puntuacionPrecio} Ptos/€)</p>
                 <p className='ml-2 text-right font-semibold'>{data.precio}€</p>
-
             </div>
         </div>
     );
 
+    // Componente de valor seleccionado personalizado para Select
     const CustomSingleValue = ({ data }) => (
         <div className='flex align-middle items-center'>
             {data.imagen && <img className='w-20 h-20' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + data.imagen} alt={data.label} />}
@@ -174,6 +201,7 @@ export default function Configurador({ user, sockets, articulos }) {
         </div>
     );
 
+    // Estilos personalizados para Select
     const customStyles = {
         control: (provided) => ({ ...provided, display: 'flex', alignItems: 'center', padding: '0.25rem', minHeight: '2.5rem' }),
         singleValue: (provided) => ({ ...provided, display: 'flex', alignItems: 'center', padding: '0.25rem', margin: 0 }),
@@ -181,6 +209,7 @@ export default function Configurador({ user, sockets, articulos }) {
         input: (provided) => ({ ...provided, margin: 0, padding: 0 }),
     };
 
+    // Actualización del máximo de ventiladores según la caja seleccionada
     useEffect(() => {
         if (data.caja) {
             const cajaSeleccionada = articulos.cajas.atx.find(caja => caja.id === data.caja) || articulos.cajas.micro_atx.find(caja => caja.id === data.caja);
@@ -190,6 +219,7 @@ export default function Configurador({ user, sockets, articulos }) {
         }
     }, [data.caja]);
 
+    // Incremento y decremento de la cantidad de ventiladores
     const handleIncrement = () => {
         if (ventiladorCount < maxVentiladores) setVentiladorCount(prevCount => prevCount + 1);
     };
@@ -200,14 +230,16 @@ export default function Configurador({ user, sockets, articulos }) {
         } else {
             setVentiladorCount(0);
             setData('ventilacion', null);
-            setVentiladorCount(1)
+            setVentiladorCount(1);
         }
     };
 
+    // Actualización del estado cuando la cantidad de ventiladores es cero
     useEffect(() => {
         if (ventiladorCount === 0) setData('ventilacion', null);
     }, [ventiladorCount]);
 
+    // Función para obtener información de un artículo
     function getArticuloInfo(collection, id, infoType) {
         if (Array.isArray(collection)) {
             return collection.find(item => item.id === id)?.[infoType] || null;
@@ -227,6 +259,7 @@ export default function Configurador({ user, sockets, articulos }) {
         return null;
     }
 
+    // Componente de barra de progreso
     const ProgressBar = ({ puntuacionTotal }) => {
         const maxScore = 2500;
         const percentage = (puntuacionTotal / maxScore) * 100;
@@ -249,12 +282,14 @@ export default function Configurador({ user, sockets, articulos }) {
         );
     };
 
+    // Verificación de selección de componentes esenciales
     const areEssentialComponentsSelected = () => {
         const essentialComponents = ['placa', 'cpu', 'disipador', 'ram', 'almacenamientoPrincipal', 'caja'];
         return essentialComponents.every(componente => data[componente] !== null);
     };
-    const noOptionsMessage = () => 'No hay opciones disponibles';
 
+    // Mensaje cuando no hay opciones disponibles
+    const noOptionsMessage = () => 'No hay opciones disponibles';
 
     return (
         <div className="min-h-screen flex flex-col gap-7 mb-20">
