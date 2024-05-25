@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Head } from '@inertiajs/react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Socket from './Socket';
 import Select from 'react-select';
@@ -9,6 +10,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Tooltip from '@mui/material/Tooltip';
 
 export default function Configurador({ user, sockets, articulos }) {
+    //console.log(articulos);
     // Estado para mostrar advertencias
     const [showCoolingWarning, setShowCoolingWarning] = useState(false);
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
@@ -52,31 +54,51 @@ export default function Configurador({ user, sockets, articulos }) {
     }
 
     // Función para determinar la relación calidad/precio
-    function calidadPrecio() {
+    function calidadPrecio(calidadPrecio) {
+        if (calidadPrecio >= 0 && calidadPrecio < 0.7) {
+            return <p className="text-red-700 font-semibold">Calidad/Precio Reducida</p>;
+        } else if (calidadPrecio >= 0.7 && calidadPrecio < 1.5) {
+            return <p className="text-yellow-400 font-semibold">Calidad/Precio Media</p>;
+        } else if (calidadPrecio >= 1.5 && calidadPrecio < 2.5) {
+            return <p className="text-green-500 font-semibold">Calidad/Precio Alta</p>;
+        }
+    }
+
+    function calidadPrecioTotal() {
         var calidad = puntuacionTotal / precioTotal;
         if (calidad >= 0 && calidad < 0.7) {
             return <p className="text-red-700 font-semibold">Calidad/Precio Reducida</p>;
-        } else if (calidad >= 0.7 && calidad < 1.4) {
+        } else if (calidad >= 0.7 && calidad < 1.5) {
             return <p className="text-yellow-400 font-semibold">Calidad/Precio Media</p>;
-        } else if (calidad >= 1.4 && calidad < 2.1) {
+        } else if (calidad >= 1.5 && calidad < 2.5) {
             return <p className="text-green-500 font-semibold">Calidad/Precio Alta</p>;
         }
     }
 
     // Funcion para alterar mostrar y ocultar la información del potencial
 
-    const cambioInfoPotencial = () => {
+    function cambioInfoPotencial() {
         setShowInfoPotencial(!showInfoPotencial);
     };
     // Función para limpiar la selección de un componente
-    function limpiarSelect(opcion){
+    function limpiarSelect(opcion) {
         setData(opcion, null);
     }
 
     // Función para calcular el precio total de los componentes seleccionados
-    function calcularPrecioTotal(){
+    function calcularPrecioTotal() {
         let total = 0;
-        const componentes = ['placa', 'cpu', 'disipador', 'ram', 'almacenamientoPrincipal', 'almacenamientoSecundario', 'grafica', 'caja', 'ventilacion'];
+        const componentes = [
+            'placa',
+            'cpu',
+            'disipador',
+            'ram',
+            'almacenamientoPrincipal',
+            'almacenamientoSecundario',
+            'grafica',
+            'caja',
+            'ventilacion'
+        ];
         componentes.forEach(componente => {
             if (data[componente]) {
                 const precio = parseFloat(getArticuloInfo(articulos, data[componente], "precio"));
@@ -87,9 +109,19 @@ export default function Configurador({ user, sockets, articulos }) {
     };
 
     // Función para calcular la puntuación total de los componentes seleccionados
-    function calcularPuntuacionTotal(){
+    function calcularPuntuacionTotal() {
         let total = 0;
-        const componentes = ['placa', 'cpu', 'disipador', 'ram', 'almacenamientoPrincipal', 'almacenamientoSecundario', 'grafica', 'caja', 'ventilacion'];
+        const componentes = [
+            'placa',
+            'cpu',
+            'disipador',
+            'ram',
+            'almacenamientoPrincipal',
+            'almacenamientoSecundario',
+            'grafica',
+            'caja',
+            'ventilacion'
+        ];
         componentes.forEach(componente => {
             if (data[componente]) {
                 const puntuacion = parseFloat(getArticuloInfo(articulos, data[componente], "puntuacion"));
@@ -100,14 +132,21 @@ export default function Configurador({ user, sockets, articulos }) {
     };
 
     // Actualización del precio y puntuación total al cambiar los datos o la cantidad de ventiladores
-    useEffect(() => [setPrecioTotal(calcularPrecioTotal()), setPuntuacionTotal(calcularPuntuacionTotal())][data, ventiladorCount]);
+    useEffect(() => [
+        setPrecioTotal(calcularPrecioTotal()),
+        setPuntuacionTotal(calcularPuntuacionTotal())
+    ]
+    [data, ventiladorCount]);
 
     // Comprobación de compatibilidad entre el CPU y el disipador seleccionado
     useEffect(() => {
         if (data.cpu && data.disipador) {
             const cpuSeleccionado = filteredArticulos.cpu.find(cpu => cpu.id === data.cpu);
             const disipadorSeleccionado = filteredArticulos.disipador.find(disipador => disipador.id === data.disipador);
-            if (cpuSeleccionado && disipadorSeleccionado && parseInt(cpuSeleccionado.datos.consumo) >= 140 && disipadorSeleccionado.datos.liquida === false) {
+            if (cpuSeleccionado &&
+                disipadorSeleccionado &&
+                parseInt(cpuSeleccionado.datos.consumo) >= 140 &&
+                disipadorSeleccionado.datos.liquida === false) {
                 setShowCoolingWarning(true);
             } else {
                 setShowCoolingWarning(false);
@@ -118,7 +157,9 @@ export default function Configurador({ user, sockets, articulos }) {
     // Advertencia si el almacenamiento principal es mecánico
     useEffect(() => {
         if (data.almacenamientoPrincipal) {
-            const almacenamientoPrSeleccionado = articulos.almacenamientos.find(almacenamiento => almacenamiento.id === data.almacenamientoPrincipal);
+            const almacenamientoPrSeleccionado = filteredArticulos.almacenamientos.find(
+                almacenamiento => almacenamiento.id === data.almacenamientoPrincipal
+            );
             if (almacenamientoPrSeleccionado.datos.clase === "Mecánico") {
                 setShowAlmacenamientoPrincipalWarning(true);
             } else {
@@ -137,6 +178,8 @@ export default function Configurador({ user, sockets, articulos }) {
                 disipador: disipador[data.socket] || [],
                 ram: [],
                 cajas: [],
+                almacenamientos: [],
+
             });
             setData(prevData => ({
                 ...prevData,
@@ -153,16 +196,23 @@ export default function Configurador({ user, sockets, articulos }) {
         }
     }, [data.socket]);
 
-    // Filtrado de RAM y cajas según la placa seleccionada
+    // Filtrado de RAM, cajas y almacenamiento según la placa seleccionada
     useEffect(() => {
         if (data.placa) {
             const placaSeleccionada = filteredArticulos.placas.find(placa => placa.id === data.placa);
             if (placaSeleccionada) {
-                const { ddrmax, clase } = placaSeleccionada.datos;
+                const { ddrmax, clase, slotsm2 } = placaSeleccionada.datos;
                 setFilteredArticulos(prevState => ({
                     ...prevState,
-                    ram: (ddrmax === 5 ? [...(articulos.ram.ddr4 || []), ...(articulos.ram.ddr5 || [])] : articulos.ram.ddr4) || [],
-                    cajas: (clase === 'Micro-ATX' ? [...(articulos.cajas.atx || []), ...(articulos.cajas.micro_atx || [])] : articulos.cajas.atx) || [],
+                    ram: (ddrmax === 5 ?
+                        [...(articulos.ram.ddr4 || []), ...(articulos.ram.ddr5 || [])] :
+                        articulos.ram.ddr4) || [],
+                    almacenamientos: (slotsm2 != 0 ?
+                        [...(articulos.almacenamientos.m2 || []), ...(articulos.almacenamientos.sata || [])] :
+                        articulos.almacenamientos.sata) || [],
+                    cajas: (clase === 'Micro-ATX' ?
+                        [...(articulos.cajas.atx || []), ...(articulos.cajas.micro_atx || [])] :
+                        articulos.cajas.atx) || [],
                 }));
                 setData(prevData => ({
                     ...prevData,
@@ -178,16 +228,48 @@ export default function Configurador({ user, sockets, articulos }) {
             }
         }
     }, [data.placa]);
+    useEffect(() => {
+        const placaSeleccionada = filteredArticulos.placas.find(placa => placa.id === data.placa);
+        if (data.almacenamientoPrincipal || data.almacenamientoSecundario) {
+            const almacenamientoPrincipalSeleccionado = getArticuloInfo(
+                articulos.almacenamientos, data.almacenamientoPrincipal, "datos"
+            );
+            const almacenamientoSecundarioSeleccionado = getArticuloInfo(
+                articulos.almacenamientos, data.almacenamientoSecundario, "datos"
+            );
+
+            let m2Count = 0;
+            if (almacenamientoPrincipalSeleccionado?.clase === 'SSD M.2') m2Count++;
+            if (almacenamientoSecundarioSeleccionado?.clase === 'SSD M.2') m2Count++;
+
+            if (m2Count >= placaSeleccionada.datos.slotsm2) {
+                setFilteredArticulos(prevState => ({
+                    ...prevState,
+                    almacenamientos: articulos.almacenamientos.sata || [],
+                }));
+            } else {
+                setFilteredArticulos(prevState => ({
+                    ...prevState,
+                    almacenamientos: [...(articulos.almacenamientos.m2 || []), ...(articulos.almacenamientos.sata || [])]
+                }));
+
+            }
+        }
+    }, [data.almacenamientoPrincipal, data.almacenamientoSecundario]);
 
     // Componente de opción personalizada para Select
     const CustomOption = ({ data, innerProps }) => (
         <div className='flex justify-between hover:bg-slate-200 align-middle cursor-pointer items-center p-2' {...innerProps}>
             <div className='flex items-center'>
-                {data.imagen && <img className='w-20 h-20' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + data.imagen} alt={data.label} />}
+                {data.imagen &&
+                    <img
+                        className='w-20 h-20'
+                        src={"http://127.0.0.1:8000/storage/uploads/articulos/" + data.imagen}
+                        alt={data.label} />}
                 <p className='ml-2'>{data.label}</p>
             </div>
             <div className='flex items-center'>
-                <p className='ml-2 text-right'>{data.puntuacion} Ptos({data.puntuacionPrecio} Ptos/€)</p>
+                <p className='ml-2 text-right'>{calidadPrecio(data.puntuacionPrecio)}</p>
                 <p className='ml-2 text-right font-semibold'>{data.precio}€</p>
             </div>
         </div>
@@ -196,7 +278,12 @@ export default function Configurador({ user, sockets, articulos }) {
     // Componente de valor seleccionado personalizado para Select
     const CustomSingleValue = ({ data }) => (
         <div className='flex align-middle items-center'>
-            {data.imagen && <img className='w-20 h-20' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + data.imagen} alt={data.label} />}
+            {data.imagen &&
+                <img
+                    className='w-20 h-20'
+                    src={"http://127.0.0.1:8000/storage/uploads/articulos/" + data.imagen}
+                    alt={data.label}
+                />}
             <span className='ml-2'>{data.label}</span>
         </div>
     );
@@ -212,7 +299,9 @@ export default function Configurador({ user, sockets, articulos }) {
     // Actualización del máximo de ventiladores según la caja seleccionada
     useEffect(() => {
         if (data.caja) {
-            const cajaSeleccionada = articulos.cajas.atx.find(caja => caja.id === data.caja) || articulos.cajas.micro_atx.find(caja => caja.id === data.caja);
+            const cajaSeleccionada = articulos.cajas.atx.find(
+                caja => caja.id === data.caja) || articulos.cajas.micro_atx.find(caja => caja.id === data.caja
+                );
             if (cajaSeleccionada) setMaxVentiladores(parseInt(cajaSeleccionada.datos.ventiladores));
         } else {
             setMaxVentiladores(0);
@@ -293,6 +382,7 @@ export default function Configurador({ user, sockets, articulos }) {
 
     return (
         <div className="min-h-screen flex flex-col gap-7 mb-20">
+            <Head title="Configurador" />
             <div className='flex flex-col sm:flex-row justify-center pt-24 gap-4'>
                 <h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Configurador de PC:</h2>
                 <input
@@ -321,12 +411,27 @@ export default function Configurador({ user, sockets, articulos }) {
                             <p className='font-semibold text-2xl py-4'>Placa base*</p>
                             <Select
                                 className='w-full rounded-md text-black'
-                                options={filteredArticulos.placas?.map(placa => ({ value: placa.id, precio: placa.precio, puntuacion: placa.puntuacion, puntuacionPrecio: placa.puntuacionPrecio, label: placa.nombre, imagen: placa.fotos[0]?.imagen })) || []}
+                                options={filteredArticulos.placas?.map(
+                                    placa => ({
+                                        value: placa.id,
+                                        precio: placa.precio,
+                                        puntuacion: placa.puntuacion,
+                                        puntuacionPrecio: placa.puntuacionPrecio,
+                                        label: placa.nombre,
+                                        imagen: placa.fotos[0]?.imagen
+                                    }))
+                                    || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
                                 placeholder='Selecciona una placa base...'
                                 noOptionsMessage={noOptionsMessage}
-                                value={data.placa ? { value: data.placa, label: filteredArticulos.placas.find(placa => placa.id === data.placa)?.nombre, imagen: filteredArticulos.placas.find(placa => placa.id === data.placa)?.fotos[0]?.imagen } : null}
+                                value={data.placa ?
+                                    {
+                                        value: data.placa,
+                                        label: getArticuloInfo(articulos.placas, data.placa, "nombre"),
+                                        imagen: getArticuloInfo(articulos.placas, data.placa, "fotos")[0]?.imagen
+                                    }
+                                    : null}
                                 onChange={(selectedOption) => setData('placa', selectedOption.value)}
                             />
                         </div>
@@ -345,7 +450,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 styles={customStyles}
                                 placeholder='Selecciona un Procesador...'
                                 noOptionsMessage={noOptionsMessage}
-                                value={data.cpu ? { value: data.cpu, label: filteredArticulos.cpu.find(cpu => cpu.id === data.cpu)?.nombre, imagen: filteredArticulos.cpu.find(cpu => cpu.id === data.cpu)?.fotos[0]?.imagen } : null}
+                                value={data.cpu ? { value: data.cpu, label: getArticuloInfo(articulos.cpu, data.cpu, "nombre"), imagen: getArticuloInfo(articulos.cpu, data.cpu, "fotos")[0]?.imagen } : null}
                                 onChange={(selectedOption) => setData('cpu', selectedOption.value)}
                             />
                         </div>
@@ -358,7 +463,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 styles={customStyles}
                                 placeholder='Selecciona un Disipador Cpu...'
                                 noOptionsMessage={noOptionsMessage}
-                                value={data.disipador ? { value: data.disipador, label: filteredArticulos.disipador.find(disipador => disipador.id === data.disipador)?.nombre, imagen: filteredArticulos.disipador.find(disipador => disipador.id === data.disipador)?.fotos[0]?.imagen } : null}
+                                value={data.disipador ? { value: data.disipador, label: getArticuloInfo(articulos.disipador, data.disipador, "nombre"), imagen: getArticuloInfo(articulos.disipador, data.disipador, "fotos")[0]?.imagen } : null}
                                 onChange={(selectedOption) => setData('disipador', selectedOption.value)}
                             />
                         </div>
@@ -371,7 +476,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 styles={customStyles}
                                 placeholder='Selecciona RAM...'
                                 noOptionsMessage={noOptionsMessage}
-                                value={data.ram ? { value: data.ram, label: filteredArticulos.ram.find(ram => ram.id === data.ram)?.nombre, imagen: filteredArticulos.ram.find(ram => ram.id === data.ram)?.fotos[0]?.imagen } : null}
+                                value={data.ram ? { value: data.ram, label: getArticuloInfo(articulos.ram, data.ram, "nombre"), imagen: getArticuloInfo(articulos.ram, data.ram, "fotos")[0]?.imagen } : null}
                                 onChange={(selectedOption) => setData('ram', selectedOption.value)}
                             />
                         </div>
@@ -379,12 +484,12 @@ export default function Configurador({ user, sockets, articulos }) {
                             <p className='font-semibold text-2xl py-4'>Almacenamiento principal*</p>
                             <Select
                                 className='w-full rounded-md text-black'
-                                options={articulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, precio: almacenamiento.precio, puntuacion: almacenamiento.puntuacion, puntuacionPrecio: almacenamiento.puntuacionPrecio, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
+                                options={filteredArticulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, precio: almacenamiento.precio, puntuacion: almacenamiento.puntuacion, puntuacionPrecio: almacenamiento.puntuacionPrecio, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
                                 components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                 styles={customStyles}
                                 placeholder='Selecciona un Almacenamiento principal...'
                                 noOptionsMessage={noOptionsMessage}
-                                value={data.almacenamientoPrincipal ? { value: data.almacenamientoPrincipal, label: articulos.almacenamientos.find(almacenamiento => almacenamiento.id === data.almacenamientoPrincipal)?.nombre, imagen: articulos.almacenamientos.find(almacenamiento => almacenamiento.id === data.almacenamientoPrincipal)?.fotos[0]?.imagen } : null}
+                                value={data.almacenamientoPrincipal ? { value: data.almacenamientoPrincipal, label: getArticuloInfo(articulos.almacenamientos, data.almacenamientoPrincipal, "nombre"), imagen: getArticuloInfo(articulos.almacenamientos, data.almacenamientoPrincipal, "fotos")[0]?.imagen } : null}
                                 onChange={(selectedOption) => setData('almacenamientoPrincipal', selectedOption.value)}
                             />
                         </div>
@@ -394,12 +499,12 @@ export default function Configurador({ user, sockets, articulos }) {
 
                                 <Select
                                     className='w-full rounded-md text-black'
-                                    options={articulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, precio: almacenamiento.precio, puntuacion: almacenamiento.puntuacion, puntuacionPrecio: almacenamiento.puntuacionPrecio, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
+                                    options={filteredArticulos.almacenamientos?.map(almacenamiento => ({ value: almacenamiento.id, precio: almacenamiento.precio, puntuacion: almacenamiento.puntuacion, puntuacionPrecio: almacenamiento.puntuacionPrecio, label: almacenamiento.nombre, imagen: almacenamiento.fotos[0]?.imagen })) || []}
                                     components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
                                     styles={customStyles}
                                     placeholder='Selecciona un Almacenamiento secundario...'
                                     noOptionsMessage={noOptionsMessage}
-                                    value={data.almacenamientoSecundario ? { value: data.almacenamientoSecundario, label: articulos.almacenamientos.find(almacenamiento => almacenamiento.id === data.almacenamientoSecundario)?.nombre, imagen: articulos.almacenamientos.find(almacenamiento => almacenamiento.id === data.almacenamientoSecundario)?.fotos[0]?.imagen } : null}
+                                    value={data.almacenamientoSecundario ? { value: data.almacenamientoSecundario, label: getArticuloInfo(articulos.almacenamientos, data.almacenamientoSecundario, "nombre"), imagen: getArticuloInfo(articulos.almacenamientos, data.almacenamientoSecundario, "fotos")[0]?.imagen } : null}
                                     onChange={(selectedOption) => setData('almacenamientoSecundario', selectedOption.value)}
                                 />
                                 {data.almacenamientoSecundario && (
@@ -417,7 +522,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                     styles={customStyles}
                                     placeholder='Selecciona una Tarjeta gráfica...'
                                     noOptionsMessage={noOptionsMessage}
-                                    value={data.grafica ? { value: data.grafica, label: articulos.graficas.find(grafica => grafica.id === data.grafica)?.nombre, imagen: articulos.graficas.find(grafica => grafica.id === data.grafica)?.fotos[0]?.imagen } : null}
+                                    value={data.grafica ? { value: data.grafica, label: getArticuloInfo(articulos.graficas, data.grafica, "nombre"), imagen: getArticuloInfo(articulos.graficas, data.grafica, "fotos")[0]?.imagen } : null}
                                     onChange={(selectedOption) => setData('grafica', selectedOption.value)}
                                 />
                                 {data.grafica && (
@@ -434,7 +539,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 styles={customStyles}
                                 placeholder='Selecciona una Caja...'
                                 noOptionsMessage={noOptionsMessage}
-                                value={data.caja ? { value: data.caja, label: filteredArticulos.cajas.find(caja => caja.id === data.caja)?.nombre, imagen: filteredArticulos.cajas.find(caja => caja.id === data.caja)?.fotos[0]?.imagen } : null}
+                                value={data.caja ? { value: data.caja, label: getArticuloInfo(articulos.cajas, data.caja, "nombre"), imagen: getArticuloInfo(articulos.cajas, data.caja, "fotos")[0]?.imagen } : null}
                                 onChange={(selectedOption) => setData('caja', selectedOption.value)}
                             />
                         </div>
@@ -450,7 +555,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                             styles={customStyles}
                                             placeholder='Selecciona un Sistema de ventilación...'
                                             noOptionsMessage={noOptionsMessage}
-                                            value={data.ventilacion ? { value: data.ventilacion, label: articulos.ventiladores.find(ventilacion => ventilacion.id === data.ventilacion)?.nombre, imagen: articulos.ventiladores.find(ventilacion => ventilacion.id === data.ventilacion)?.fotos[0]?.imagen } : null}
+                                            value={data.ventilacion ? { value: data.ventilacion, label: getArticuloInfo(articulos.ventiladores, data.ventilacion, "nombre"), imagen: getArticuloInfo(articulos.ventiladores, data.ventilacion, "fotos")[0]?.imagen } : null}
                                             onChange={(selectedOption) => setData('ventilacion', selectedOption.value)}
                                         />
                                     </div>
@@ -487,7 +592,7 @@ export default function Configurador({ user, sockets, articulos }) {
                         <div className="flex flex-col justify-center items-center">
                             <div className="mt-4 relative flex items-center">
                                 <p className="font-semibold text-2xl pt-5 pb-3">Potencial PCreate™</p>
-                                <Tooltip title="Potencial PCreate™ indica cómo de cerca está su dispositivo de alcanzar el máximo posible de potencia establecido por nuestra empresa.">
+                                <Tooltip title="Potencial PCreate™ indica cómo de cerca está su dispositivo de alcanzar el máximo posible de especificaciones establecido por nuestra empresa.">
                                     <HelpOutlineIcon
                                         className={`text-gray-400 h-5 w-5 cursor-pointer ml-1 ${showInfoPotencial ? 'text-gray-600' : ''}`}
                                         onMouseEnter={cambioInfoPotencial}
@@ -503,7 +608,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <ProgressBar puntuacionTotal={areEssentialComponentsSelected() ? puntuacionTotal : 0} />
 
                             {areEssentialComponentsSelected() ? (
-                                <p className='text-xl py-5'>{calidadPrecio()}</p>
+                                <p className='text-xl py-5'>{calidadPrecioTotal()}</p>
                             ) : (
                                 <p className='text-xl py-5'>Configure los elementos obligatorios para ver su Potencial.</p>
                             )}

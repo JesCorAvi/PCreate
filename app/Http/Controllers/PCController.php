@@ -41,7 +41,7 @@ class PcController extends Controller
             "disipador" => $this->subdividePorSocket($articulosPorCategoria->get(6)),
             "cajas" => $this->subdivideCaja($articulosPorCategoria->get(7)),
             "ventiladores" => $articulosPorCategoria->get(8),
-            "almacenamientos" => $articulosPorCategoria->get(9),
+            "almacenamientos" => $this->subdivideAlmacenamiento($articulosPorCategoria->get(9)),
         ];
 
         return Inertia::render('PC/Create', [
@@ -77,6 +77,25 @@ class PcController extends Controller
             })->values(),
             'micro_atx' => $cajas->filter(function ($caja) {
                 return strtolower($caja->datos->clase) === 'micro-atx';
+            })->values(),
+        ];
+    }
+
+    private function subdivideAlmacenamiento($almacenamiento)
+    {
+        if ($almacenamiento === null) {
+            return [
+                'm2' => collect(),
+                'sata' => collect(),
+            ];
+        }
+
+        return [
+            'm2' => $almacenamiento->filter(function ($almacenamiento) {
+                return $almacenamiento->datos->clase == 'SSD M.2';
+            })->values(),
+            'sata' => $almacenamiento->filter(function ($almacenamiento) {
+                return $almacenamiento->datos->clase == 'SSD Sata' || $almacenamiento->datos->clase == 'Mecánico';
             })->values(),
         ];
     }
