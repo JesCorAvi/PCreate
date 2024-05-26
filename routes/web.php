@@ -69,6 +69,8 @@ Route::post('/configurador/creado', [PCController::class, 'store'])->name('pc.st
 Route::get('/pc/ver', [PCController::class, 'create'])->name('pc.show');
 
 Route::post('/carrito/store', [CarritoController::class, 'store'])->name('carrito.store')->middleware('auth');
+Route::post('/carrito/storepc', [CarritoController::class, 'storepc'])->name('carrito.storepc')->middleware('auth');
+
 Route::post('/carrito/update', [CarritoController::class, 'update'])->name('carrito.update')->middleware('auth');
 Route::delete('/carrito/destroy', [CarritoController::class, 'destroy'])->name('carrito.destroy')->middleware('auth');
 Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index');

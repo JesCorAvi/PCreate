@@ -7,10 +7,12 @@ import Boton from '@/Components/Boton';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Link } from '@inertiajs/react';
+import useCarritoStore from '@/carritoStore';
 
 
 export default function Index({ auth, categorias, articulos: InitialArticulos, cantidad }) {
-
+    const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
+    const { actualizarCantidadArticulosCookies } = useCarritoStore((state) => state);
     const [articulos, setArticulos] = useState(InitialArticulos);
     const [precioTotal, setPrecioTotal] = useState(Total());
     const [cantidadTotal, setCantidadTotal] = useState(cantidad);
@@ -59,6 +61,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
             .then(response => {
                 setArticulos([]);
                 setCantidadTotal(0);
+                actualizarCantidadArticulos();
             }).catch(error => {
                 console.error('Error al borrar el carrito:', error);
             });
@@ -67,6 +70,7 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
             localStorage.removeItem('carrito');
             setArticulos([]);
             setCantidadTotal(0);
+            actualizarCantidadArticulosCookies();
         }
     }
     useEffect(() => {

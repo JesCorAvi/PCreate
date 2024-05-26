@@ -203,7 +203,6 @@ export default function Muestra({ user, active = false, classNameName = '', chil
                         <img src={imagenGrande} alt="Imagen principal" className="max-w-screen-lg max-h-screen p-5 cursor-zoom-out" />
                     </div>
                 )}
-
             </div>
         </>
     );

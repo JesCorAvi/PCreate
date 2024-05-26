@@ -16,7 +16,7 @@ export default function FormularioCaja({ marcas, articulo }) {
         imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen,
         imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen,
         imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen,
-        tipo: "Fuente de alimentación"
+        tipo: "Caja"
     });
 
     const [imagenes, setImagenes] = useState({

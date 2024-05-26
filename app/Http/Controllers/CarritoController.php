@@ -62,14 +62,6 @@ class CarritoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -90,22 +82,6 @@ class CarritoController extends Controller
         }
 
         return redirect()->back();
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Carrito $carrito)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Carrito $carrito)
-    {
-        //
     }
 
     /**
@@ -150,5 +126,52 @@ class CarritoController extends Controller
     {
         $carrito = Carrito::where('user_id', auth()->id())->first();
         $carrito->articulos()->detach($request->articulo_id);
+    }
+
+    public function storepc(Request $request)
+    {
+        $carrito = auth()->user()->carritos->first();
+
+        if (!$carrito) {
+            $carrito = Carrito::create([
+                'user_id' => auth()->id(),
+            ]);
+        }
+
+        $componentes = [
+            'placa',
+            'cpu',
+            'disipador',
+            'ram',
+            'fuente',
+            'caja',
+            'almacenamientoPrincipal',
+            'grafica',
+            'ventilacion' => $request->ventiladorCount ?? 1
+        ];
+
+        if ($request->filled('almacenamientoSecundario') && $request->almacenamientoSecundario != $request->almacenamientoPrincipal) {
+            $componentes['almacenamientoSecundario'] = 1;
+        }
+
+        foreach ($componentes as $componente => $cantidad) {
+            if (is_int($componente)) {
+                $componente = $cantidad;
+                $cantidad = 1;
+            }
+
+            if ($request->filled($componente)) {
+                $articuloId = $request->$componente;
+                if ($carrito->articulos->contains($articuloId)) {
+                    $carrito->articulos()->updateExistingPivot($articuloId, [
+                        'cantidad' => $carrito->articulos->find($articuloId)->pivot->cantidad + $cantidad
+                    ]);
+                } else {
+                    $carrito->articulos()->attach($articuloId, ['cantidad' => $cantidad]);
+                }
+            }
+        }
+
+        return redirect()->route('carrito.index')->with('message', 'PC añadido al carrito');
     }
 }

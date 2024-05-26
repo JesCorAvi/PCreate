@@ -274,7 +274,7 @@ class ArticuloSeeder extends Seeder
                     'puntuacionPrecio' => 40 / 50,
                     'datos' => [
                         'clase' => 'ATX',
-                        'ventiladores' => 1,
+                        'ventiladores' => 6,
                     ],
                 ],
                 [

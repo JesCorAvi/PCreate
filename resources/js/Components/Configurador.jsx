@@ -8,14 +8,17 @@ import BotonGrande from './BotonGrande';
 import Boton from './Boton';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Tooltip from '@mui/material/Tooltip';
+import Modal from './Modal';
+import SecondaryButton from './SecondaryButton';
+import DangerButton from './DangerButton';
 
 export default function Configurador({ user, sockets, articulos }) {
-    console.log(articulos);
     // Estado para mostrar advertencias
     const [showCoolingWarning, setShowCoolingWarning] = useState(false);
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
     const [showInfoPotencial, setShowInfoPotencial] = useState(false);
-
+    const [showFuenteWarning, setShowFuenteWarning] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     // Estado para la cantidad de ventiladores y su límite
     const [ventiladorCount, setVentiladorCount] = useState(1);
     const [maxVentiladores, setMaxVentiladores] = useState(0);
@@ -44,6 +47,7 @@ export default function Configurador({ user, sockets, articulos }) {
         almacenamientoPrincipal: null,
         almacenamientoSecundario: null,
         grafica: null,
+        fuente: null,
         caja: null,
         ventilacion: null,
     });
@@ -96,8 +100,10 @@ export default function Configurador({ user, sockets, articulos }) {
             'almacenamientoPrincipal',
             'almacenamientoSecundario',
             'grafica',
+            'fuente',
             'caja',
             'ventilacion'
+
         ];
         componentes.forEach(componente => {
             if (data[componente]) {
@@ -132,11 +138,10 @@ export default function Configurador({ user, sockets, articulos }) {
     };
 
     // Actualización del precio y puntuación total al cambiar los datos o la cantidad de ventiladores
-    useEffect(() => [
-        setPrecioTotal(calcularPrecioTotal()),
-        setPuntuacionTotal(calcularPuntuacionTotal())
-    ]
-    [data, ventiladorCount]);
+    useEffect(() => {
+        setPrecioTotal(calcularPrecioTotal());
+        setPuntuacionTotal(calcularPuntuacionTotal());
+    }, [data, ventiladorCount]);
 
     // Comprobación de compatibilidad entre el CPU y el disipador seleccionado
     useEffect(() => {
@@ -154,6 +159,24 @@ export default function Configurador({ user, sockets, articulos }) {
         }
     }, [data.cpu, data.disipador]);
 
+    // Comprobación de potencia de fuente
+
+    useEffect(() => {
+        if (data.cpu && data.fuente && data.grafica) {
+            const cpuSeleccionado = filteredArticulos.cpu.find(cpu => cpu.id === data.cpu);
+            const fuenteSeleccionado = articulos.fuentes.find(fuente => fuente.id === data.fuente);
+            const graficaSeleccionado = articulos.graficas.find(grafica => grafica.id === data.grafica);
+            let consumo = cpuSeleccionado.datos.consumo + graficaSeleccionado.datos.consumo;
+            let maximoConsumo = parseInt(fuenteSeleccionado.datos.poder) * 0.8;
+            if (consumo > maximoConsumo) {
+                setShowFuenteWarning(true);
+            } else {
+                setShowFuenteWarning(false);
+            }
+        }else{
+            setShowFuenteWarning(false);
+        }
+    }, [data.cpu, data.grafica, data.fuente]);
     // Advertencia si el almacenamiento principal es mecánico
     useEffect(() => {
         if (data.almacenamientoPrincipal) {
@@ -185,6 +208,7 @@ export default function Configurador({ user, sockets, articulos }) {
                 ...prevData,
                 placa: null,
                 cpu: null,
+                fuente: null,
                 disipador: null,
                 ram: null,
                 almacenamientoPrincipal: null,
@@ -347,6 +371,23 @@ export default function Configurador({ user, sockets, articulos }) {
         }
         return null;
     }
+    function abrirModal() {
+        setOpenModal(true);
+    }
+    function cerrarModal() {
+        setOpenModal(false);
+    }
+    function procesarCarrito() {
+        if(showAlmacenamientoPrincipalWarning || showCoolingWarning || showFuenteWarning){
+            abrirModal();
+        }else{
+            añadirAlCarrito();
+        }
+    }
+    function añadirAlCarrito() {
+        data.ventiladorCount = ventiladorCount;
+        post(route('carrito.storepc'));
+    }
 
     // Componente de barra de progreso
     const ProgressBar = ({ puntuacionTotal }) => {
@@ -373,7 +414,7 @@ export default function Configurador({ user, sockets, articulos }) {
 
     // Verificación de selección de componentes esenciales
     const areEssentialComponentsSelected = () => {
-        const essentialComponents = ['placa', 'cpu', 'disipador', 'ram', 'almacenamientoPrincipal', 'caja'];
+        const essentialComponents = ['placa', 'cpu', 'disipador', 'ram', 'almacenamientoPrincipal', 'caja', 'fuente'];
         return essentialComponents.every(componente => data[componente] !== null);
     };
 
@@ -382,6 +423,21 @@ export default function Configurador({ user, sockets, articulos }) {
 
     return (
         <div className="min-h-screen flex flex-col gap-7 mb-20">
+            <Modal show={openModal} onClose={cerrarModal}>
+                <h2 className="text-lg font-medium text-gray-900 font-semibold p-10">
+                    Problemas detectados
+                </h2>
+                <p className="mt-1 text-lg px-10 text-gray-600">
+                    Existen problemas en su configuración que pueden afectar al rendimiento de su PC. Aconsejamos que revises las advertencias existentes.
+                </p>
+                <p className="mt-1 text-lg px-10 text-gray-600">
+                    ¿Seguro que desea continuar?
+                </p>
+                <div className="mt-6 flex justify-end p-6 gap-3">
+                    <DangerButton className="ms-3 p-1" type='button' onClick={añadirAlCarrito} text="Entiendo los riesgos y quiero añadir al carrito"></DangerButton>
+                    <SecondaryButton type='button' onClick={cerrarModal}>Cancelar</SecondaryButton>
+                </div>
+            </Modal>
             <Head title="Configurador" />
             <div className='flex flex-col sm:flex-row justify-center pt-24 gap-4'>
                 <h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Configurador de PC:</h2>
@@ -531,6 +587,24 @@ export default function Configurador({ user, sockets, articulos }) {
                             </div>
                         </div>
                         <div>
+                            <p className='font-semibold text-2xl py-4'>Fuente de alimentación*</p>
+                            <div className='flex'>
+                                <Select
+                                    className='w-full rounded-md text-black shadow-lg'
+                                    options={articulos.fuentes?.map(fuente => ({ value: fuente.id, precio: fuente.precio, puntuacion: fuente.puntuacion, puntuacionPrecio: fuente.puntuacionPrecio, label: fuente.nombre, imagen: fuente.fotos[0]?.imagen })) || []}
+                                    components={{ Option: CustomOption, SingleValue: CustomSingleValue }}
+                                    styles={customStyles}
+                                    placeholder='Selecciona una Tarjeta gráfica...'
+                                    noOptionsMessage={noOptionsMessage}
+                                    value={data.fuente ? { value: data.fuente, label: getArticuloInfo(articulos.fuentes, data.fuente, "nombre"), imagen: getArticuloInfo(articulos.fuentes, data.fuente, "fotos")[0]?.imagen } : null}
+                                    onChange={(selectedOption) => setData('fuente', selectedOption.value)}
+                                />
+                                {data.grafica && (
+                                    <button onClick={() => limpiarSelect("grafica")} className='p-2 bg-red-500 text-white rounded'><DeleteIcon /></button>
+                                )}
+                            </div>
+                        </div>
+                        <div>
                             <p className='font-semibold text-2xl py-4'>Caja*</p>
                             <Select
                                 className='w-full rounded-md text-black shadow-lg'
@@ -643,6 +717,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 </div>
                                 {showCoolingWarning &&
                                     <div className="bg-orange-500 text-white p-2 rounded font-bold">
+                                        <p className='w-full text-center text-xl'>Advertencia</p>
                                         <p className='justify-center text-center'>Advertencia: Debería elegir un modelo de refrigeración líquida para el procesador seleccionado debido a su alto consumo.</p>
                                     </div>
                                 }
@@ -657,6 +732,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 </div>
                                 {filteredArticulos.ram.find(ram => ram.id === data.ram)?.datos.ddr < filteredArticulos.placas.find(placa => placa.id === data.placa)?.datos.ddrmax && (
                                     <div className="bg-orange-500 text-white p-2 rounded font-bold">
+                                        <p className='w-full text-center text-xl'>Advertencia</p>
                                         <p className='justify-center text-center'>Advertencia: El tipo de RAM es inferior a la máxima soportada por su placa. Considere cambiar su placa a un modelo de inferior caracteristicas o su RAM a una superior.</p>
                                     </div>
                                 )}
@@ -670,7 +746,8 @@ export default function Configurador({ user, sockets, articulos }) {
                                     <p>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.almacenamientoPrincipal, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "precio")}€</strong></p>
                                 </div>
                                 {showAlmacenamientoPrincipalWarning &&
-                                    <div className="bg-orange-500 text-white p-2 rounded font-semibold justify-normal px-5 ">
+                                    <div className="bg-orange-500 text-white p-2 rounded font-bold justify-normal px-5 ">
+                                        <p className='w-full text-center text-xl'>Advertencia</p>
                                         <p className='justify-center text-center'>Advertencia: Debería considerar elegir un modelo SSD para agilizar su navegación con el equipo.</p>
                                     </div>
                                 }
@@ -692,6 +769,21 @@ export default function Configurador({ user, sockets, articulos }) {
                                     <p>{getArticuloInfo(articulos, data.grafica, "nombre")}</p>
                                     <p>{getArticuloInfo(articulos, data.grafica, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.grafica, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.grafica, "precio")}€</strong></p>
                                 </div>
+                            </div>
+                        )}
+                        {data.fuente && (
+                            <div>
+                                <h3 className="font-semibold text-xl">Fuente de alimentación*</h3>
+                                <div className="flex justify-between px-5">
+                                    <p>{getArticuloInfo(articulos, data.fuente, "nombre")}</p>
+                                    <p>{getArticuloInfo(articulos, data.fuente, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.fuente, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.fuente, "precio")}€</strong></p>
+                                </div>
+                                {showFuenteWarning &&
+                                    <div className="bg-red-700 text-white p-2 rounded font-bold">
+                                        <p className='w-full text-center text-xl'>Advertencia importante</p>
+                                        <p className='justify-center text-center'>Esta fuente podria no poseer suficiente potencia para soportar su configuracion. De no escoger una con mayor capacidad su ordenador no funcionará de manera correcta.</p>
+                                    </div>
+                                }
                             </div>
                         )}
                         {data.caja && (
@@ -718,7 +810,7 @@ export default function Configurador({ user, sockets, articulos }) {
                             <p className='text-3xl pt-5'>{precioTotal}€</p>
                         </div>
                         {areEssentialComponentsSelected() ? (
-                            <BotonGrande texto="Añadir al carrito"></BotonGrande>
+                            <BotonGrande onClick={procesarCarrito} texto="Añadir al carrito"></BotonGrande>
                         ) : (
                             <p className='text-xl py-5 text-center'>Configure los elementos obligatorios para poder añadir al carrito.</p>
                         )}
