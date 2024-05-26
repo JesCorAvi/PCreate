@@ -68,8 +68,8 @@ class PaypalController extends Controller
                     'precio' => $articulo->precio,
                 ]);
             }
-
-            Mail::to(auth()->user()->email)->send(new FacturaMailable($factura));
+            $facturaCreada = Factura::find($factura->id);
+            Mail::to(auth()->user()->email)->send(new FacturaMailable($facturaCreada));
 
 
             $carrito->delete();

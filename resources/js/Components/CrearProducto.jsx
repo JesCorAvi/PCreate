@@ -12,8 +12,6 @@ import { useState, useEffect } from 'react';
 import Alertas from '@/Components/Alertas';
 
 
-
-
 export default function CrearProducto({ marcas, sockets }) {
     const [formularioActual, setFormularioActual] = useState('placa');
 
