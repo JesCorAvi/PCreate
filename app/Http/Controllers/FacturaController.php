@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateFacturaRequest;
 use App\Models\Carrito;
 use App\Models\Categoria;
 use App\Models\Provincia;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
@@ -58,27 +59,6 @@ class FacturaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $carrito = auth()->user()->carritos->first();
-        $articulos = $carrito->articulos()->withPivot('cantidad')->get();
-
-        $factura = Factura::create([
-            'user_id' => auth()->user()->id,
-            'domicilio_id' => $request->domicilio_id,
-        ]);
-
-        foreach ($articulos as $articulo) {
-            $factura->articulos()->attach($articulo->id, [
-                'cantidad' => $articulo->pivot->cantidad,
-                'precio' => $articulo->precio, // Guardar el precio del producto en el momento de la compra
-            ]);
-        }
-
-        $carrito->delete();
-
-        return redirect()->route('articulo.index')->with('success', 'Compra realizada exitosamente.');
-    }
 
 
     /**
@@ -125,5 +105,13 @@ class FacturaController extends Controller
     {
         $factura = Factura::find($request->id);
         $factura->delete();
+    }
+    public function download($id)
+    {
+        $factura = Factura::with('articulos', 'domicilio', 'domicilio.provincia', 'user')->findOrFail($id);
+
+        $pdf = Pdf::loadView('factura.pdf', compact('factura'));
+
+        return $pdf->download('factura-' . $factura->id . '.pdf');
     }
 }

@@ -1,7 +1,9 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Head } from '@inertiajs/react';
 
 export default function Pedido({ factura }) {
+    const { csrf_token } = usePage().props;
+
     function Total() {
         let total = 0;
         factura.articulos.forEach(articulo => {
@@ -13,11 +15,15 @@ export default function Pedido({ factura }) {
     function formatDate(date) {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         const formattedDate = new Date(date).toLocaleDateString('es-ES', options);
-        // Convertir el mes a mayúsculas
         const mesMayusculas = formattedDate.replace(/\b[a-z]/g, function (char) {
             return char.toUpperCase();
         });
         return mesMayusculas;
+    }
+
+    function handleDownload() {
+        const url = route('factura.download', { id: factura.id });
+        window.location.href = url;
     }
 
     return (
@@ -30,7 +36,7 @@ export default function Pedido({ factura }) {
 
                 <div className="ml-auto">
                     <p><strong>PEDIDO Nº</strong> {factura.id}</p>
-                    <a href="#" className='underline'>Descargar Factura</a>
+                    <button onClick={handleDownload} className='underline'>Descargar Factura</button>
                 </div>
             </div>
             <div className='px-2 py-1'>

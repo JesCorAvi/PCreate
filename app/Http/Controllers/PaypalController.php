@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\FacturaMailable;
 use App\Models\Factura;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
@@ -66,6 +68,9 @@ class PaypalController extends Controller
                     'precio' => $articulo->precio,
                 ]);
             }
+
+            Mail::to(auth()->user()->email)->send(new FacturaMailable($factura));
+
 
             $carrito->delete();
 

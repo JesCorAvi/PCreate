@@ -97,4 +97,5 @@ Route::post("/paypal/pago", [PaypalController::class, 'payment'])->name('paypal.
 Route::get("/paypal/listo", [PaypalController::class, 'success'])->name('paypal.listo')->middleware(['auth', 'verified']);
 Route::get("/paypal/cancelar", [PaypalController::class, 'cancel'])->name('paypal.cancelar')->middleware(['auth', 'verified']);
 
+Route::get('/factura/{id}/download', [FacturaController::class, 'download'])->name('factura.download');
 require __DIR__.'/auth.php';
