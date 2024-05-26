@@ -266,11 +266,11 @@ export default function Configurador({ user, sockets, articulos }) {
                         className='w-20 h-20'
                         src={"http://127.0.0.1:8000/storage/uploads/articulos/" + data.imagen}
                         alt={data.label} />}
-                <p className='ml-2'>{data.label}</p>
+                <div className='ml-2'>{data.label}</div>
             </div>
             <div className='flex items-center'>
-                <p className='ml-2 text-right'>{calidadPrecio(data.puntuacionPrecio)}</p>
-                <p className='ml-2 text-right font-semibold'>{data.precio}€</p>
+                <div className='ml-2 text-right'>{calidadPrecio(data.puntuacionPrecio)}</div>
+                <div className='ml-2 text-right font-semibold'>{data.precio}€</div>
             </div>
         </div>
     );

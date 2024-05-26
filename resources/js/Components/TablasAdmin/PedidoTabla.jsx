@@ -96,7 +96,7 @@ export default function FacturaTabla() {
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <Modal show={modifyingFactura} onClose={closeModifyModal}>
                 <form onSubmit={(e) => modifyFactura(e)} className="p-6">
-                    <h2 className="text-lg font-medium text-gray-900">Modificar Factura</h2>
+                    <h2 className="text-lg font-medium text-gray-900">Modificar fecha de entrega</h2>
                     <input
                         type="date"
                         placeholder="Nueva Fecha de envio"
