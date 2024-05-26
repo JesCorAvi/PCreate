@@ -10,7 +10,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Tooltip from '@mui/material/Tooltip';
 
 export default function Configurador({ user, sockets, articulos }) {
-    //console.log(articulos);
+    console.log(articulos);
     // Estado para mostrar advertencias
     const [showCoolingWarning, setShowCoolingWarning] = useState(false);
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
@@ -59,7 +59,7 @@ export default function Configurador({ user, sockets, articulos }) {
             return <p className="text-red-700 font-semibold">Calidad/Precio Reducida</p>;
         } else if (calidadPrecio >= 0.7 && calidadPrecio < 1.5) {
             return <p className="text-yellow-400 font-semibold">Calidad/Precio Media</p>;
-        } else if (calidadPrecio >= 1.5 && calidadPrecio < 2.5) {
+        } else if (calidadPrecio >= 1.5) {
             return <p className="text-green-500 font-semibold">Calidad/Precio Alta</p>;
         }
     }
@@ -201,12 +201,12 @@ export default function Configurador({ user, sockets, articulos }) {
         if (data.placa) {
             const placaSeleccionada = filteredArticulos.placas.find(placa => placa.id === data.placa);
             if (placaSeleccionada) {
-                const { ddrmax, clase, slotsm2 } = placaSeleccionada.datos;
+                const { ddrmax, clase, slotsm2, slotsram } = placaSeleccionada.datos;
                 setFilteredArticulos(prevState => ({
                     ...prevState,
-                    ram: (ddrmax === 5 ?
+                    ram: (ddrmax == 5 ?
                         [...(articulos.ram.ddr4 || []), ...(articulos.ram.ddr5 || [])] :
-                        articulos.ram.ddr4) || [],
+                        articulos.ram.ddr4).filter(ram => ram.datos.cantidad <= slotsram) || [],
                     almacenamientos: (slotsm2 != 0 ?
                         [...(articulos.almacenamientos.m2 || []), ...(articulos.almacenamientos.sata || [])] :
                         articulos.almacenamientos.sata) || [],
@@ -657,7 +657,7 @@ export default function Configurador({ user, sockets, articulos }) {
                                 </div>
                                 {filteredArticulos.ram.find(ram => ram.id === data.ram)?.datos.ddr < filteredArticulos.placas.find(placa => placa.id === data.placa)?.datos.ddrmax && (
                                     <div className="bg-orange-500 text-white p-2 rounded font-bold">
-                                        <p className='justify-center text-center'>Advertencia: El tipo de RAM es inferior a la máxima soportada por su placa. Considere cambiar su placa a una inferior o su RAM a una superior.</p>
+                                        <p className='justify-center text-center'>Advertencia: El tipo de RAM es inferior a la máxima soportada por su placa. Considere cambiar su placa a un modelo de inferior caracteristicas o su RAM a una superior.</p>
                                     </div>
                                 )}
                             </div>

@@ -136,7 +136,7 @@ class ArticuloController extends Controller
 
         switch ($request->tipo) {
             case "Placa base":
-                $puntuacion = $request->slotsm2 * 10 + $request->slotsram * 5 + $request->ddrmax * 10 + $request->mhzmax / 200;
+                $puntuacion = $request->slotsm2 * 10 + $request->slotsram * 5 + $request->ddrmax * 10;
                 $request->validate([
                     "socket_id" => "required",
                     "slotsm2" => "required|regex:/^\d+$/",
@@ -159,7 +159,7 @@ class ArticuloController extends Controller
                 break;
 
             case "Tarjeta gráfica":
-                $puntuacion = $request->memoria * 10;
+                $puntuacion = $request->memoria * 30;
 
                 if (strpos($request->gddr, 'x') !== false) {
                     $gddr = str_replace('x', '', $request->gddr);
@@ -201,7 +201,7 @@ class ArticuloController extends Controller
                 break;
 
             case "RAM":
-                $puntuacion = $request->cantidad * 2 + $request->memoria * 10 + $request->frecuencia / 400;
+                $puntuacion = $request->memoria * 5 + $request->frecuencia / 400;
                 $request->validate([
                     "cantidad" => "required|regex:/^\d+$/",
                     "memoria" => "required|regex:/^\d+$/",
@@ -219,7 +219,7 @@ class ArticuloController extends Controller
                 break;
 
             case "Disipador de CPU":
-                $puntuacion = $request->liquida ? 100 : 50;
+                $puntuacion = $request->liquida ? 50 : 20;
                 $request->validate([
                     "socket_id" => "required",
                     "liquida" => "required",
@@ -381,7 +381,7 @@ class ArticuloController extends Controller
 
         switch ($request->tipo) {
             case "Placa base":
-                $puntuacion = $request->slotsm2 * 10 + $request->slotsram * 5 + $request->ddrmax * 10 + $request->mhzmax / 200;
+                $puntuacion = $request->slotsm2 * 10 + $request->slotsram * 5 + $request->ddrmax * 10;
                 $request->validate([
                     "socket_id" => "required",
                     "slotsm2" => "required|regex:/^\d+$/",
@@ -408,7 +408,7 @@ class ArticuloController extends Controller
 
                 if (strpos($request->gddr, 'x') !== false) {
                     $gddr = str_replace('x', '', $request->gddr);
-                    $puntuacion *= $gddr + 0.5;
+                    $puntuacion *= ($gddr + 0.5)/2;
                 } else {
                     $puntuacion *= $request->gddr;
                 }
@@ -464,7 +464,7 @@ class ArticuloController extends Controller
                 break;
 
             case "Disipador de CPU":
-                $puntuacion = $request->liquida ? 100 : 50;
+                $puntuacion = $request->liquida ? 50 : 20;
                 $request->validate([
                     "socket_id" => "required",
                     "liquida" => "required",
