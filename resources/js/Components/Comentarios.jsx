@@ -7,7 +7,7 @@ import SecondaryButton from './SecondaryButton';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 
-export default function Comentarios({ user, id }) {
+export default function Comentarios({ user, id, onComentarioCreado, onComentarioBorrado }) {
     const [comentarios, setComentario] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -22,13 +22,12 @@ export default function Comentarios({ user, id }) {
         comentario.comentable_type === 'App\\Models\\Articulo' && comentario.comentable_id === id
     ) : false);
 
-    console.log(user);
     useEffect(() => {
         getComentariosWhere(currentPage);
     }, [currentPage]);
 
     function getComentariosWhere(page) {
-        axios.post(route('comentario.getComentariosWhere', { page: page, id: id, type: 'Articulo' , commentableId: id }))
+        axios.post(route('comentario.getComentariosWhere', { page: page, id: id, type: 'Articulo', commentableId: id }))
             .then((response) => {
                 setComentario(response.data.data);
                 setTotalPages(response.data.last_page);
@@ -47,11 +46,12 @@ export default function Comentarios({ user, id }) {
         pageNumbers.push(i);
     }
 
-    function delComentarios(id) {
+    function delComentarios(id, nota) {
         axios.post(route('comentario.destroy', { id: id }))
             .then((response) => {
                 getComentariosWhere();
                 setUserHasCommented(false);
+                onComentarioBorrado(nota);
             });
     }
 
@@ -66,6 +66,7 @@ export default function Comentarios({ user, id }) {
             setEstrellasNuevaComentario(0);
             setContenidoNuevaComentario('');
             setUserHasCommented(true);
+            onComentarioCreado(estrellasNuevaComentario);
 
         })
             .catch((error) => {
@@ -78,7 +79,7 @@ export default function Comentarios({ user, id }) {
             <div className='flex justify-between'>
                 <h2 className="font-bold text-2xl pt-10 ">Comentarios</h2>
                 {userHasArticle && !userHasCommented && (
-                    <button onClick={() => setCreatingComentario(true)}  className="font-semibold text-lg pt-10 xl:pr-10 underline">Añadir comentario</button>
+                    <button onClick={() => setCreatingComentario(true)} className="font-semibold text-lg pt-10 xl:pr-10 underline">Añadir comentario</button>
                 )}
                 <Modal show={creatingComentario} onClose={() => setCreatingComentario(false)}>
                     <form onSubmit={(e) => createComentario(e)} className="p-6">

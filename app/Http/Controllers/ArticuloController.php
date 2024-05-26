@@ -325,7 +325,7 @@ class ArticuloController extends Controller
      */
     public function show(Request $request)
     {
-        $articulo = Articulo::with('categoria', 'marca', 'fotos')->find($request->id);
+        $articulo = Articulo::with('categoria', 'marca', 'fotos', 'comentarios')->find($request->id);
         $user = null;
 
         if (auth()->check()) {
