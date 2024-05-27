@@ -35,7 +35,7 @@ export default function ShowUsuario({ mustVerifyEmail, avatar, pedidos, domicili
                 <a className={seccionActual === 'pedidos' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('pedidos')}>
                     <p className='text-center'>Mis pedidos</p>
                 </a>
-                <a className={seccionActual === 'pedidos' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('pc')}>
+                <a className={seccionActual === 'pc' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('pc')}>
                     <p className='text-center'>Mis PC</p>
                 </a>
                 <a className={seccionActual === 'edit' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('edit')}>
