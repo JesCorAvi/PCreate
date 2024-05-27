@@ -12,7 +12,8 @@ import Modal from './Modal';
 import SecondaryButton from './SecondaryButton';
 import DangerButton from './DangerButton';
 
-export default function Configurador({ user, sockets, articulos }) {
+export default function Configurador({ user, sockets, articulos, pc }) {
+    console.log(pc);
     // Estado para mostrar advertencias
     const [showCoolingWarning, setShowCoolingWarning] = useState(false);
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
@@ -27,6 +28,9 @@ export default function Configurador({ user, sockets, articulos }) {
     const [precioTotal, setPrecioTotal] = useState(0);
     const [puntuacionTotal, setPuntuacionTotal] = useState(0);
 
+    const [isInitialLoad, setIsInitialLoad] = useState(true); // Nuevo estado para la carga inicial
+
+
     // Estado para los artículos filtrados según el socket seleccionado
     const [filteredArticulos, setFilteredArticulos] = useState({
         placas: [],
@@ -38,9 +42,9 @@ export default function Configurador({ user, sockets, articulos }) {
 
     // Inicialización del formulario
     const { data, setData, post, errors, reset } = useForm({
-        nombre: `PC de ${user.name} Nº${new Date().getTime().toString().slice(-4)}`,
-        socket: null,
-        placa: null,
+        nombre: pc == undefined ? `PC de ${user.name} Nº${new Date().getTime().toString().slice(-4)}` : pc.nombre,
+        socket: pc == undefined ? null : pc.socket,
+        placa: pc == undefined ? null : pc.placa,
         cpu: null,
         disipador: null,
         ram: null,
@@ -204,19 +208,21 @@ export default function Configurador({ user, sockets, articulos }) {
                 almacenamientos: [],
 
             });
-            setData(prevData => ({
-                ...prevData,
-                placa: null,
-                cpu: null,
-                fuente: null,
-                disipador: null,
-                ram: null,
-                almacenamientoPrincipal: null,
-                almacenamientoSecundario: null,
-                grafica: null,
-                caja: null,
-                ventilacion: null,
-            }));
+            if (!isInitialLoad){
+                setData(prevData => ({
+                    ...prevData,
+                    placa: null,
+                    cpu: null,
+                    fuente: null,
+                    disipador: null,
+                    ram: null,
+                    almacenamientoPrincipal: null,
+                    almacenamientoSecundario: null,
+                    grafica: null,
+                    caja: null,
+                    ventilacion: null,
+                }));
+        }
         }
     }, [data.socket]);
 
@@ -238,6 +244,7 @@ export default function Configurador({ user, sockets, articulos }) {
                         [...(articulos.cajas.atx || []), ...(articulos.cajas.micro_atx || [])] :
                         articulos.cajas.atx) || [],
                 }));
+                if (!isInitialLoad) {
                 setData(prevData => ({
                     ...prevData,
                     cpu: null,
@@ -250,8 +257,14 @@ export default function Configurador({ user, sockets, articulos }) {
                     ventilacion: null,
                 }));
             }
+            }
         }
-    }, [data.placa]);
+    }, [[data.placa]]);
+
+    useEffect(() => {
+        setIsInitialLoad(false); // Actualizar el estado después de la carga inicial
+    }, []);
+
     useEffect(() => {
         const placaSeleccionada = filteredArticulos.placas.find(placa => placa.id === data.placa);
         if (data.almacenamientoPrincipal || data.almacenamientoSecundario) {
@@ -386,9 +399,16 @@ export default function Configurador({ user, sockets, articulos }) {
     }
     function añadirAlCarrito() {
         data.ventiladorCount = ventiladorCount;
+        data.precioTotal = precioTotal;
+        data.puntuacionTotal = puntuacionTotal;
         post(route('carrito.storepc'));
     }
-
+    function guardarConfiguracion() {
+        data.ventiladorCount = ventiladorCount;
+        data.precioTotal = precioTotal;
+        data.puntuacionTotal = puntuacionTotal;
+        post(route('pc.store'));
+    }
     // Componente de barra de progreso
     const ProgressBar = ({ puntuacionTotal }) => {
         const maxScore = 2500;
@@ -599,8 +619,8 @@ export default function Configurador({ user, sockets, articulos }) {
                                     value={data.fuente ? { value: data.fuente, label: getArticuloInfo(articulos.fuentes, data.fuente, "nombre"), imagen: getArticuloInfo(articulos.fuentes, data.fuente, "fotos")[0]?.imagen } : null}
                                     onChange={(selectedOption) => setData('fuente', selectedOption.value)}
                                 />
-                                {data.grafica && (
-                                    <button onClick={() => limpiarSelect("grafica")} className='p-2 bg-red-500 text-white rounded'><DeleteIcon /></button>
+                                {data.fuente && (
+                                    <button onClick={() => limpiarSelect("fuente")} className='p-2 bg-red-500 text-white rounded'><DeleteIcon /></button>
                                 )}
                             </div>
                         </div>
@@ -657,7 +677,7 @@ export default function Configurador({ user, sockets, articulos }) {
                         )}
 
                         {areEssentialComponentsSelected() ? (
-                            <Boton texto="Guardar Configuración" className="w-full"></Boton>
+                            <Boton texto="Guardar Configuración" onClick={guardarConfiguracion} className="w-full"></Boton>
                         ) : (
                             <p className='text-xl py-5'>Configure los elementos obligatorios para poder guardar su configuración.</p>
                         )}

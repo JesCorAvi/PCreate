@@ -3,7 +3,7 @@ import Footer from '@/Layouts/Footer';
 import Configurador from '@/Components/Configurador';
 import { Head, Link } from '@inertiajs/react';
 
-export default function Create({ auth, categorias, sockets, articulos }) {
+export default function Create({ auth, categorias, sockets, articulos, pc }) {
     return (
         <>
             <LayoutLogueado
@@ -15,6 +15,7 @@ export default function Create({ auth, categorias, sockets, articulos }) {
                 user = {auth.user}
                 sockets = {sockets}
                 articulos = {articulos}
+                pc = {pc}
             ></Configurador>
             </LayoutLogueado>
             <Footer></Footer>

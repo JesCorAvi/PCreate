@@ -23,7 +23,10 @@ class Articulo extends Model
 
     public function pcs(): BelongsToMany
     {
-        return $this->belongsToMany(Pc::class, 'articulo_pc');
+        return $this->belongsToMany(Pc::class, 'articulo_pc')
+            ->withPivot('cantidad')
+            ->withPivot('parte')
+            ->withTimestamps();
     }
     public function comentarios(): MorphMany
     {

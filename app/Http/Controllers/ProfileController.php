@@ -51,7 +51,8 @@ class ProfileController extends Controller
             'categorias' => Categoria::all(),
             "domicilios" => $domicilios,
             "provincias" => Provincia::all(),
-            "facturas" => $facturas
+            "facturas" => $facturas,
+            "pcs" => $request->user()->pcs()->with('articulos.fotos')->get()
         ]);
     }
 
