@@ -12,7 +12,7 @@ export default function Pc({ pc }) {
         <>
         <div className="border-2 rounded-md my-5 xl:my-10 overflow-hidden shadow-2xl">
             <div className=" px-2 py-1 border-solid border-black flex gap-5 bg-slate-200">
-                <Link href={route("pc.edit", {"id": pc.id})} className="text-center w-full font-semibold text-xl">{pc.nombre}</Link>
+                <Link href={route("pc.edit", {"id": pc.id})} className="text-center w-full font-semibold text-xl underline">{pc.nombre}</Link>
             </div>
             <div className='px-2 py-1'>
                 <div className='flex flex-col gap-4'>

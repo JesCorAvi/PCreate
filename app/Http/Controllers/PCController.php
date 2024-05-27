@@ -100,6 +100,7 @@ class PcController extends Controller
     {
         $pc = Pc::with('articulos')->find($request->id);
         $pcInicial = [
+            "id" => $pc->id,
             "nombre" => $pc->nombre,
             "socket" => $pc->socket_id,
             "placa" => optional($pc->articulos->where('pivot.parte', 'placa')->first())->id,
@@ -141,9 +142,41 @@ class PcController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PC $pc)
+    public function update(Request $request)
     {
-        //
+        $pc = Pc::find($request->initialPc);
+
+        $request->validate([
+            'nombre' => 'required',
+            'socket' => 'required',
+        ]);
+
+        $pc->update([
+            'nombre' => $request->nombre,
+            'socket_id' => $request->socket,
+            'user_id' => $request->user()->id,
+        ]);
+
+        $pc->articulos()->detach();
+
+        $componentes = [
+            ['placa', 1],
+            ['cpu', 1],
+            ['disipador', 1],
+            ['ram', 1],
+            ['fuente', 1],
+            ['caja', 1],
+            ['almacenamientoPrincipal', 1],
+            ['almacenamientoSecundario', 1],
+            ['grafica', 1],
+            ['ventilacion', $request->ventiladorCount ?? 1],
+        ];
+
+        foreach ($componentes as $componente) {
+            if ($request->filled($componente[0])) {
+                $pc->articulos()->attach($request->{$componente[0]}, ['cantidad' => $componente[1], 'parte' => $componente[0]]);
+            }
+        }
     }
 
     /**

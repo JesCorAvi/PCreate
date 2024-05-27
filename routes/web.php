@@ -69,6 +69,7 @@ Route::post('/articulos/getArticulos', [ArticuloController::class, 'getArticulos
 Route::get('/configurador/crear', [PCController::class, 'create'])->name('pc.create')->middleware('auth');
 Route::post('/configurador/creado', [PCController::class, 'store'])->name('pc.store')->middleware('auth');
 Route::get('/configurador/edit', [PCController::class, 'edit'])->name('pc.edit')->middleware('auth');
+Route::post('/configurador/editado', [PCController::class, 'update'])->name('pc.update')->middleware('auth');
 
 // Rutas relacionadas con el carrito de compras
 Route::post('/carrito/store', [CarritoController::class, 'store'])->name('carrito.store')->middleware('auth');

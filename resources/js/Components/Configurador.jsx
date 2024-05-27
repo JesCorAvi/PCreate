@@ -12,8 +12,7 @@ import Modal from './Modal';
 import SecondaryButton from './SecondaryButton';
 import DangerButton from './DangerButton';
 
-export default function Configurador({ user, sockets, articulos, pc }) {
-    console.log(pc);
+export default function Configurador({ user, sockets, articulos, pc: initialPc }) {
     // Estado para mostrar advertencias
     const [showCoolingWarning, setShowCoolingWarning] = useState(false);
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
@@ -27,8 +26,8 @@ export default function Configurador({ user, sockets, articulos, pc }) {
     // Estado para el precio y puntuación total
     const [precioTotal, setPrecioTotal] = useState(0);
     const [puntuacionTotal, setPuntuacionTotal] = useState(0);
-
     const [isInitialLoad, setIsInitialLoad] = useState(true); // Nuevo estado para la carga inicial
+    const [pc, setPc] = useState(initialPc); // Nuevo estado para pc
 
 
     // Estado para los artículos filtrados según el socket seleccionado
@@ -42,9 +41,9 @@ export default function Configurador({ user, sockets, articulos, pc }) {
 
     // Inicialización del formulario
     const { data, setData, post, errors, reset } = useForm({
-        nombre: pc == undefined ? `PC de ${user.name} Nº${new Date().getTime().toString().slice(-4)}` : pc.nombre,
+        nombre: `PC de ${user.name} Nº${new Date().getTime().toString().slice(-4)}`,
         socket: pc == undefined ? null : pc.socket,
-        placa: pc == undefined ? null : pc.placa,
+        placa: null,
         cpu: null,
         disipador: null,
         ram: null,
@@ -55,7 +54,6 @@ export default function Configurador({ user, sockets, articulos, pc }) {
         caja: null,
         ventilacion: null,
     });
-
     // Función para calcular el porcentaje de la puntuación total
     function porcentaje() {
         return ((puntuacionTotal / 2500) * 100).toFixed(2);
@@ -92,23 +90,20 @@ export default function Configurador({ user, sockets, articulos, pc }) {
     function limpiarSelect(opcion) {
         setData(opcion, null);
     }
-
+    const componentes = [
+        'placa',
+        'cpu',
+        'disipador',
+        'ram',
+        'almacenamientoPrincipal',
+        'almacenamientoSecundario',
+        'grafica',
+        'caja',
+        'ventilacion'
+    ];
     // Función para calcular el precio total de los componentes seleccionados
     function calcularPrecioTotal() {
         let total = 0;
-        const componentes = [
-            'placa',
-            'cpu',
-            'disipador',
-            'ram',
-            'almacenamientoPrincipal',
-            'almacenamientoSecundario',
-            'grafica',
-            'fuente',
-            'caja',
-            'ventilacion'
-
-        ];
         componentes.forEach(componente => {
             if (data[componente]) {
                 const precio = parseFloat(getArticuloInfo(articulos, data[componente], "precio"));
@@ -121,17 +116,6 @@ export default function Configurador({ user, sockets, articulos, pc }) {
     // Función para calcular la puntuación total de los componentes seleccionados
     function calcularPuntuacionTotal() {
         let total = 0;
-        const componentes = [
-            'placa',
-            'cpu',
-            'disipador',
-            'ram',
-            'almacenamientoPrincipal',
-            'almacenamientoSecundario',
-            'grafica',
-            'caja',
-            'ventilacion'
-        ];
         componentes.forEach(componente => {
             if (data[componente]) {
                 const puntuacion = parseFloat(getArticuloInfo(articulos, data[componente], "puntuacion"));
@@ -177,7 +161,7 @@ export default function Configurador({ user, sockets, articulos, pc }) {
             } else {
                 setShowFuenteWarning(false);
             }
-        }else{
+        } else {
             setShowFuenteWarning(false);
         }
     }, [data.cpu, data.grafica, data.fuente]);
@@ -208,7 +192,7 @@ export default function Configurador({ user, sockets, articulos, pc }) {
                 almacenamientos: [],
 
             });
-            if (!isInitialLoad){
+            if (!pc) {
                 setData(prevData => ({
                     ...prevData,
                     placa: null,
@@ -222,9 +206,24 @@ export default function Configurador({ user, sockets, articulos, pc }) {
                     caja: null,
                     ventilacion: null,
                 }));
-        }
+            }
         }
     }, [data.socket]);
+
+    useEffect(() => {
+        if (pc) {
+            setData(prevData => ({
+                ...prevData,
+                cpu: pc.cpu,
+                disipador: pc.disipador,
+                nombre: pc.nombre,
+                socket: pc.socket,
+                placa: pc.placa,
+
+            }));
+
+        }
+    }, [filteredArticulos]);
 
     // Filtrado de RAM, cajas y almacenamiento según la placa seleccionada
     useEffect(() => {
@@ -244,7 +243,7 @@ export default function Configurador({ user, sockets, articulos, pc }) {
                         [...(articulos.cajas.atx || []), ...(articulos.cajas.micro_atx || [])] :
                         articulos.cajas.atx) || [],
                 }));
-                if (!isInitialLoad) {
+                if (isInitialLoad) {
                 setData(prevData => ({
                     ...prevData,
                     cpu: null,
@@ -259,7 +258,25 @@ export default function Configurador({ user, sockets, articulos, pc }) {
             }
             }
         }
-    }, [[data.placa]]);
+    }, [data.placa]);
+    useEffect(() => {
+        if (!isInitialLoad) {
+            if (pc) {
+                setData(prevData => ({
+                    ...prevData,
+                    ram: pc.ram,
+                    almacenamientoPrincipal: pc.almacenamientoPrincipal,
+                    almacenamientoSecundario: pc.almacenamientoSecundario,
+                    grafica: pc.grafica,
+                    caja: pc.caja,
+                    fuente: pc.fuente,
+                    ventilacion: pc.ventilacion,
+                }));
+                setTimeout(() => setPc(undefined), 0);
+                setVentiladorCount(pc.ventiladorCount);
+            }
+        }
+    }, [data.placa]);
 
     useEffect(() => {
         setIsInitialLoad(false); // Actualizar el estado después de la carga inicial
@@ -391,9 +408,9 @@ export default function Configurador({ user, sockets, articulos, pc }) {
         setOpenModal(false);
     }
     function procesarCarrito() {
-        if(showAlmacenamientoPrincipalWarning || showCoolingWarning || showFuenteWarning){
+        if (showAlmacenamientoPrincipalWarning || showCoolingWarning || showFuenteWarning) {
             abrirModal();
-        }else{
+        } else {
             añadirAlCarrito();
         }
     }
@@ -407,7 +424,12 @@ export default function Configurador({ user, sockets, articulos, pc }) {
         data.ventiladorCount = ventiladorCount;
         data.precioTotal = precioTotal;
         data.puntuacionTotal = puntuacionTotal;
-        post(route('pc.store'));
+        if(initialPc){
+            data.initialPc = initialPc.id;
+            post(route('pc.update'));
+        }else{
+            post(route('pc.store'));
+        }
     }
     // Componente de barra de progreso
     const ProgressBar = ({ puntuacionTotal }) => {

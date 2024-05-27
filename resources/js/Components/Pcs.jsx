@@ -1,4 +1,4 @@
-import Pc from "./pc";
+import Pc from "./Pc";
 import { Head } from '@inertiajs/react';
 
 export default function Pcs({ pcs }) {
