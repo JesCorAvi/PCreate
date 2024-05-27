@@ -34,6 +34,9 @@ export default function ShowUsuario({ mustVerifyEmail, avatar, pedidos, domicili
                 <a className={seccionActual === 'pedidos' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('pedidos')}>
                     <p className='text-center'>Mis pedidos</p>
                 </a>
+                <a className={seccionActual === 'pedidos' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('pc')}>
+                    <p className='text-center'>Mis PC</p>
+                </a>
                 <a className={seccionActual === 'edit' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('edit')}>
                     <p className='text-center'>Editar Perfil</p>
                 </a>
@@ -45,18 +48,23 @@ export default function ShowUsuario({ mustVerifyEmail, avatar, pedidos, domicili
                 </Link>
             </aside>
             <div className="flex lg:flex-col items-center justify-center flex-grow ">
-                {seccionActual === 'mis datos' && <Datos />}
-                {seccionActual === 'edit' && <Edit
-                    mustVerifyEmail={mustVerifyEmail}
-                    status={status}
-                    avatar={avatar}
-                />}
+
                 {seccionActual === 'pedidos' && <Pedidos
                     mustVerifyEmail={mustVerifyEmail}
                     status={status}
                     avatar={avatar}
                     pedidos={pedidos}
                     facturas={facturas}
+                />}
+                {seccionActual === 'edit' && <Edit
+                    mustVerifyEmail={mustVerifyEmail}
+                    status={status}
+                    avatar={avatar}
+                />}
+                {seccionActual === 'edit' && <Edit
+                    mustVerifyEmail={mustVerifyEmail}
+                    status={status}
+                    avatar={avatar}
                 />}
                 {seccionActual === 'direcciones' && <Direcciones
                     mustVerifyEmail={mustVerifyEmail}

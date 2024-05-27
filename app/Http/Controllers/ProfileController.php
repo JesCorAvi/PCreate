@@ -16,11 +16,24 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
+
     public function show(Request $request): Response
     {
+
+        $facturas = $request->user()->facturas()
+        ->with([
+            'domicilio.provincia',
+            'articulos' => function ($query) {
+                $query->withTrashed()->with([
+                    'fotos' => function ($query) {
+                        $query->withTrashed();
+                    }
+                ]);
+            }
+        ])
+        ->orderByDesc('id')
+        ->paginate(6);
+
         return Inertia::render('Profile/Show', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
@@ -28,12 +41,8 @@ class ProfileController extends Controller
             'categorias' => Categoria::all(),
             "domicilios" => Auth::user()->domicilios->load('provincia')->sortBy('direccion')->values(),
             "provincias" => Provincia::all(),
-            "facturas" => Auth::user()->facturas->sortByDesc('id')->values()->load(['domicilio.provincia', 'articulos' => function ($query) {
-                $query->withTrashed()->with(['fotos' => function ($query) {
-                    $query->withTrashed();
-                }]);
-            }]),
-    ]);
+            "facturas" => $facturas
+        ]);
     }
 
 

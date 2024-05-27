@@ -42,7 +42,7 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
         switch (name) {
             case 'nombre':
             case 'ciudad':
-                error = /^[a-zA-Z\s]+$/.test(value) ? '' : 'El nombre y la ciudad solo pueden contener letras y espacios';
+                error = /^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/.test(value) ? '' : 'El nombre y la ciudad solo pueden contener letras y espacios';
                 break;
             case 'telefono':
                 error = /^(\+?\d{1,12}|\d{9})$/.test(value) ? '' : 'Número de teléfono no válido';
@@ -51,7 +51,7 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                 error = /^\d+$/.test(value) ? '' : 'El código postal solo puede contener números';
                 break;
             case 'direccion':
-                error = /^[a-zA-Z0-9º\.,\s]+$/.test(value) ? '' : 'La dirección contiene caracteres no válidos';
+                error = /^[a-zA-ZáéíóúÁÉÍÓÚ0-9º\.,\s]+$/.test(value) ? '' : 'La dirección contiene caracteres no válidos';
                 break;
             default:
                 error = '';
