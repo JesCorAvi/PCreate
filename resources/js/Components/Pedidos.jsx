@@ -6,7 +6,6 @@ import { useMediaQuery } from 'react-responsive';
 import React, { useState, useEffect } from 'react';
 
 export default function Pedidos({ auth, facturas }) {
-    console.log(facturas);
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
     const [visibleLinks, setVisibleLinks] = useState(facturas.links);
     useEffect(() => {
@@ -46,7 +45,7 @@ export default function Pedidos({ auth, facturas }) {
                             ${index === 0 ? 'rounded-l' : ''}
                             ${index === visibleLinks.length - 1 ? 'rounded-r' : ''}
                         `}
-                        href={link.url}
+                        href={link.url + `&seccion=pedidos`}
                     >
                         {link.label}
                     </Link>

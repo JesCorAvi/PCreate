@@ -22,7 +22,12 @@ class ProfileController extends Controller
 
         $facturas = $request->user()->facturas()
         ->with([
-            'domicilio.provincia',
+            'domicilio' => function ($query) {
+                $query->withTrashed()->with([
+                    'provincia' => function ($query) {
+                        $query->withTrashed();
+                }]);
+            },
             'articulos' => function ($query) {
                 $query->withTrashed()->with([
                     'fotos' => function ($query) {
@@ -34,12 +39,17 @@ class ProfileController extends Controller
         ->orderByDesc('id')
         ->paginate(6);
 
+        $domicilios = $request->user()->domicilios()
+        ->with('provincia')
+        ->orderByDesc('direccion')
+        ->paginate(6);
+
         return Inertia::render('Profile/Show', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'avatar' => auth()->user()->avatar,
             'categorias' => Categoria::all(),
-            "domicilios" => Auth::user()->domicilios->load('provincia')->sortBy('direccion')->values(),
+            "domicilios" => $domicilios,
             "provincias" => Provincia::all(),
             "facturas" => $facturas
         ]);

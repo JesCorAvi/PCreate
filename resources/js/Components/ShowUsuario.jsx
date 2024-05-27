@@ -61,11 +61,6 @@ export default function ShowUsuario({ mustVerifyEmail, avatar, pedidos, domicili
                     status={status}
                     avatar={avatar}
                 />}
-                {seccionActual === 'edit' && <Edit
-                    mustVerifyEmail={mustVerifyEmail}
-                    status={status}
-                    avatar={avatar}
-                />}
                 {seccionActual === 'direcciones' && <Direcciones
                     mustVerifyEmail={mustVerifyEmail}
                     status={status}

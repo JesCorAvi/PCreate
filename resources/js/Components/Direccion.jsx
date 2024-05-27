@@ -150,14 +150,14 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                             />
                         </div>
                         <div className='flex flex-col sm:flex-row items-center justify-between'>
-                            <input className='w-full'
+                            <input className='w-1/4'
                                 name='ciudad'
                                 required
                                 placeholder='Ciudad'
                                 value={data.ciudad}
                                 onChange={handleChange}
                             />
-                            <input className='w-full'
+                            <input className='w-1/4'
                                 type="text"
                                 maxLength={5}
                                 minLength={5}
@@ -167,7 +167,7 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                                 value={data.cpostal}
                                 onChange={handleChange}
                             />
-                            <input className='w-full'
+                            <input className='w-1/4'
                                 type="text"
                                 maxLength={12}
                                 name='telefono'
@@ -176,7 +176,7 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                                 value={data.telefono}
                                 onChange={handleChange}
                             />
-                            <select className='w-full'
+                            <select className='w-1/4'
                                 name='provincia_id'
                                 onChange={handleChange}
                                 value={data.provincia_id}
