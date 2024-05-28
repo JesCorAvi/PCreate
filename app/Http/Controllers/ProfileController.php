@@ -39,6 +39,18 @@ class ProfileController extends Controller
         ->orderByDesc('id')
         ->paginate(6);
 
+        $pcs = $request->user()->pcs()
+        ->with(['articulos' => function ($query) {
+                $query->withTrashed()->with([
+                    'fotos' => function ($query) {
+                        $query->withTrashed();
+                    }
+                ]);
+            }
+        ])
+        ->orderByDesc('id')
+        ->paginate(6);
+
         $domicilios = $request->user()->domicilios()
         ->with('provincia')
         ->orderByDesc('direccion')
@@ -52,7 +64,7 @@ class ProfileController extends Controller
             "domicilios" => $domicilios,
             "provincias" => Provincia::all(),
             "facturas" => $facturas,
-            "pcs" => $request->user()->pcs()->with('articulos.fotos')->get()
+            "pcs" => $pcs
         ]);
     }
 

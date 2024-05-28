@@ -58,7 +58,7 @@ export default function Direcciones({ auth, domicilios, provincias }) {
                 </div>
             </div>
             <nav className="flex items-center justify-center py-4">
-                {visibleLinks.map((link, index) => (
+            {visibleLinks.map((link, index) => (
                     <Link
                         key={index}
                         className={`
@@ -67,7 +67,7 @@ export default function Direcciones({ auth, domicilios, provincias }) {
                             ${index === 0 ? 'rounded-l' : ''}
                             ${index === visibleLinks.length - 1 ? 'rounded-r' : ''}
                         `}
-                        href={link.url + `&seccion=direcciones`}
+                        href={link.url}
                     >
                         {link.label}
                     </Link>
