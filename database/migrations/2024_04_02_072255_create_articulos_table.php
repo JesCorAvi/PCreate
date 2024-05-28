@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string("nombre");
             $table->decimal("precio");
             $table->text("descripcion");
+            $table->integer("puntuacion")->default(0);
+            $table->decimal("puntuacionPrecio")->default(0);
             $table->json("datos")->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -29,8 +29,8 @@ class ArticuloPolicy
      */
     public function create(): bool
     {
-        //$user = auth()->user();
-        //return ($user->role === 'admin' || $user->id === 1);
+        $user = auth()->user();
+        return ($user->role === 'admin' || $user->id === 1);
     }
 
     /**
@@ -38,8 +38,8 @@ class ArticuloPolicy
      */
     public function update(): bool
     {
-        //$user = auth()->user();
-        //return ($user->role === 'admin' || $user->id === 1);
+        $user = auth()->user();
+        return ($user->role === 'admin' || $user->id === 1);
     }
 
     /**

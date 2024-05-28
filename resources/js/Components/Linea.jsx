@@ -26,13 +26,14 @@ export default function Linea({ auth, nombre, precio, imagen, cantidad: initialC
             let articulo = carrito.find(articulo => articulo.id == id);
             if (tipo == "+") {
                 articulo.pivot.cantidad++;
-            } else {
+            } else if( tipo == "-") {
                 if (articulo.pivot.cantidad > 1) {
                     articulo.pivot.cantidad--;
                 }else{
                     carrito = carrito.filter(item => item.id !== id);
-
                 }
+            } else{
+                carrito = carrito.filter(item => item.id !== id);
             }
             localStorage.setItem('carrito', JSON.stringify(carrito));
             setCantidad(articulo.pivot.cantidad);
@@ -75,7 +76,7 @@ export default function Linea({ auth, nombre, precio, imagen, cantidad: initialC
                                 <button onClick={() => modificarCantidad("+")} className='bg-blue-600 text-xl rounded-xl text-white w-6 h-6 font-semibold  hover:bg-blue-700'> + </button>
                             </div>
                         </div>
-                        <button className='underline' onClick={borrar}>Borrar</button>
+                        <button className='underline' onClick={() => modificarCantidad("borrar")}>Borrar</button>
                     </div>
                 </div>
             </div>

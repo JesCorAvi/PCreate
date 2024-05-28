@@ -74,3 +74,28 @@
   img.aparecer {
     animation: aparecer 0.5s ease-out; /* Duración de la animación y función de tiempo */
   }
+/* Estilo personalizado para el elemento <progress> */
+progress {
+    -webkit-appearance: none; /* Para Chrome y Safari */
+    appearance: none;
+    width: 100%; /* Asegúrate de ajustar esto según sea necesario */
+    height: 20px; /* Asegúrate de ajustar esto según sea necesario */
+    border-radius: 9999px; /* Esto aplica el borde redondeado */
+    overflow: hidden; /* Esto asegura que el contenido dentro del progreso también esté redondeado */
+  }
+
+  /* Estilo para el interior de la barra de progreso */
+  progress::-webkit-progress-bar {
+    background-color: #f3f4f6; /* Color de fondo */
+    border-radius: 9999px; /* Asegúrate de que el contenedor esté redondeado */
+  }
+
+  progress::-webkit-progress-value {
+    background-color: #4caf50; /* Color de la barra de progreso */
+    border-radius: 9999px; /* Asegúrate de que la barra de progreso esté redondeada */
+  }
+
+  progress::-moz-progress-bar {
+    background-color: #4caf50; /* Color de la barra de progreso para Firefox */
+    border-radius: 9999px; /* Asegúrate de que la barra de progreso esté redondeada */
+  }

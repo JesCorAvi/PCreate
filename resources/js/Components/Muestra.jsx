@@ -9,11 +9,13 @@ import axios from 'axios';
 import Modal from '@/Components/Modal';
 import SecondaryButton from './SecondaryButton';
 import Comentarios from './Comentarios';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from '@mui/icons-material/Star';
 
 
 
 
-export default function Pieza({user, active = false, classNameName = '', children, articulo }) {
+export default function Muestra({ user, active = false, classNameName = '', children, articulo }) {
     const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
     const { actualizarCantidadArticulosCookies } = useCarritoStore((state) => state);
 
@@ -25,13 +27,22 @@ export default function Pieza({user, active = false, classNameName = '', childre
     const [imagenPrincipal] = useState(`http://127.0.0.1:8000/storage/uploads/articulos/${imagenpr}`);
     const [imagenSecundaria1] = useState(`http://127.0.0.1:8000/storage/uploads/articulos/${imagenSec1}`);
     const [imagenSecundaria2] = useState(`http://127.0.0.1:8000/storage/uploads/articulos/${imagenSec2}`);
-
+    const [nota, setNota] = useState(calcularNota());
+    const [valoraciones, setValoraciones] = useState(articulo.comentarios.length);
     const [lightboxVisible, setLightboxVisible] = useState(false);
-    const datos = JSON.parse(articulo.datos);
+    const datos = articulo.datos;
 
+    function calcularNota() {
+        if (articulo.comentarios.length === 0) return 0;
+        let suma = 0;
+        articulo.comentarios.forEach(comentario => {
+            suma += comentario.estrellas;
+        });
+        return suma / articulo.comentarios.length;
+    }
     function añadirAlCarrito() {
         handleAddToCartClick()
-        if(user){
+        if (user) {
             axios.post(route('carrito.store'), {
                 articulo_id: articulo.id,
             }).then(response => {
@@ -39,17 +50,17 @@ export default function Pieza({user, active = false, classNameName = '', childre
             }).catch(error => {
                 console.log(error);
             });
-        }else{
+        } else {
             let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-            let articuloEncontrado = carrito.find(art => art.articulo_id === articulo.id);
+            let articuloEncontrado = carrito.find(art => art.id === articulo.id);
             if (articuloEncontrado) {
-                articuloEncontrado.cantidad++;
+                articuloEncontrado.pivot.cantidad++;
             } else {
                 carrito.push({
                     id: articulo.id,
                     nombre: articulo.nombre,
                     precio: articulo.precio,
-                    fotos:[{imagen: articulo.fotos[0].imagen}],
+                    fotos: [{ imagen: articulo.fotos[0].imagen }],
                     pivot: { cantidad: 1 },
                 });
             }
@@ -61,7 +72,21 @@ export default function Pieza({user, active = false, classNameName = '', childre
     function acortar(cadena, longitud) {
         return cadena.length <= longitud ? cadena : cadena.substring(0, longitud) + '...';
     }
+    function handleComentarioCreado(nuevaNota) {
+        setValoraciones(valoraciones + 1);
+        let resultado;
+        if (valoraciones === 0) {
+            resultado = nuevaNota; // o cualquier valor que tenga sentido en este contexto
+        } else {
+            resultado = (nota * valoraciones + nuevaNota) / (valoraciones + 1);
+        }
+        setNota(resultado);
 
+    };
+    function handleComentarioBorrado(nuevaNota) {
+        setValoraciones(valoraciones - 1);
+        setNota((nota * valoraciones - nuevaNota) / (valoraciones - 1));
+    };
     function handleGrande(url) {
         setGrande(url);
     }
@@ -88,6 +113,7 @@ export default function Pieza({user, active = false, classNameName = '', childre
             <Alertas></Alertas>
             <div className='xl:px-40 min-h-screen'>
                 <p className="py-2"><Link href={route("articulo.index")}>Tienda</Link>{' > '}{articulo.nombre}</p>
+
                 <article className='block xl:flex px-5'>
                     <section className="flex-1 flex flex-col items-center justify-center">
                         <div className="lg:w-imagen lg:h-imagen ">
@@ -101,8 +127,20 @@ export default function Pieza({user, active = false, classNameName = '', childre
                     </section>
                     <section className="flex-1 text-justify xl:px-10 flex flex-col justify-between " >
                         <h1 className="font-bold text-4xl pt-10 ">{articulo.nombre}</h1>
+                        <div className='flex'>
+                            {[...Array(5)].map((star, index) => {
+                                const starValue = index + 1;
+                                return (
+                                    <span key={starValue}
+                                        className='text-purple-800'
+                                    >
+                                        {starValue <= nota ? <StarIcon /> : <StarBorderIcon className="text-gray-400" />}
+                                    </span>
+                                );
+                            })}<p className='text-purple-800 font-semibold'>{valoraciones} valoraciones</p>
+                        </div>
                         <p className='py-10 xl:py-20 xl:px-10 max-w-2xl overflow-hidden whitespace-pre-wrap'>
-                            {acortar(articulo.descripcion, 400)}
+                            {acortar(articulo.descripcion, 400)}<br></br>
                             <a href="#descripcion-completa" className='underline'>Seguir leyendo</a>
                         </p>
 
@@ -158,14 +196,13 @@ export default function Pieza({user, active = false, classNameName = '', childre
                     </section>
 
 
-                   <Comentarios id={articulo.id} user={user}></Comentarios>
+                    <Comentarios onComentarioCreado={handleComentarioCreado} onComentarioBorrado={handleComentarioBorrado} id={articulo.id} user={user}></Comentarios>
                 </article>
                 {lightboxVisible && (
                     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={handleCloseLightbox}>
                         <img src={imagenGrande} alt="Imagen principal" className="max-w-screen-lg max-h-screen p-5 cursor-zoom-out" />
                     </div>
                 )}
-
             </div>
         </>
     );

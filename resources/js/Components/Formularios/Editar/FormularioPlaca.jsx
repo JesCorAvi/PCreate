@@ -7,16 +7,16 @@ import validation from '../../../validation.json';
 export default function FormularioPlaca({ sockets, marcas, articulo }) {
     const { data, setData, post, errors } = useForm({
         id: articulo.id,
-        socket_id: JSON.parse(articulo.datos).socket_id,
+        socket_id:articulo.datos.socket_id,
         marca_id: articulo.marca_id,
         nombre: articulo.nombre,
         descripcion: articulo.descripcion,
         precio: articulo.precio,
-        slotsm2: JSON.parse(articulo.datos).slotsm2,
-        slotsram: JSON.parse(articulo.datos).slotsram,
-        ddrmax: JSON.parse(articulo.datos).ddrmax,
-        mhzmax: JSON.parse(articulo.datos).mhzmax,
-        clase: JSON.parse(articulo.datos).clase,
+        slotsm2: articulo.datos.slotsm2,
+        slotsram: articulo.datos.slotsram,
+        ddrmax: articulo.datos.ddrmax,
+        mhzmax: articulo.datos.mhzmax,
+        clase: articulo.datos.clase,
         imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen,
         imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen,
         imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen,
@@ -66,19 +66,23 @@ export default function FormularioPlaca({ sockets, marcas, articulo }) {
         <div name="placa base" className="min-h-screen">
             <form className="max-w-2xl mx-auto" onSubmit={submit}>
             <div className="mb-5">
-                    <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modelo</label>
-                    <input
-                        value={data.nombre}
-                        pattern={validation.nombre}
-                        type="text"
-                        name="nombre"
-                        id="nombre"
-                        maxLength="120"
-                        className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${errors.nombre ? 'border-red-500' : ''}`}
-                        placeholder="Introduzca el nombre del componente"
+                    <label htmlFor="socket" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Socket</label>
+                    <select
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        name="socket_id"
+                        onChange={(e) => setData('socket_id', e.target.value)}
                         required
-                        onChange={(e) => handleChange('nombre', e.target.value)}
-                        onBlur={(e) => validar(e.target)}                    />
+                        value={data.socket_id}
+                    >
+                        <option> Seleccione un Socket</option>
+                        {sockets.map((soc) => (
+                            <option
+                                key={soc.id}
+                                value={soc.id}>
+                                {soc.nombre}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div className="mb-5">
                     <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modelo</label>

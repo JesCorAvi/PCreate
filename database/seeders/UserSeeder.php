@@ -16,13 +16,15 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@admin.admin',
             'password' => "admin",
-            'role' => 'admin'
+            'role' => 'admin',
+            'email_verified_at' => '2021-10-10 00:00:00'
        ]);
        User::create([
         'name' => 'jesus',
         'email' => 'jesus@jesus.jesus',
         'password' => "jesus",
-        'role' => 'user'
+        'role' => 'user',
+        'email_verified_at' => '2021-10-10 00:00:00'
    ]);
     }
 }

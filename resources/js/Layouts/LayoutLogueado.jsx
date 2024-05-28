@@ -47,7 +47,7 @@ export default function Layout({ user, header, children, categorias }) {
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex hover:bg-gray-800">
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
+                                <NavLink href={route('pc.create')} active={route().current('pc.create')}>
                                     <p className="text-white">Configurador</p>
                                 </NavLink>
                             </div>
@@ -143,7 +143,7 @@ export default function Layout({ user, header, children, categorias }) {
                         </ResponsiveNavLink>
                     </div>
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
+                        <ResponsiveNavLink href={route('pc.create')} active={route().current('pc.create')}>
                             Configurador
                         </ResponsiveNavLink>
                     </div>

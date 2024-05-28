@@ -15,12 +15,18 @@ class Articulo extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ["nombre","categoria_id", "descripcion", "precio", "datos", "marca_id"];
+    protected $fillable = ["nombre","categoria_id", "descripcion", "precio", "datos", "marca_id", "puntuacion", "puntuacionPrecio"];
 
+    protected $casts = [
+        'datos' => 'object',
+    ];
 
     public function pcs(): BelongsToMany
     {
-        return $this->belongsToMany(Pc::class, 'articulo_pc');
+        return $this->belongsToMany(Pc::class, 'articulo_pc')
+            ->withPivot('cantidad')
+            ->withPivot('parte')
+            ->withTimestamps();
     }
     public function comentarios(): MorphMany
     {

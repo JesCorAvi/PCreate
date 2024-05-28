@@ -6,14 +6,14 @@ import validation from '../../../validation.json';
 export default function FormularioCpu({  sockets, marcas, articulo }) {
     const { data, setData, post, errors } = useForm({
         id: articulo.id,
-        socket_id: JSON.parse(articulo.datos).socket_id,
+        socket_id: articulo.datos.socket_id,
         marca_id: articulo.marca_id,
         nombre: articulo.nombre,
         descripcion: articulo.descripcion,
         precio: articulo.precio,
-        nucleos:JSON.parse(articulo.datos).nucleos,
-        frecuencia: JSON.parse(articulo.datos).frecuencia,
-        consumo: JSON.parse(articulo.datos).consumo,
+        nucleos:articulo.datos.nucleos,
+        frecuencia: articulo.datos.frecuencia,
+        consumo: articulo.datos.consumo,
         imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen,
         imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen,
         imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen,
@@ -70,6 +70,8 @@ export default function FormularioCpu({  sockets, marcas, articulo }) {
                         name="socket_id"
                         onChange={(e) => setData('socket_id', e.target.value)}
                         required
+                        value={data.socket_id}
+
                     >
                         <option> Seleccione un Socket</option>
                         {sockets.map((soc) => (

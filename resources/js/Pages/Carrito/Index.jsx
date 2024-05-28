@@ -7,23 +7,30 @@ import Boton from '@/Components/Boton';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Link } from '@inertiajs/react';
+import useCarritoStore from '@/carritoStore';
 
 
 export default function Index({ auth, categorias, articulos: InitialArticulos, cantidad }) {
-
-
+    const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
+    const { actualizarCantidadArticulosCookies } = useCarritoStore((state) => state);
     const [articulos, setArticulos] = useState(InitialArticulos);
     const [precioTotal, setPrecioTotal] = useState(Total());
     const [cantidadTotal, setCantidadTotal] = useState(cantidad);
     useEffect(() => {
         if (!auth.user) {
-            let carrito = JSON.parse(localStorage.getItem('carrito'));
-            setArticulos(carrito);
-            setCantidadTotal(Total());
+            calcCantidadLocal()
         }
     }, []);
 
-
+    function calcCantidadLocal() {
+        let carrito = JSON.parse(localStorage.getItem('carrito'));
+        setArticulos(carrito);
+        let total = 0;
+        carrito?.forEach(e => {
+            total += e.pivot.cantidad;
+        });
+        setCantidadTotal(total);
+    }
     function Total() {
         let total = 0;
         if (!articulos) return 0;
@@ -44,17 +51,28 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
             });
             return;
         } else {
-            let carrito = JSON.parse(localStorage.getItem('carrito'));
-            setArticulos(carrito);
-            let total = 0;
-            carrito.forEach(e => {
-                total += e.pivot.cantidad;
-            });
-            setCantidadTotal(total);
+            calcCantidadLocal()
         }
 
     }
-
+    function borrarCarrito() {
+        if (auth.user) {
+            axios.delete(route('carrito.destroy'))
+            .then(response => {
+                setArticulos([]);
+                setCantidadTotal(0);
+                actualizarCantidadArticulos();
+            }).catch(error => {
+                console.error('Error al borrar el carrito:', error);
+            });
+            return;
+        } else {
+            localStorage.removeItem('carrito');
+            setArticulos([]);
+            setCantidadTotal(0);
+            actualizarCantidadArticulosCookies();
+        }
+    }
     useEffect(() => {
         setPrecioTotal(Total());
     }, [articulos]);
@@ -62,7 +80,11 @@ export default function Index({ auth, categorias, articulos: InitialArticulos, c
         <>
             <LayoutLogueado
                 user={auth.user}
-                header={<><h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Carrito</h2><p className=" text-gray-800 leading-tight text-center">Tienes {cantidadTotal} carticulos en la cesta</p></>}
+                header={<>
+                    <h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Carrito</h2>
+                    <p className=" text-gray-800 leading-tight text-center">Tienes {cantidadTotal} carticulos en la cesta</p>
+                    {cantidadTotal > 0 && <button onClick={borrarCarrito} className='text-red-600 leading-tight text-center font-semibold w-full underline'>Borrar carrito</button>}
+                </>}
                 categorias={categorias}
 
             >

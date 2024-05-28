@@ -4,8 +4,9 @@ import Edit from '@/Components/Edit';
 import Datos from '@/Components/Datos';
 import Pedidos from '@/Components/Pedidos';
 import Direcciones from '@/Components/Direcciones';
+import Pcs from './Pcs';
 
-export default function ShowUsuario({ mustVerifyEmail, avatar, pedidos, domicilios, provincias, facturas }) {
+export default function ShowUsuario({ mustVerifyEmail, avatar, pedidos, domicilios, provincias, facturas, pcs }) {
     const [seccionActual, setSeccionActual] = useState("pedidos");
 
     useEffect(() => {
@@ -30,9 +31,12 @@ export default function ShowUsuario({ mustVerifyEmail, avatar, pedidos, domicili
 
     return (
         <div className='block lg:flex lg:px-20'>
-            <aside className='flex lg:flex-col lg:pt-32 gap-4 p-3'>
+            <aside className='flex lg:flex-col lg:pt-32 gap-4 p-3 lg:min-w-36'>
                 <a className={seccionActual === 'pedidos' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('pedidos')}>
                     <p className='text-center'>Mis pedidos</p>
+                </a>
+                <a className={seccionActual === 'pc' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('pc')}>
+                    <p className='text-center'>Mis PC</p>
                 </a>
                 <a className={seccionActual === 'edit' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('edit')}>
                     <p className='text-center'>Editar Perfil</p>
@@ -45,22 +49,23 @@ export default function ShowUsuario({ mustVerifyEmail, avatar, pedidos, domicili
                 </Link>
             </aside>
             <div className="flex lg:flex-col items-center justify-center flex-grow ">
-                {seccionActual === 'mis datos' && <Datos />}
-                {seccionActual === 'edit' && <Edit
-                    mustVerifyEmail={mustVerifyEmail}
-                    status={status}
-                    avatar={avatar}
-                />}
+
                 {seccionActual === 'pedidos' && <Pedidos
                     mustVerifyEmail={mustVerifyEmail}
-                    status={status}
                     avatar={avatar}
                     pedidos={pedidos}
                     facturas={facturas}
                 />}
+                    {seccionActual === 'pc' && <Pcs
+                    mustVerifyEmail={mustVerifyEmail}
+                    pcs = {pcs}
+                />}
+                {seccionActual === 'edit' && <Edit
+                    mustVerifyEmail={mustVerifyEmail}
+                    avatar={avatar}
+                />}
                 {seccionActual === 'direcciones' && <Direcciones
                     mustVerifyEmail={mustVerifyEmail}
-                    status={status}
                     avatar={avatar}
                     domicilios={domicilios}
                     provincias={provincias}

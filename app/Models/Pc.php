@@ -14,7 +14,11 @@ class Pc extends Model
 {
     use HasFactory;
     use SoftDeletes;
-
+    protected $fillable = [
+        'nombre',
+        'user_id',
+        'socket_id',
+    ];
 
     public function user(): BelongsTo
     {
@@ -30,5 +34,12 @@ class Pc extends Model
     public function comentarios(): MorphMany
     {
         return $this->morphMany(Comentario::class, 'comentable');
+    }
+    public function articulos(): BelongsToMany
+    {
+        return $this->belongsToMany(Articulo::class, 'articulo_pc')->withPivot('cantidad')
+        ->withPivot('cantidad')
+        ->withPivot('parte')
+        ->withTimestamps();
     }
 }

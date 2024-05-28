@@ -20,11 +20,9 @@ class Factura extends Model
     }
 
 
-    public function articulos(): BelongsToMany
+    public function articulos()
     {
-        return $this->belongsToMany(Articulo::class, 'articulo_factura')
-        ->withPivot('cantidad')
-        ->withTimestamps();
+        return $this->belongsToMany(Articulo::class)->withPivot('cantidad', 'precio')->withTimestamps();
     }
     public function domicilio(): BelongsTo
     {

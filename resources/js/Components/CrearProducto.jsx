@@ -8,10 +8,8 @@ import FormularioAlmacenamiento from './Formularios/Crear/FormularioAlmacenamien
 import FormularioFuente from './Formularios/Crear/FormularioFuente';
 import FormularioCaja from './Formularios/Crear/FormularioCaja';
 import FormularioVentilador from './Formularios/Crear/FormularioVentilador';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Alertas from '@/Components/Alertas';
-
-
 
 
 export default function CrearProducto({ marcas, sockets }) {
@@ -22,8 +20,19 @@ export default function CrearProducto({ marcas, sockets }) {
 
     const handleBotonClick = (formulario) => {
         setFormularioActual(formulario);
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('articulo', formulario);
+        const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+        window.history.pushState({}, '', newUrl);
     };
 
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const formularioFromURL = params.get('articulo');
+        if (formularioFromURL) {
+            setFormularioActual(formularioFromURL);
+        }
+    }, []);
 
     return (
         <>

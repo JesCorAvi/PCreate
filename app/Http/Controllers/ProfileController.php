@@ -16,24 +16,44 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
+
     public function show(Request $request): Response
     {
+
+        $facturas = $request->user()->facturas()
+        ->with([
+            'domicilio' => function ($query) {
+                $query->withTrashed()->with([
+                    'provincia' => function ($query) {
+                        $query->withTrashed();
+                }]);
+            },
+            'articulos' => function ($query) {
+                $query->withTrashed()->with([
+                    'fotos' => function ($query) {
+                        $query->withTrashed();
+                    }
+                ]);
+            }
+        ])
+        ->orderByDesc('id')
+        ->paginate(6);
+
+        $domicilios = $request->user()->domicilios()
+        ->with('provincia')
+        ->orderByDesc('direccion')
+        ->paginate(6);
+
         return Inertia::render('Profile/Show', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'avatar' => auth()->user()->avatar,
             'categorias' => Categoria::all(),
-            "domicilios" => Auth::user()->domicilios->load('provincia'),
+            "domicilios" => $domicilios,
             "provincias" => Provincia::all(),
-            "facturas" => Auth::user()->facturas->sortByDesc('id')->values()->load(['domicilio.provincia', 'articulos' => function ($query) {
-                $query->withTrashed()->with(['fotos' => function ($query) {
-                    $query->withTrashed();
-                }]);
-            }]),
-    ]);
+            "facturas" => $facturas,
+            "pcs" => $request->user()->pcs()->with('articulos.fotos')->get()
+        ]);
     }
 
 

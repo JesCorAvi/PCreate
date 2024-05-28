@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('domicilios', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained();
+            $table->string("nombre");
             $table->foreignId("provincia_id")->constrained();
             $table->string("direccion");
             $table->string("ciudad");
             $table->string("telefono");
             $table->integer("cpostal");
+            $table->boolean("favorito")->default(false);
             $table->timestamps();
             $table->softDeletes();
 

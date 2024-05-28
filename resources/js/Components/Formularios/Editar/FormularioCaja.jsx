@@ -11,12 +11,12 @@ export default function FormularioCaja({ marcas, articulo }) {
         nombre: articulo.nombre,
         descripcion: articulo.descripcion,
         precio: articulo.precio,
-        ventiladores: JSON.parse(articulo.datos).ventiladores,
-        clase: JSON.parse(articulo.datos).clase,
+        ventiladores: articulo.datos.ventiladores,
+        clase: articulo.datos.clase,
         imagenpr: articulo.fotos.find(foto => foto.orden === 1)?.imagen,
         imagensec1: articulo.fotos.find(foto => foto.orden === 2)?.imagen,
         imagensec2: articulo.fotos.find(foto => foto.orden === 3)?.imagen,
-        tipo: "Fuente de alimentación"
+        tipo: "Caja"
     });
 
     const [imagenes, setImagenes] = useState({

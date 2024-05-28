@@ -19,6 +19,8 @@ class Domicilio extends Model
         'provincia_id',
         'user_id',
         'telefono',
+        'nombre',
+        'favorito'
     ];
 
     public function user(): BelongsTo
