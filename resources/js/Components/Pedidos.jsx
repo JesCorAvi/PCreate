@@ -36,7 +36,7 @@ export default function Pedidos({ auth, facturas }) {
             )}
         </div>
         <nav className="flex items-center justify-center py-4">
-                {visibleLinks.map((link, index) => (
+        {visibleLinks.map((link, index) => (
                     <Link
                         key={index}
                         className={`
@@ -45,7 +45,7 @@ export default function Pedidos({ auth, facturas }) {
                             ${index === 0 ? 'rounded-l' : ''}
                             ${index === visibleLinks.length - 1 ? 'rounded-r' : ''}
                         `}
-                        href={link.url + `&seccion=pedidos`}
+                        href={link.url}
                     >
                         {link.label}
                     </Link>
