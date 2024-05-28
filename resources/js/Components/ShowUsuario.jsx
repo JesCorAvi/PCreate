@@ -31,7 +31,7 @@ export default function ShowUsuario({ mustVerifyEmail, avatar, pedidos, domicili
 
     return (
         <div className='block lg:flex lg:px-20'>
-            <aside className='flex lg:flex-col lg:pt-32 gap-4 p-3'>
+            <aside className='flex lg:flex-col lg:pt-32 gap-4 p-3 lg:min-w-36'>
                 <a className={seccionActual === 'pedidos' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('pedidos')}>
                     <p className='text-center'>Mis pedidos</p>
                 </a>

@@ -113,7 +113,7 @@ class PcController extends Controller
             "almacenamientoSecundario" => optional($pc->articulos->where('pivot.parte', 'almacenamientoSecundario')->first())->id,
             "grafica" => optional($pc->articulos->where('pivot.parte', 'grafica')->first())->id,
             "ventilacion" => optional($pc->articulos->where('pivot.parte', 'ventilacion')->first())->id,
-            "ventiladorCount" => $pc->articulos->where('pivot.parte', 'ventilacion')->count(),
+            "ventiladorCount" => optional($pc->articulos->firstWhere('pivot.parte', 'ventilacion'))->pivot->cantidad ?? null
         ];
 
         $articulos = Articulo::with('fotos', 'marca', 'categoria')->get();
@@ -177,6 +177,7 @@ class PcController extends Controller
                 $pc->articulos()->attach($request->{$componente[0]}, ['cantidad' => $componente[1], 'parte' => $componente[0]]);
             }
         }
+        return redirect("/perfil?seccion=pc")->with("success", "PC guardado correctamente.");
     }
 
     /**

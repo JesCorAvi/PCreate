@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ProgressBar from './ProgressBar';
 import { Head } from '@inertiajs/react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Socket from './Socket';
@@ -13,6 +14,7 @@ import SecondaryButton from './SecondaryButton';
 import DangerButton from './DangerButton';
 
 export default function Configurador({ user, sockets, articulos, pc: initialPc }) {
+    console.log(initialPc);
     // Estado para mostrar advertencias
     const [showCoolingWarning, setShowCoolingWarning] = useState(false);
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
@@ -60,15 +62,6 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     }
 
     // Función para determinar la relación calidad/precio
-    function calidadPrecio(calidadPrecio) {
-        if (calidadPrecio >= 0 && calidadPrecio < 0.7) {
-            return <p className="text-red-700 font-semibold">Calidad/Precio Reducida</p>;
-        } else if (calidadPrecio >= 0.7 && calidadPrecio < 1.5) {
-            return <p className="text-yellow-400 font-semibold">Calidad/Precio Media</p>;
-        } else if (calidadPrecio >= 1.5) {
-            return <p className="text-green-500 font-semibold">Calidad/Precio Alta</p>;
-        }
-    }
 
     function calidadPrecioTotal() {
         var calidad = puntuacionTotal / precioTotal;
@@ -219,9 +212,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                 nombre: pc.nombre,
                 socket: pc.socket,
                 placa: pc.placa,
-
             }));
-
         }
     }, [filteredArticulos]);
 
@@ -259,6 +250,9 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
             }
         }
     }, [data.placa]);
+
+    // Si es un edit, cargar la configuración del pc
+
     useEffect(() => {
         if (!isInitialLoad) {
             if (pc) {
@@ -323,8 +317,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                 <div className='ml-2'>{data.label}</div>
             </div>
             <div className='flex items-center'>
-                <div className='ml-2 text-right'>{calidadPrecio(data.puntuacionPrecio)}</div>
-                <div className='ml-2 text-right font-semibold'>{data.precio}€</div>
+                <div className='mr-10 text-xl text-right font-semibold'>{data.precio}€</div>
             </div>
         </div>
     );
@@ -338,7 +331,8 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                     src={"http://127.0.0.1:8000/storage/uploads/articulos/" + data.imagen}
                     alt={data.label}
                 />}
-            <span className='ml-2'>{data.label}</span>
+            <span className='ml-2 font-semibold text-lg'>{data.label}</span>
+
         </div>
     );
 
@@ -401,6 +395,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
         }
         return null;
     }
+
     function abrirModal() {
         setOpenModal(true);
     }
@@ -432,27 +427,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
         }
     }
     // Componente de barra de progreso
-    const ProgressBar = ({ puntuacionTotal }) => {
-        const maxScore = 2500;
-        const percentage = (puntuacionTotal / maxScore) * 100;
 
-        let progressBarClass = '';
-        if (percentage <= 20) {
-            progressBarClass = 'bg-red-500';
-        } else if (percentage <= 40) {
-            progressBarClass = 'bg-yellow-500';
-        } else if (percentage <= 70) {
-            progressBarClass = 'bg-amber-400';
-        } else {
-            progressBarClass = 'bg-green-500';
-        }
-
-        return (
-            <div className="w-full bg-gray-200 rounded-full h-4">
-                <div className={`${progressBarClass} h-full rounded-full`} style={{ width: `${percentage}%` }}></div>
-            </div>
-        );
-    };
 
     // Verificación de selección de componentes esenciales
     const areEssentialComponentsSelected = () => {
@@ -662,8 +637,8 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                         {data.caja && (
                             <div>
                                 <p className='font-semibold text-2xl py-4'>Ventilación</p>
-                                <div className='flex items-center'>
-                                    <div className='w-full pr-5'>
+                                <div className='block xl:flex items-center'>
+                                    <div className='w-full xl:pr-5'>
                                         <Select
                                             className='w-full rounded-md text-black shadow-lg'
                                             options={articulos.ventiladores?.map(ventilador => ({ value: ventilador.id, precio: ventilador.precio, puntuacion: ventilador.puntuacion, puntuacionPrecio: ventilador.puntuacionPrecio, label: ventilador.nombre, imagen: ventilador.fotos[0]?.imagen })) || []}
@@ -676,7 +651,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                                         />
                                     </div>
                                     {data.ventilacion && (
-                                        <div className="flex items-center space-x-4">
+                                        <div className="flex items-center space-x-4 py-5 xl:py-0">
                                             <button
                                                 onClick={handleDecrement}
                                                 disabled={ventiladorCount === 0}
@@ -738,7 +713,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                             <h3 className="font-semibold text-xl">Placa base</h3>
                             <div className="flex justify-between px-5">
                                 <p>{getArticuloInfo(articulos, data.placa, "nombre")}</p>
-                                <p>{getArticuloInfo(articulos, data.placa, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.placa, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.placa, "precio")}€</strong></p>
+                                <p className='font-semibold'>{getArticuloInfo(articulos, data.placa, "precio")}€</p>
                             </div>
                         </div>
                         {data.cpu && (
@@ -746,7 +721,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                                 <h3 className="font-semibold text-xl">CPU</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.cpu, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.cpu, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.cpu, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.cpu, "precio")}€</strong></p>
+                                    <p className='font-semibold'>{getArticuloInfo(articulos, data.cpu, "precio")}€</p>
                                 </div>
                             </div>
                         )}
@@ -755,7 +730,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                                 <h3 className="font-semibold text-xl">Disipador CPU</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.disipador, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.disipador, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.disipador, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.disipador, "precio")}€</strong></p>
+                                    <p className='font-semibold'>{getArticuloInfo(articulos, data.disipador, "precio")}€</p>
                                 </div>
                                 {showCoolingWarning &&
                                     <div className="bg-orange-500 text-white p-2 rounded font-bold">
@@ -770,7 +745,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                                 <h3 className="font-semibold text-xl">Modulos de RAM</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.ram, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.ram, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.ram, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.ram, "precio")}€</strong></p>
+                                    <p className='font-semibold'>{getArticuloInfo(articulos, data.ram, "precio")}€</p>
                                 </div>
                                 {filteredArticulos.ram.find(ram => ram.id === data.ram)?.datos.ddr < filteredArticulos.placas.find(placa => placa.id === data.placa)?.datos.ddrmax && (
                                     <div className="bg-orange-500 text-white p-2 rounded font-bold">
@@ -785,7 +760,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                                 <h3 className="font-semibold text-xl">Almacenamiento Principal</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.almacenamientoPrincipal, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "precio")}€</strong></p>
+                                    <p className='font-semibold'>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "precio")}€</p>
                                 </div>
                                 {showAlmacenamientoPrincipalWarning &&
                                     <div className="bg-orange-500 text-white p-2 rounded font-bold justify-normal px-5 ">
@@ -800,7 +775,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                                 <h3 className="font-semibold text-xl">Almacenamiento Secundario</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.almacenamientoSecundario, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.almacenamientoSecundario, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.almacenamientoSecundario, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.almacenamientoSecundario, "precio")}€</strong></p>
+                                    <p className='font-semibold'>{getArticuloInfo(articulos, data.almacenamientoSecundario, "precio")}€</p>
                                 </div>
                             </div>
                         )}
@@ -809,7 +784,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                                 <h3 className="font-semibold text-xl">Tarjeta Gráfica</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.grafica, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.grafica, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.grafica, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.grafica, "precio")}€</strong></p>
+                                    <p className='font-semibold'>{getArticuloInfo(articulos, data.grafica, "precio")}€</p>
                                 </div>
                             </div>
                         )}
@@ -818,7 +793,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                                 <h3 className="font-semibold text-xl">Fuente de alimentación*</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.fuente, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.fuente, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.fuente, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.fuente, "precio")}€</strong></p>
+                                    <p className='font-semibold'>{getArticuloInfo(articulos, data.fuente, "precio")}€</p>
                                 </div>
                                 {showFuenteWarning &&
                                     <div className="bg-red-700 text-white p-2 rounded font-bold">
@@ -833,7 +808,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                                 <h3 className="font-semibold text-xl">Caja</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.caja, "nombre")}</p>
-                                    <p>{getArticuloInfo(articulos, data.caja, "puntuacion")}Ptos ({getArticuloInfo(articulos, data.caja, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.caja, "precio")}€</strong></p>
+                                    <p className='font-semibold'>{getArticuloInfo(articulos, data.caja, "precio")}€</p>
                                 </div>
                             </div>
                         )}
@@ -842,7 +817,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                                 <h3 className="font-semibold text-xl">Ventilacion</h3>
                                 <div className="flex justify-between px-5">
                                     <p>{getArticuloInfo(articulos, data.ventilacion, "nombre")} <strong>x{ventiladorCount}</strong></p>
-                                    <p>{getArticuloInfo(articulos, data.ventilacion, "puntuacion") * ventiladorCount}Ptos ({getArticuloInfo(articulos, data.ventilacion, "puntuacionPrecio")}Ptos/€) <strong>{getArticuloInfo(articulos, data.ventilacion, "precio") * ventiladorCount}€</strong></p>
+                                    <p className='font-semibold'>{getArticuloInfo(articulos, data.ventilacion, "precio")}€</p>
                                 </div>
                             </div>
                         )}
