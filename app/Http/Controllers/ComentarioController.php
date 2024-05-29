@@ -10,16 +10,33 @@ use App\Models\Pc;
 
 class ComentarioController extends Controller
 {
-    public function getComentarios()
-    {
-        $Comentarios = Comentario::with('user')->orderBy('created_at', 'desc')->paginate(10);
-        return response()->json($Comentarios);
+    public function getComentarios(Request $request)
+{
+    $query = Comentario::with(['user', 'comentable'])->whereHasMorph('comentable', [Articulo::class]);
+
+    if ($request->filled('search')) {
+        $search = $request->input('search');
+        $query->where(function($q) use ($search) {
+            $q->where('contenido', 'LIKE', "%{$search}%")
+              ->orWhereHas('user', function($q) use ($search) {
+                  $q->where('name', 'LIKE', "%{$search}%");
+              })
+              ->orWhereHasMorph('comentable', [Articulo::class], function($q) use ($search) {
+                  $q->where('nombre', 'LIKE', "%{$search}%");
+              });
+        });
     }
-    public function getComentariosWhere(Request $request)
-    {
-        $Comentarios = Comentario::with('user')->where("comentable_type", 'App\\Models\\' . $request->type)->where('comentable_id', $request->id)->orderBy('created_at', 'desc')->paginate(10);
-        return response()->json($Comentarios);
+
+    if ($request->filled('stars')) {
+        $stars = $request->input('stars');
+        $query->where('estrellas', $stars);
     }
+
+    $comentarios = $query->orderBy('created_at', 'desc')->paginate(10);
+
+    return response()->json($comentarios);
+}
+
 
     /**
      * Display a listing of the resource.

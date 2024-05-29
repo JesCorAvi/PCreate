@@ -11,11 +11,26 @@ use Illuminate\Support\Facades\Storage;
 
 class MarcaController extends Controller
 {
-    public function getMarcas()
+    public function getMarcas(Request $request)
     {
-        $marcas = Marca::paginate(10);
+        $query = Marca::withTrashed()->orderBy('nombre', 'asc');
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where('nombre', 'ilike', "%{$search}%");
+        }
+
+        $marcas = $query->paginate(10);
+
         return response()->json($marcas);
     }
+    public function getAllMarcas()
+    {
+        $marcas = Marca::withTrashed()->orderBy('nombre', 'asc')->get();
+
+        return response()->json($marcas);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -81,7 +96,7 @@ class MarcaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function darDeBaja(Request $request)
     {
         $marca = Marca::find($request->id);
         if ($marca) {
@@ -91,8 +106,21 @@ class MarcaController extends Controller
                 }
                 $articulo->delete();
             }
-
             $marca->delete();
+        }
+    }
+
+    public function darDeAlta(Request $request)
+    {
+        $marca = Marca::withTrashed()->find($request->id);
+        if ($marca) {
+            $marca->restore();
+            foreach ($marca->articulos()->withTrashed()->get() as $articulo) {
+                $articulo->restore();
+                foreach ($articulo->fotos()->withTrashed()->get() as $foto) {
+                    $foto->restore();
+                }
+            }
         }
     }
 }

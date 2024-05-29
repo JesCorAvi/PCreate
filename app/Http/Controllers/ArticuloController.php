@@ -25,15 +25,45 @@ use Illuminate\Support\Facades\Gate;
 class ArticuloController extends Controller
 {
 
-    public function getArticulos()
+    public function getArticulos(Request $request)
     {
-        $articulos = Articulo::with('categoria')->with("marca")->paginate(10);
+        $query = Articulo::withTrashed()->with([
+            'categoria' => function ($query) {
+                $query->withTrashed();
+            },
+            'marca' => function ($query) {
+                $query->withTrashed();
+            }
+        ])->orderBy('nombre', 'asc');
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where('nombre', 'ilike', "%{$search}%");
+        }
+
+        if ($request->has('categoria') && !empty($request->categoria)) {
+            $query->where('categoria_id', $request->categoria);
+        }
+
+        if ($request->has('marca') && !empty($request->marca)) {
+            $query->where('marca_id', $request->marca);
+        }
+
+        $articulos = $query->paginate(10);
+
         return response()->json($articulos);
     }
 
 
+
     public function Tienda(Request $request)
     {
+        request()->validate([
+            'categoria' => 'nullable|string',
+            'marca' => 'nullable|string',
+            'precioMinimo' => 'nullable|numeric',
+            'precioMaximo' => 'nullable|numeric',
+            'palabras' => 'nullable|string',
+        ]);
         $categorias = $request->input('categoria');
         $marcas = $request->input('marca');
         $precioMinimo = $request->input('precioMinimo');
@@ -586,25 +616,23 @@ class ArticuloController extends Controller
             return redirect()->back()->with('error', 'Error al crear el articulo.');
         }
     }
-
-
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function darDeBaja(Request $request)
     {
-        $articulo = Articulo::find($id);
-
-        //foreach ($articulo->fotos()->get() as $foto) {
-        //    Storage::delete("public/uploads/articulos/" . $foto->imagen);
-        //}
-
-        $articulo->fotos()->delete();
-
+        $articulo = Articulo::find($request->id);
         $articulo->delete();
-
-        return redirect()->route('profile.show');
+        $articulo->fotos()->delete();
     }
+
+    public function darDeAlta(Request $request)
+    {
+        $articulo = Articulo::withTrashed()->find($request->id);
+        $articulo->restore();
+        $articulo->fotos()->restore();
+    }
+
 }
 
 function subirImagen($image, $ruta)

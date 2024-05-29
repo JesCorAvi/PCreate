@@ -108,17 +108,31 @@ class ProfileController extends Controller
 
     public function destroyId(Request $request)
     {
-
         $user = User::find($request->id);
         $users = User::all();
         $user->delete();
         return response()->json($users);
-
-
     }
 
-    public function getUsers(){
-        $users = User::paginate(10);
+    public function activarId(Request $request)
+    {
+        $user = User::withTrashed()->find($request->id);
+        $users = User::all();
+        $user->restore();
+        return response()->json($users);
+    }
+
+    public function getUsers(Request $request)
+    {
+        $search = $request->input('search');
+        $query = User::withTrashed()->orderBy('role', 'asc')->orderBy('email', 'asc');
+
+        if ($search) {
+            $query->where('name', 'ILIKE', "%{$search}%")
+                  ->orWhere('email', 'ILIKE', "%{$search}%");
+        }
+
+        $users = $query->paginate(10);
         return response()->json($users);
     }
 }

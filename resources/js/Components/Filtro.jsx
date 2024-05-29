@@ -29,13 +29,29 @@ export default function Filtro({ categorias, marcas, filtrar }) {
         getQueryParam("precioMaximo") || ""
     );
     const [plegado, setPlegado] = useState(true);
+    const [error, setError] = useState("");
 
     const togglePlegado = () => {
         setPlegado(!plegado);
     };
 
+    const validatePrices = () => {
+        if (precioMinimo && precioMaximo && parseFloat(precioMinimo) > parseFloat(precioMaximo)) {
+            setError("El precio mínimo debe ser menor o igual al precio máximo.");
+        } else {
+            setError("");
+        }
+    };
+
+    useEffect(() => {
+        validatePrices();
+    }, [precioMinimo, precioMaximo]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (error) {
+            return;
+        }
         filtrar(categoriasSeleccionadas.join(","), marcasSeleccionadas.join(","), precioMinimo, precioMaximo);
     };
 
@@ -44,6 +60,7 @@ export default function Filtro({ categorias, marcas, filtrar }) {
         setMarcasSeleccionadas([]);
         setPrecioMinimo("");
         setPrecioMaximo("");
+        setError("");
         window.history.pushState({}, "", window.location.pathname);
         filtrar("", "", "", "");
     };
@@ -112,6 +129,7 @@ export default function Filtro({ categorias, marcas, filtrar }) {
                             placeholder="Max"
                         />
                     </div>
+                    {error && <p className="text-red-600">{error}</p>}
                     <h2 className="text-center lg:text-left font-bold text-2xl py-2">Marcas</h2>
                     <div className="my-3 max-h-52 lg:max-h-72 py-4 overflow-y-auto  dark:bg-gray-800">
                         <fieldset className="p-2">

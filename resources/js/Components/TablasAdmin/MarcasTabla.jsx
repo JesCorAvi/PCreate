@@ -6,7 +6,7 @@ import { Link } from '@inertiajs/react';
 import Modal from '../Modal';
 
 export default function MarcasTabla() {
-    const [Marcas, setMarcas] = useState([]);
+    const [marcas, setMarcas] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [creatingMarca, setCreatingMarca] = useState(false);
@@ -14,13 +14,14 @@ export default function MarcasTabla() {
     const [marcaIdToModify, setMarcaIdToModify] = useState(null);
     const [nombreNuevaMarca, setNombreNuevaMarca] = useState('');
     const [nombreMarcaModificar, setNombreMarcaModificar] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         getMarcas(currentPage);
     }, [currentPage]);
 
-    function getMarcas(page) {
-        axios.post(route('marca.getMarcas', { page: page }))
+    function getMarcas(page, query = '') {
+        axios.post(route('marca.getMarcas', { page: page, search: query }))
             .then((response) => {
                 setMarcas(response.data.data);
                 setTotalPages(response.data.last_page);
@@ -28,6 +29,11 @@ export default function MarcasTabla() {
             .catch((error) => {
                 console.error('Error al obtener Marcas:', error);
             });
+    }
+
+    function handleSearch() {
+        setCurrentPage(1);
+        getMarcas(1, searchQuery);
     }
 
     function openModifyModal(id, nombre) {
@@ -44,6 +50,7 @@ export default function MarcasTabla() {
 
     function changePage(page) {
         setCurrentPage(page);
+        getMarcas(page, searchQuery);
     }
 
     const pageNumbers = [];
@@ -51,18 +58,31 @@ export default function MarcasTabla() {
         pageNumbers.push(i);
     }
 
-    function delMarcas(id) {
-        axios.post(route('marca.destroy', {id:id }))
-            .then((response) => {
-                getMarcas();
+
+    function darDeBaja(id) {
+        axios.post(route('marca.destroy', { id: id }))
+            .then(() => {
+                getMarcas(currentPage, searchQuery);
+            })
+            .catch((error) => {
+                console.error('Error al eliminar marca:', error);
+            });
+    }
+    function darDeAlta(id) {
+        axios.post(route('marca.restore', { id: id }))
+            .then(() => {
+                getMarcas(currentPage, searchQuery);
+            })
+            .catch((error) => {
+                console.error('Error al restaurar marca:', error);
             });
     }
 
     function modifyMarca(e) {
         e.preventDefault();
         axios.post("/marca/update", { id: marcaIdToModify, nombre: nombreMarcaModificar })
-            .then((response) => {
-                getMarcas();
+            .then(() => {
+                getMarcas(currentPage, searchQuery);
                 closeModifyModal();
             })
             .catch((error) => {
@@ -72,9 +92,9 @@ export default function MarcasTabla() {
 
     function createMarca(e) {
         e.preventDefault();
-        axios.post("/marca/store",{nombre:nombreNuevaMarca})
-            .then((response) => {
-                getMarcas();
+        axios.post("/marca/store", { nombre: nombreNuevaMarca })
+            .then(() => {
+                getMarcas(currentPage, searchQuery);
                 setCreatingMarca(false);
                 setNombreNuevaMarca('');
             })
@@ -84,8 +104,30 @@ export default function MarcasTabla() {
     }
 
     return (
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <button className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold' onClick={() => setCreatingMarca(true)}> Crear Marca </button>
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-4 bg-white dark:bg-gray-800">
+            <div className="flex items-center mb-4 justify-between">
+                <button
+                    className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold'
+                    onClick={() => setCreatingMarca(true)}
+                >
+                    Crear Marca
+                </button>
+                <div className="flex items-center mb-4">
+                    <input
+                        type="text"
+                        placeholder="Buscar por nombre..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="border border-gray-300 rounded p-2 mr-2 w-full max-w-xs"
+                    />
+                    <button
+                        onClick={handleSearch}
+                        className="bg-blue-500 text-white rounded p-2 hover:bg-blue-700"
+                    >
+                        Buscar
+                    </button>
+                </div>
+            </div>
 
             <Modal show={creatingMarca} onClose={() => setCreatingMarca(false)}>
                 <form onSubmit={(e) => createMarca(e)} className="p-6">
@@ -100,7 +142,7 @@ export default function MarcasTabla() {
                     />
                     <div className="mt-4 flex justify-end">
                         <SecondaryButton onClick={() => setCreatingMarca(false)}>Cancelar</SecondaryButton>
-                        <button className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold' type="submit" >Crear Marca</button>
+                        <button className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold' type="submit">Crear Marca</button>
                     </div>
                 </form>
             </Modal>
@@ -129,27 +171,30 @@ export default function MarcasTabla() {
                         <th scope="col" className="px-6 py-3">
                             <p className="text-center">Nombre de la marca</p>
                         </th>
-
                         <th scope="col" className="px-6 py-3">
                             <p className="text-center">Acciones</p>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {Marcas.map((marca) => (
+                    {marcas.map((marca) => (
                         <tr key={marca.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                             <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <p className="text-center">{marca.nombre}</p>
                             </td>
                             <td className="px-6 py-4 flex gap-2 justify-center items-center">
                                 <SecondaryButton onClick={() => openModifyModal(marca.id, marca.nombre)}>Editar</SecondaryButton>
-                                <DangerButton text="Borrar" onClick={() => delMarcas(marca.id)}></DangerButton>
+                                {marca.deleted_at ? (
+                                        <SecondaryButton onClick={() => darDeAlta(marca.id)} >Dar de Alta</SecondaryButton>
+                                    ) : (
+                                        <DangerButton text="Dar de Baja" onClick={() => darDeBaja(marca.id)} />
+                                    )}
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <div className='flex justify-center  pt-10'>
+            <div className='flex justify-center pt-10'>
                 <button className='h-8 w-20 bg-black text-white rounded-l-lg' onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1}>Anterior</button>
                 {pageNumbers.map((pageNumber) => (
                     <button className={`border border-solid border-black h-8 w-8 ${pageNumber === currentPage ? 'bg-gray-700 text-white' : ''}`} key={pageNumber} onClick={() => changePage(pageNumber)} disabled={pageNumber === currentPage}>

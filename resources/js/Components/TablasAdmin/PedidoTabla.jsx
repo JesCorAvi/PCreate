@@ -15,13 +15,31 @@ export default function FacturaTabla() {
     const [fechaCreacion, setFechaCreacion] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isDateValid, setIsDateValid] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [dateFilterType, setDateFilterType] = useState('fecha_creacion');
 
     useEffect(() => {
         getFacturas(currentPage);
     }, [currentPage]);
 
-    function getFacturas(page) {
-        axios.post(route('factura.getFacturas', { page: page }))
+    function handleSearch() {
+        setCurrentPage(1);
+        getFacturas(1, searchQuery);
+    }
+
+    function handleClearFilters() {
+        setSearchQuery('');
+        setStartDate('');
+        setEndDate('');
+        setDateFilterType('fecha_creacion');
+        setCurrentPage(1);
+        getFacturas(1, '');
+    }
+
+    function getFacturas(page, query) {
+        axios.post(route('factura.getFacturas', { page: page, search: query, start_date: startDate, end_date: endDate, date_type: dateFilterType }))
             .then((response) => {
                 setFacturas(response.data.data);
                 setTotalPages(response.data.last_page);
@@ -94,6 +112,7 @@ export default function FacturaTabla() {
 
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+
             <Modal show={modifyingFactura} onClose={closeModifyModal}>
                 <form onSubmit={(e) => modifyFactura(e)} className="p-6">
                     <h2 className="text-lg font-medium text-gray-900">Modificar fecha de entrega</h2>
@@ -127,7 +146,47 @@ export default function FacturaTabla() {
                     </div>
                 </form>
             </Modal>
-
+            <div className="flex items-center mb-4">
+                <input
+                    type="text"
+                    placeholder="Buscar usuario..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="border border-gray-300 rounded p-2 mr-2 w-full max-w-xs"
+                />
+                <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="border border-gray-300 rounded p-2 mr-2"
+                />
+                <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="border border-gray-300 rounded p-2 mr-2"
+                />
+                <select
+                    value={dateFilterType}
+                    onChange={(e) => setDateFilterType(e.target.value)}
+                    className="border border-gray-300 rounded p-2 mr-2"
+                >
+                    <option value="fecha_creacion">Fecha de Creación</option>
+                    <option value="entrega_aproximada">Fecha de Entrega</option>
+                </select>
+                <button
+                    onClick={handleSearch}
+                    className="bg-blue-500 text-white rounded p-2 hover:bg-blue-700"
+                >
+                    Buscar
+                </button>
+                <button
+                    onClick={handleClearFilters}
+                    className="bg-gray-500 text-white rounded p-2 hover:bg-gray-700 ml-2"
+                >
+                    Limpiar Filtros
+                </button>
+            </div>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>

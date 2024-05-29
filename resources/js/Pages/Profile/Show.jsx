@@ -35,7 +35,9 @@ export default function Show({ auth, mustVerifyEmail, status, categorias, avatar
                 ></ShowUsuario>
             )
             : (
-                <AdminDashboard/>
+                <AdminDashboard
+                categorias={categorias}
+                />
             )
         }
             <Footer />
