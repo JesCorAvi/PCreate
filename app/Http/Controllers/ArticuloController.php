@@ -106,7 +106,6 @@ class ArticuloController extends Controller
             "categorias" => Categoria::all(),
             "marcas" => Marca::all(),
             "sockets" => Socket::all(),
-
         ]);
     }
 
@@ -582,7 +581,7 @@ class ArticuloController extends Controller
         }
 
         if ($articulo) {
-            return redirect()->route('profile.show')->with('success', 'Articulo editado exitosamente.');
+            return redirect("/perfil?tabla=Articulos")->with('success', 'Articulo editado exitosamente.');
         } else {
             return redirect()->back()->with('error', 'Error al crear el articulo.');
         }

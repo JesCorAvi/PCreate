@@ -5,7 +5,7 @@ import validation from '../../../validation.json';
 
 
 export default function FormularioGrafica({ marcas, articulo  }) {
-    const { data, setData, post, errors } = useForm({
+    const { data, setData, post, errors, setError, clearErrors } = useForm({
         id: articulo.id,
         marca_id: articulo.marca_id,
         nombre: articulo.nombre,
@@ -50,13 +50,23 @@ export default function FormularioGrafica({ marcas, articulo  }) {
         post(route('articulo.update', data))
     };
 
-    function validar(target)    {
+    function validar(target){
         if (target.validity.valid) {
             target.classList.remove('border-red-500');
+            clearErrors(target.name);
         } else {
             target.classList.add('border-red-500');
+            let errorMessage = '';
+            if (target.validity.valueMissing) {
+                errorMessage = 'Este campo es requerido';
+            } else if (target.validity.patternMismatch) {
+                errorMessage = 'Formato incorrecto';
+            } else if (target.validity.tooLong) {
+                errorMessage = `Máximo ${target.maxLength} caracteres`;
+            }
+            setError(target.name, errorMessage);
         }
-    }
+    };
 
 
     return (

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import validation from '../../../validation.json';
 
 export default function FormularioPlaca({ sockets, marcas }) {
-    const { data, setData, post, errors } = useForm({
+    const { data, setData, post, errors, setError, clearErrors } = useForm({
         socket_id: '',
         categoria_id: '1',
         marca_id: '',
@@ -37,21 +37,30 @@ export default function FormularioPlaca({ sockets, marcas }) {
         setData(key, file);
     };
 
-
     const submit = (e) => {
         e.preventDefault();
         post(route('articulo.store', data))
     };
-     function validar(target)    {
+
+    function validar(target){
         if (target.validity.valid) {
             target.classList.remove('border-red-500');
+            clearErrors(target.name);
         } else {
             target.classList.add('border-red-500');
+            let errorMessage = '';
+            if (target.validity.valueMissing) {
+                errorMessage = 'Este campo es requerido';
+            } else if (target.validity.patternMismatch) {
+                errorMessage = 'Formato incorrecto';
+            } else if (target.validity.tooLong) {
+                errorMessage = `Máximo ${target.maxLength} caracteres`;
+            }
+            setError(target.name, errorMessage);
         }
-    }
+    };
 
     return (
-
         <div name="placa base" className="min-h-screen">
             <form className="max-w-2xl mx-auto" onSubmit={submit}>
                 <div className="mb-5">
@@ -61,17 +70,15 @@ export default function FormularioPlaca({ sockets, marcas }) {
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         name="socket_id"
                         onChange={(e) => setData('socket_id', e.target.value)}
+                        onBlur={(e) => validar(e.target)}
                         required
                     >
-                        <option disabled  value=""> Seleccione un Socket</option>
+                        <option disabled value="">Seleccione un Socket</option>
                         {sockets.map((soc) => (
-                            <option
-                                key={soc.id}
-                                value={soc.id}>
-                                {soc.nombre}
-                            </option>
+                            <option key={soc.id} value={soc.id}>{soc.nombre}</option>
                         ))}
                     </select>
+                    {errors.socket_id && <p className="text-red-800 py-2">{errors.socket_id}</p>}
                 </div>
                 <div className="mb-5">
                     <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modelo</label>
@@ -82,13 +89,13 @@ export default function FormularioPlaca({ sockets, marcas }) {
                         type="text"
                         name="nombre"
                         id="nombre"
-
+                        required
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Introduzca el nombre del componente"
                         onChange={(e) => setData('nombre', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
-                    <p className="text-red-800 py-2">{errors.nombre && <div>{errors.nombre}</div>}</p>
+                    {errors.nombre && <p className="text-red-800 py-2">{errors.nombre}</p>}
                 </div>
                 <div className="mb-5">
                     <label htmlFor="descripcion" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción del producto</label>
@@ -103,7 +110,7 @@ export default function FormularioPlaca({ sockets, marcas }) {
                         onChange={(e) => setData('descripcion', e.target.value)}
                         onBlur={(e) => validar(e.target)}
                     />
-                    <p className="text-red-800 py-2">{errors.descripcion && <div>{errors.descripcion}</div>}</p>
+                    {errors.descripcion && <p className="text-red-800 py-2">{errors.descripcion}</p>}
                 </div>
                 <div className="flex">
                     <div className="flex-initial mr-2 mb-5 w-1/2">
@@ -120,8 +127,7 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             onChange={(e) => setData('precio', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
-                    <p className="text-red-800 py-2">{errors.precio && <div>{errors.precio}</div>}</p>
-
+                        {errors.precio && <p className="text-red-800 py-2">{errors.precio}</p>}
                     </div>
                     <div className="flex-initial mb-5 w-1/2">
                         <label htmlFor="marca" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la Marca del producto</label>
@@ -131,20 +137,15 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             id="marca"
                             required
                             onChange={(e) => setData('marca_id', e.target.value)}
+                            onBlur={(e) => validar(e.target)}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
-
-                            <option disabled  value=""> Seleccione una marca</option>
+                            <option disabled value="">Seleccione una marca</option>
                             {marcas.map((mar) => (
-                                <option
-                                    key={mar.id}
-                                    value={mar.id}>
-                                    {mar.nombre}
-                                </option>
+                                <option key={mar.id} value={mar.id}>{mar.nombre}</option>
                             ))}
                         </select>
-                        <p className="text-red-800 py-2">{errors.marca && <div>{errors.marca}</div>}</p>
-
+                        {errors.marca_id && <p className="text-red-800 py-2">{errors.marca_id}</p>}
                     </div>
                 </div>
                 <div className="flex">
@@ -154,15 +155,14 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             value={data.slotsm2}
                             type="number"
                             name="slotsm2"
-                            d="slotsm2"
+                            id="slotsm2"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Introduzca un valor numerico"
                             min="0" max="8" required
                             onChange={(e) => setData('slotsm2', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
-                        <p className="text-red-800 py-2">{errors.slotsm2 && <div>{errors.slotsm2}</div>}</p>
-
+                        {errors.slotsm2 && <p className="text-red-800 py-2">{errors.slotsm2}</p>}
                     </div>
                     <div className="flex-initial mr-2 mb-5 w-1/2">
                         <label htmlFor="slotsram" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Slots para RAM</label>
@@ -177,12 +177,10 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             onChange={(e) => setData('slotsram', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
-                        <p className="text-red-800 py-2">{errors.slotsram && <div>{errors.slotsram}</div>}</p>
+                        {errors.slotsram && <p className="text-red-800 py-2">{errors.slotsram}</p>}
                     </div>
-
                 </div>
                 <div className="flex">
-
                     <div className="flex-initial mb-5 w-1/2">
                         <label htmlFor="ddrmax" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Soporta hasta DDR</label>
                         <input
@@ -197,10 +195,10 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             onChange={(e) => setData('ddrmax', e.target.value)}
                             onBlur={(e) => validar(e.target)}
                         />
-                        <p className="text-red-800 py-2">{errors.ddrmax && <div>{errors.ddrmax}</div>}</p>
+                        {errors.ddrmax && <p className="text-red-800 py-2">{errors.ddrmax}</p>}
                     </div>
                     <div className="flex-initial mb-5 w-1/2">
-                        <label htmlFor="mhzmax" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Frecuencia max RAM(Mhz)</label>
+                        <label htmlFor="mhzmax" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Frecuencia max RAM (Mhz)</label>
                         <input
                             value={data.mhzmax}
                             type="number"
@@ -211,33 +209,29 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             min="0" max="10000"
                             required
                             onChange={(e) => setData('mhzmax', e.target.value)}
-
+                            onBlur={(e) => validar(e.target)}
                         />
-                        <p className="text-red-800 py-2">{errors.mhzmax && <div>{errors.mhzmax}</div>}</p>
-
+                        {errors.mhzmax && <p className="text-red-800 py-2">{errors.mhzmax}</p>}
                     </div>
-
                 </div>
                 <div className="flex">
-
                     <div className="flex-initial mb-5 w-full">
-                    <label htmlFor="clase" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Formato de placa</label>
+                        <label htmlFor="clase" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Formato de placa</label>
                         <select
                             required
                             value={data.clase}
                             name="clase"
                             id="clase" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             onChange={(e) => setData('clase', e.target.value)}
-                            >
-                            <option disabled  value="">Seleccione un tipo</option>
+                            onBlur={(e) => validar(e.target)}
+                        >
+                            <option disabled value="">Seleccione un tipo</option>
                             <option value="ATX">ATX</option>
                             <option value="Micro-ATX">Micro-ATX</option>
                         </select>
-
+                        {errors.clase && <p className="text-red-800 py-2">{errors.clase}</p>}
                     </div>
-
                 </div>
-
                 <div className="mb-5">
                     <div className="mb-5">
                         <div className="flex">
@@ -259,9 +253,9 @@ export default function FormularioPlaca({ sockets, marcas }) {
                             ))}
                         </div>
                         <div className="flex">
-                            <p className="text-red-800 py-2">{errors.imagenpr && <div>{errors.imagenpr}</div>}</p>
-                            <p className="text-red-800 py-2">{errors.imagensec1 && <div>{errors.imagensec1}</div>}</p>
-                            <p className="text-red-800 py-2">{errors.imagensec2 && <div>{errors.imagensec2}</div>}</p>
+                            {errors.imagenpr && <p className="text-red-800 py-2">{errors.imagenpr}</p>}
+                            {errors.imagensec1 && <p className="text-red-800 py-2">{errors.imagensec1}</p>}
+                            {errors.imagensec2 && <p className="text-red-800 py-2">{errors.imagensec2}</p>}
                         </div>
                     </div>
                 </div>
