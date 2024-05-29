@@ -11,11 +11,20 @@ use Illuminate\Support\Facades\Storage;
 
 class MarcaController extends Controller
 {
-    public function getMarcas()
+    public function getMarcas(Request $request)
     {
-        $marcas = Marca::paginate(10);
+        $query = Marca::query();
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where('nombre', 'like', "%{$search}%");
+        }
+
+        $marcas = $query->paginate(10);
+
         return response()->json($marcas);
     }
+
     /**
      * Display a listing of the resource.
      */

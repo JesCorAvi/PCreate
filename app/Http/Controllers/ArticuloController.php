@@ -25,9 +25,25 @@ use Illuminate\Support\Facades\Gate;
 class ArticuloController extends Controller
 {
 
-    public function getArticulos()
+    public function getArticulos(Request $request)
     {
-        $articulos = Articulo::with('categoria')->with("marca")->paginate(10);
+        $query = Articulo::with('categoria', 'marca');
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nombre', 'like', "%{$search}%")
+                  ->orWhereHas('categoria', function($q) use ($search) {
+                      $q->where('nombre', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('marca', function($q) use ($search) {
+                      $q->where('nombre', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $articulos = $query->paginate(10);
+
         return response()->json($articulos);
     }
 

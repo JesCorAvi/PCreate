@@ -11,10 +11,16 @@ use Inertia\Inertia;
 
 class SocketController extends Controller
 {
-
-    public function getSockets()
+    public function getSockets(Request $request)
     {
-        $sockets = Socket::paginate(10);
+        $search = $request->input('search');
+        $query = Socket::query();
+
+        if ($search) {
+            $query->where('nombre', 'LIKE', "%{$search}%");
+        }
+
+        $sockets = $query->paginate(10);
         return response()->json($sockets);
     }
     /**

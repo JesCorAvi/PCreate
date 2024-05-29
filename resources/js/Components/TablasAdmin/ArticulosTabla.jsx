@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import DangerButton from '../DangerButton';
-import SecondaryButton from '../SecondaryButton';
 import { Link } from '@inertiajs/react';
 
 export default function ArticulosTabla() {
     const [articulos, setArticulos] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         getArticulos(currentPage);
     }, [currentPage]); // Se vuelve a cargar cuando cambia la página actual
-    function getArticulos(page) {
-        axios.post(route('articulo.getArticulos', { page: page }))
+
+    function getArticulos(page, query = '') {
+        axios.post(route('articulo.getArticulos', { page: page, search: query }))
             .then((response) => {
                 setArticulos(response.data.data);
                 setTotalPages(response.data.last_page);
@@ -23,8 +24,14 @@ export default function ArticulosTabla() {
             });
     }
 
+    function handleSearch() {
+        setCurrentPage(1);
+        getArticulos(1, searchQuery);
+    }
+
     function changePage(page) {
         setCurrentPage(page);
+        getArticulos(page, searchQuery);
     }
 
     const pageNumbers = [];
@@ -35,23 +42,48 @@ export default function ArticulosTabla() {
     function delArticulos(id) {
         axios.post(route('articulo.destroy', { id: id }))
             .then((response) => {
-                getArticulos()
+                getArticulos(currentPage, searchQuery);
+            })
+            .catch((error) => {
+                console.error('Error al eliminar artículo:', error);
             });
     }
 
-
     return (
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <Link className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold'
-            href={route('articulo.create')} method="get" as="button"> Crear artículo </Link>
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-4 bg-white dark:bg-gray-800">
+            <div className="flex items-center mb-4 justify-between">
+                <Link
+                    className='bg-blue-900 text-white rounded-md px-4 py-2 mx-6 font-semibold'
+                    href={route('articulo.create')}
+                    method="get"
+                    as="button"
+                >
+                    Crear artículo
+                </Link>
+                <div className="flex items-center mb-4">
+                    <input
+                        type="text"
+                        placeholder="Buscar por nombre, categoría, marca..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="border border-gray-300 rounded p-2 mr-2 w-full max-w-xs"
+                    />
+                    <button
+                        onClick={handleSearch}
+                        className="bg-blue-500 text-white rounded p-2 hover:bg-blue-700"
+                    >
+                        Buscar
+                    </button>
+                </div>
+            </div>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" className="px-6 py-3">
-                            Nombre del aritculo
+                            Nombre del artículo
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Categoria
+                            Categoría
                         </th>
                         <th scope="col" className="px-6 py-3">
                             Marca
@@ -74,14 +106,21 @@ export default function ArticulosTabla() {
                                 {articulo.marca.nombre}
                             </td>
                             <td className="px-6 py-4 flex gap-2">
-                                <Link className='inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150' href={route('articulo.edit', articulo.id)} method="get" as="button"> Editar </Link>
-                                <DangerButton text="Borrar" onClick={() => delArticulos(articulo.id)}></DangerButton>
+                                <Link
+                                    className='inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150'
+                                    href={route('articulo.edit', articulo.id)}
+                                    method="get"
+                                    as="button"
+                                >
+                                    Editar
+                                </Link>
+                                <DangerButton text="Borrar" onClick={() => delArticulos(articulo.id)} />
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <div className='flex justify-center  pt-10'>
+            <div className='flex justify-center pt-10'>
                 <button className='h-8 w-20 bg-black text-white rounded-l-lg' onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1}>Anterior</button>
                 {pageNumbers.map((pageNumber) => (
                     <button className={`border border-solid border-black h-8 w-8 ${pageNumber === currentPage ? 'bg-gray-700 text-white' : ''}`} key={pageNumber} onClick={() => changePage(pageNumber)} disabled={pageNumber === currentPage}>

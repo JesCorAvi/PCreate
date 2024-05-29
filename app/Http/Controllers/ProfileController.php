@@ -117,8 +117,17 @@ class ProfileController extends Controller
 
     }
 
-    public function getUsers(){
-        $users = User::paginate(10);
+    public function getUsers(Request $request)
+    {
+        $search = $request->input('search');
+        $query = User::query();
+
+        if ($search) {
+            $query->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('email', 'LIKE', "%{$search}%");
+        }
+
+        $users = $query->paginate(10);
         return response()->json($users);
     }
 }

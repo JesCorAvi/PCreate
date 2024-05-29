@@ -7,12 +7,14 @@ export default function UsuariosTabla() {
     const [usuarios, setUsuarios] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
-        getUsuarios(currentPage);
+        getUsuarios(currentPage, searchQuery);
     }, [currentPage]); // Se vuelve a cargar cuando cambia la página actual
-    function getUsuarios(page) {
-        axios.post(route('usuario.getUsuarios', { page: page }))
+
+    function getUsuarios(page, query) {
+        axios.post(route('profile.getUsers', { page: page, search: query }))
             .then((response) => {
                 setUsuarios(response.data.data);
                 setTotalPages(response.data.last_page);
@@ -20,6 +22,11 @@ export default function UsuariosTabla() {
             .catch((error) => {
                 console.error('Error al obtener usuarios:', error);
             });
+    }
+
+    function handleSearch() {
+        setCurrentPage(1);
+        getUsuarios(1, searchQuery);
     }
 
     function changePage(page) {
@@ -30,24 +37,31 @@ export default function UsuariosTabla() {
     for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
     }
-    function getUsuarios() {
-        axios.post(route("profile.getUsers"))
-            .then((response) => {
-                setUsuarios(response.data.data);
-            })
-            .catch((error) => {
-                console.error('Error al obtener usuarios:', error);
-            });
-    }
 
     function delUsuarios(id) {
         axios.post(route('profile.destroyId', {id: id}))
             .then((response) => {
-                getUsuarios() });
+                getUsuarios(currentPage, searchQuery);
+            });
     }
 
     return (
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-4 bg-white dark:bg-gray-800">
+            <div className="flex items-center mb-4">
+                <input
+                    type="text"
+                    placeholder="Buscar usuario..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="border border-gray-300 rounded p-2 mr-2 w-full max-w-xs"
+                />
+                <button
+                    onClick={handleSearch}
+                    className="bg-blue-500 text-white rounded p-2 hover:bg-blue-700"
+                >
+                    Buscar
+                </button>
+            </div>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
