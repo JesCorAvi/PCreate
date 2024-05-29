@@ -14,10 +14,10 @@ class SocketController extends Controller
     public function getSockets(Request $request)
     {
         $search = $request->input('search');
-        $query = Socket::query();
+        $query = Socket::withTrashed()->orderBy('nombre', 'asc');
 
         if ($search) {
-            $query->where('nombre', 'LIKE', "%{$search}%");
+            $query->where('nombre', 'ILIKE', "%{$search}%");
         }
 
         $sockets = $query->paginate(10);
@@ -127,10 +127,15 @@ class SocketController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function darDeBaja(Request $request)
     {
-        $socket = Socket::find($request->id);
+        $socket = Socket::withTrashed()->find($request->id);
         $socket->delete();
-        return redirect()->back()->with('success', 'Socket eliminado exitosamente.');
+
+    }
+    public function darDeAlta(Request $request)
+    {
+        $socket = Socket::withTrashed()->find($request->id);
+        $socket->restore();
     }
 }

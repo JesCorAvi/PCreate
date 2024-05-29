@@ -14,8 +14,13 @@ use Illuminate\Http\Request;
 
 class FacturaController extends Controller
 {
-    public function getFacturas()
+    public function getFacturas(Request $request)
     {
+        $search = $request->input('search');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $dateType = $request->input('date_type', 'fecha_creacion');
+
         $facturas = Factura::with([
             'user' => function ($query) {
                 $query->withTrashed();
@@ -26,9 +31,26 @@ class FacturaController extends Controller
             'domicilio' => function ($query) {
                 $query->withTrashed()->with(['provincia']);
             }
-        ])->paginate(10);
+        ])
+        ->when($search, function ($query) use ($search) {
+            $query->whereHas('user', function ($query) use ($search) {
+                $query->where('name', 'ILIKE', "%{$search}%");
+            })
+            ->orWhereHas('articulos', function ($query) use ($search) {
+                $query->where('nombre', 'ILIKE', "%{$search}%");
+            })
+            ->orWhereHas('domicilio', function ($query) use ($search) {
+                $query->where('direccion', 'ILIKE', "%{$search}%");
+            });
+        })
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate, $dateType) {
+            $query->whereBetween($dateType, [$startDate, $endDate]);
+        })
+        ->paginate(10);
+
         return response()->json($facturas);
     }
+
     /**
      * Display a listing of the resource.
      */

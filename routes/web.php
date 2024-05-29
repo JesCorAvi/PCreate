@@ -53,7 +53,8 @@ Route::put('/perfil/update', [DomicilioController::class, 'update'])->name('domi
 Route::post('/perfil/destroy', [DomicilioController::class, 'destroy'])->name('domicilio.destroy');
 Route::post('/perfil/set-favorito', [DomicilioController::class, 'setFavorito'])->name('domicilio.setFavorito');
 Route::post('/perfil/getUsers', [ProfileController::class, 'getUsers'])->name('profile.getUsers')->middleware('auth');
-Route::post('/perfil/delUsers', [ProfileController::class, 'destroyId'])->name('profile.destroyId')->middleware('auth');
+Route::post('/perfil/delUsers/{id}', [ProfileController::class, 'destroyId'])->name('profile.destroyId')->middleware('auth');
+Route::post('/perfil/activarId/{id}', [ProfileController::class, 'activarId'])->name('profile.activarId')->middleware('auth');
 
 // Rutas relacionadas con artículos
 Route::get('/tienda', [ArticuloController::class, 'Tienda'])->name('articulo.index');
@@ -63,14 +64,16 @@ Route::get('/socket/crear', [SocketController::class, 'create'])->name('socket.c
 Route::post('/socket/creado', [SocketController::class, 'store'])->name('socket.store')->middleware('auth');
 Route::get('/socket/editar/{id}', [SocketController::class, 'edit'])->name('socket.edit')->middleware('auth');
 Route::post('/socket/editado/{id}', [SocketController::class, 'update'])->name('socket.update')->middleware('auth');
-Route::post('/socket/destruir/{id}', [SocketController::class, 'destroy'])->name('socket.destroy')->middleware('auth');
+Route::post('/socket/destruir/{id}', [SocketController::class, 'darDeBaja'])->name('socket.destroy')->middleware('auth');
+Route::post('/socket/restaurar/{id}', [SocketController::class, 'darDeALta'])->name('socket.restore')->middleware('auth');
 Route::post('/socket/getSockets', [SocketController::class, 'getSockets'])->name('socket.getSockets')->middleware('auth');
 
 Route::post('/tienda/creado', [ArticuloController::class, 'store'])->name('articulo.store')->middleware('auth');
 Route::get('/tienda/{id}', [ArticuloController::class, 'show'])->name('articulos.show');
-Route::get('/tienda/editar/{id}', [ArticuloController::class, 'edit'])->name('articulo.edit');
-Route::post('/tienda/editado/{id}', [ArticuloController::class, 'update'])->name('articulo.update');
-Route::post('/tienda/destruir/{id}', [ArticuloController::class, 'destroy'])->name('articulo.destroy');
+Route::get('/tienda/editar/{id}', [ArticuloController::class, 'edit'])->name('articulo.edit')->middleware('auth');
+Route::post('/tienda/editado/{id}', [ArticuloController::class, 'update'])->name('articulo.update')->middleware('auth');
+Route::post('/tienda/destruir/{id}', [ArticuloController::class, 'darDeBaja'])->name('articulo.destroy')->middleware('auth');
+Route::post('/tienda/restaurar/{id}', [ArticuloController::class, 'darDeAlta'])->name('articulo.restore')->middleware('auth');
 Route::post('/articulos/getArticulos', [ArticuloController::class, 'getArticulos'])->name('articulo.getArticulos')->middleware('auth');
 
 // Rutas relacionadas con la configuración de PC
@@ -89,10 +92,12 @@ Route::get('/carritoActualizar', [CarritoController::class, 'articulos'])->name(
 
 // Rutas relacionadas con marcas
 Route::post('/marcas/getMarca', [MarcaController::class, 'getMarcas'])->name('marca.getMarcas')->middleware('auth');
+Route::get('/marcas/all', [MarcaController::class, 'getAllMarcas'])->name('marca.getAllMarcas');
+
 Route::post('/marca/store', [MarcaController::class, 'store'])->name('marca.store')->middleware('auth');
 Route::post('/marca/update', [MarcaController::class, 'update'])->name('marca.update')->middleware('auth');
-Route::post('/marca/destroy', [MarcaController::class, 'destroy'])->name('marca.destroy')->middleware('auth');
-
+Route::post('/marca/destruir/{id}', [MarcaController::class, 'darDeBaja'])->name('marca.destroy')->middleware('auth');
+Route::post('/marca/restaurar/{id}', [MarcaController::class, 'darDeALta'])->name('marca.restore')->middleware('auth');
 // Rutas relacionadas con facturas
 Route::post('/facturas/getMarcas', [FacturaController::class, 'getFacturas'])->name('factura.getFacturas')->middleware('auth');
 Route::post('/factura/update', [FacturaController::class, 'update'])->name('factura.update')->middleware('auth');

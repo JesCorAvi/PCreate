@@ -38,11 +38,17 @@ export default function UsuariosTabla() {
         pageNumbers.push(i);
     }
 
-    function delUsuarios(id) {
+    function darDeBaja(id) {
         axios.post(route('profile.destroyId', {id: id}))
             .then((response) => {
                 getUsuarios(currentPage, searchQuery);
-            });
+        });
+    }
+    function darDeAlta(id) {
+        axios.post(route('profile.activarId', {id: id}))
+            .then((response) => {
+                getUsuarios(currentPage, searchQuery);
+        });
     }
 
     return (
@@ -92,7 +98,13 @@ export default function UsuariosTabla() {
                                 {usuario.role}
                             </td>
                             <td className="px-6 py-4 flex gap-2">
-                                {usuario.id !== 1 && <DangerButton text="Borrar" onClick={() => delUsuarios(usuario.id)}></DangerButton>}
+                                {usuario.id !== 1 &&
+                                    (usuario.deleted_at ? (
+                                        <SecondaryButton onClick={() => darDeAlta(usuario.id)} >Dar de Alta</SecondaryButton>
+                                    ) : (
+                                        <DangerButton text="Dar de Baja" onClick={() => darDeBaja(usuario.id)} />
+                                    ))
+                                }
                             </td>
                         </tr>
                     ))}

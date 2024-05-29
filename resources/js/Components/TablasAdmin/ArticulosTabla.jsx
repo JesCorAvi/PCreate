@@ -2,19 +2,24 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import DangerButton from '../DangerButton';
 import { Link } from '@inertiajs/react';
+import SecondaryButton from '../SecondaryButton';
 
-export default function ArticulosTabla() {
+export default function ArticulosTabla({categorias}) {
     const [articulos, setArticulos] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
+    const [marcas, setMarcas] = useState([]);
+    const [selectedCategoria, setSelectedCategoria] = useState('');
+    const [selectedMarca, setSelectedMarca] = useState('');
 
     useEffect(() => {
         getArticulos(currentPage);
-    }, [currentPage]); // Se vuelve a cargar cuando cambia la página actual
+        getMarcas();
+    }, [currentPage]);
 
-    function getArticulos(page, query = '') {
-        axios.post(route('articulo.getArticulos', { page: page, search: query }))
+    function getArticulos(page, query = '', categoria = '', marca = '') {
+        axios.post(route('articulo.getArticulos', { page, search: query, categoria, marca }))
             .then((response) => {
                 setArticulos(response.data.data);
                 setTotalPages(response.data.last_page);
@@ -24,14 +29,34 @@ export default function ArticulosTabla() {
             });
     }
 
+
+    function getMarcas() {
+        axios.get(route('marca.getAllMarcas'))
+            .then((response) => {
+                console.log(response.data);
+                setMarcas(response.data);
+            })
+            .catch((error) => {
+                console.error('Error al obtener marcas:', error);
+            });
+    }
+
     function handleSearch() {
         setCurrentPage(1);
-        getArticulos(1, searchQuery);
+        getArticulos(1, searchQuery, selectedCategoria, selectedMarca);
+    }
+
+    function handleClearFilters() {
+        setSearchQuery('');
+        setSelectedCategoria('');
+        setSelectedMarca('');
+        setCurrentPage(1);
+        getArticulos(1);
     }
 
     function changePage(page) {
         setCurrentPage(page);
-        getArticulos(page, searchQuery);
+        getArticulos(page, searchQuery, selectedCategoria, selectedMarca);
     }
 
     const pageNumbers = [];
@@ -39,13 +64,23 @@ export default function ArticulosTabla() {
         pageNumbers.push(i);
     }
 
-    function delArticulos(id) {
+    function darDeBaja(id) {
         axios.post(route('articulo.destroy', { id: id }))
-            .then((response) => {
-                getArticulos(currentPage, searchQuery);
+            .then(() => {
+                getArticulos(currentPage, searchQuery, selectedCategoria, selectedMarca);
             })
             .catch((error) => {
-                console.error('Error al eliminar artículo:', error);
+                console.error('Error al eliminar articulo:', error);
+            });
+    }
+
+    function darDeAlta(id) {
+        axios.post(route('articulo.restore', { id: id }))
+            .then(() => {
+                getArticulos(currentPage, searchQuery, selectedCategoria, selectedMarca);
+            })
+            .catch((error) => {
+                console.error('Error al restaurar articulo:', error);
             });
     }
 
@@ -63,16 +98,46 @@ export default function ArticulosTabla() {
                 <div className="flex items-center mb-4">
                     <input
                         type="text"
-                        placeholder="Buscar por nombre, categoría, marca..."
+                        placeholder="Buscar por nombre..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="border border-gray-300 rounded p-2 mr-2 w-full max-w-xs"
                     />
+                    <select
+                        value={selectedCategoria}
+                        onChange={(e) => setSelectedCategoria(e.target.value)}
+                        className="border border-gray-300 rounded p-2 mr-2"
+                    >
+                        <option value="">Todas las categorías</option>
+                        {categorias.map(categoria => (
+                            <option key={categoria.id} value={categoria.id}>
+                                {categoria.nombre}
+                            </option>
+                        ))}
+                    </select>
+                    <select
+                        value={selectedMarca}
+                        onChange={(e) => setSelectedMarca(e.target.value)}
+                        className="border border-gray-300 rounded p-2 mr-2"
+                    >
+                        <option value="">Todas las marcas</option>
+                        {marcas.map(marca => (
+                            <option key={marca.id} value={marca.id}>
+                                {marca.nombre}
+                            </option>
+                        ))}
+                    </select>
                     <button
                         onClick={handleSearch}
                         className="bg-blue-500 text-white rounded p-2 hover:bg-blue-700"
                     >
                         Buscar
+                    </button>
+                    <button
+                        onClick={handleClearFilters}
+                        className="bg-gray-500 text-white rounded p-2 hover:bg-gray-700 ml-2"
+                    >
+                        Limpiar filtros
                     </button>
                 </div>
             </div>
@@ -114,7 +179,11 @@ export default function ArticulosTabla() {
                                 >
                                     Editar
                                 </Link>
-                                <DangerButton text="Borrar" onClick={() => delArticulos(articulo.id)} />
+                                {articulo.deleted_at ? (
+                                    <SecondaryButton onClick={() => darDeAlta(articulo.id)}>Dar de Alta</SecondaryButton>
+                                ) : (
+                                    <DangerButton text="Dar de Baja" onClick={() => darDeBaja(articulo.id)} />
+                                )}
                             </td>
                         </tr>
                     ))}

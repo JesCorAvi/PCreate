@@ -58,13 +58,23 @@ export default function MarcasTabla() {
         pageNumbers.push(i);
     }
 
-    function delMarcas(id) {
+
+    function darDeBaja(id) {
         axios.post(route('marca.destroy', { id: id }))
             .then(() => {
                 getMarcas(currentPage, searchQuery);
             })
             .catch((error) => {
-                console.error('Error al eliminar la marca:', error);
+                console.error('Error al eliminar marca:', error);
+            });
+    }
+    function darDeAlta(id) {
+        axios.post(route('marca.restore', { id: id }))
+            .then(() => {
+                getMarcas(currentPage, searchQuery);
+            })
+            .catch((error) => {
+                console.error('Error al restaurar marca:', error);
             });
     }
 
@@ -174,7 +184,11 @@ export default function MarcasTabla() {
                             </td>
                             <td className="px-6 py-4 flex gap-2 justify-center items-center">
                                 <SecondaryButton onClick={() => openModifyModal(marca.id, marca.nombre)}>Editar</SecondaryButton>
-                                <DangerButton text="Borrar" onClick={() => delMarcas(marca.id)}></DangerButton>
+                                {marca.deleted_at ? (
+                                        <SecondaryButton onClick={() => darDeAlta(marca.id)} >Dar de Alta</SecondaryButton>
+                                    ) : (
+                                        <DangerButton text="Dar de Baja" onClick={() => darDeBaja(marca.id)} />
+                                    )}
                             </td>
                         </tr>
                     ))}

@@ -39,13 +39,22 @@ export default function ArticulosTabla() {
         pageNumbers.push(i);
     }
 
-    function delSockets(id) {
+    function darDeBaja(id) {
         axios.post(route('socket.destroy', { id: id }))
             .then(() => {
                 getSockets(currentPage, searchQuery);
             })
             .catch((error) => {
                 console.error('Error al eliminar socket:', error);
+            });
+    }
+    function darDeAlta(id) {
+        axios.post(route('socket.restore', { id: id }))
+            .then(() => {
+                getSockets(currentPage, searchQuery);
+            })
+            .catch((error) => {
+                console.error('Error al restaurar socket:', error);
             });
     }
 
@@ -106,7 +115,11 @@ export default function ArticulosTabla() {
                                 >
                                     Editar
                                 </Link>
-                                <DangerButton text="Borrar" onClick={() => delSockets(socket.id)} />
+                                    {socket.deleted_at ? (
+                                        <SecondaryButton onClick={() => darDeAlta(socket.id)} >Dar de Alta</SecondaryButton>
+                                    ) : (
+                                        <DangerButton text="Dar de Baja" onClick={() => darDeBaja(socket.id)} />
+                                    )}
                             </td>
                         </tr>
                     ))}

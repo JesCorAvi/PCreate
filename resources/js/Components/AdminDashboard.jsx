@@ -7,7 +7,7 @@ import PedidoTabla from './TablasAdmin/PedidoTabla';
 import ComentarioTabla from './TablasAdmin/ComentarioTabla';
 import SocketsTabla from './TablasAdmin/SocketsTabla';
 
-export default function AdminDashboard({ }) {
+export default function AdminDashboard({ categorias }) {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const tablaFromURL = params.get('tabla');
@@ -51,7 +51,7 @@ export default function AdminDashboard({ }) {
                 </button>
             </div>
             {tablaActual === 'Usuarios' && < UsuariosTabla/>}
-            {tablaActual === 'Articulos' && < ArticulosTabla/>}
+            {tablaActual === 'Articulos' && < ArticulosTabla categorias={categorias} />}
             {tablaActual === 'Sockets' && < SocketsTabla/>}
             {tablaActual === 'Marcas' && < MarcasTabla/>}
             {tablaActual === 'Pedidos' && < PedidoTabla/>}
