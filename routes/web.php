@@ -58,6 +58,14 @@ Route::post('/perfil/delUsers', [ProfileController::class, 'destroyId'])->name('
 // Rutas relacionadas con artículos
 Route::get('/tienda', [ArticuloController::class, 'Tienda'])->name('articulo.index');
 Route::get('/tienda/crear', [ArticuloController::class, 'create'])->name('articulo.create')->middleware('auth');
+
+Route::get('/socket/crear', [SocketController::class, 'create'])->name('socket.create')->middleware('auth');
+Route::post('/socket/creado', [SocketController::class, 'store'])->name('socket.store')->middleware('auth');
+Route::get('/socket/editar/{id}', [SocketController::class, 'edit'])->name('socket.edit')->middleware('auth');
+Route::post('/socket/editado/{id}', [SocketController::class, 'update'])->name('socket.update')->middleware('auth');
+Route::post('/socket/destruir/{id}', [SocketController::class, 'destroy'])->name('socket.destroy')->middleware('auth');
+Route::post('/socket/getSockets', [SocketController::class, 'getSockets'])->name('socket.getSockets')->middleware('auth');
+
 Route::post('/tienda/creado', [ArticuloController::class, 'store'])->name('articulo.store')->middleware('auth');
 Route::get('/tienda/{id}', [ArticuloController::class, 'show'])->name('articulos.show');
 Route::get('/tienda/editar/{id}', [ArticuloController::class, 'edit'])->name('articulo.edit');

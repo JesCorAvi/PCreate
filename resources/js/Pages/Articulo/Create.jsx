@@ -15,11 +15,12 @@ export default function Create({ auth, categorias, marcas, sockets }) {
             >
                 <Head title="Crear Artículo" />
             </LayoutLogueado>
-            <Link href={route('profile.show')} className="underline px-10">Volver al dashboard</Link>
+            <Link href={"/perfil?tabla=Articulos"} className="underline px-10">Volver al dashboard</Link>
             <CrearProducto
                 categorias = {categorias}
                 marcas = {marcas}
-                sockets = {sockets}>
+                sockets={sockets}
+            >
 
             </CrearProducto>
             <Footer></Footer>

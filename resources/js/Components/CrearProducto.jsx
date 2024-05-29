@@ -1,4 +1,3 @@
-import FormularioSocket from './Formularios/Crear/FormularioSocket';
 import FormularioPlaca from './Formularios/Crear/FormularioPlaca';
 import FormularioCpu from './Formularios/Crear/FormularioCpu';
 import FormularioRam from './Formularios/Crear/FormularioRam';
@@ -38,9 +37,7 @@ export default function CrearProducto({ marcas, sockets }) {
         <>
 
             <div className='flex flex-wrap justify-between lg:px-52 lg:pb-20'>
-                <button className={formularioActual === 'socket' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('socket')}>
-                    Socket
-                </button>
+
                 <button className={formularioActual === 'placa' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('placa')}>
                     Placa Base
                 </button>
@@ -70,7 +67,6 @@ export default function CrearProducto({ marcas, sockets }) {
                 </button>
             </div>
             <Alertas></Alertas>
-            {formularioActual === 'socket' && <FormularioSocket />}
             {formularioActual === 'placa' && <FormularioPlaca marcas={marcas} sockets={sockets} />}
             {formularioActual === 'cpu' && <FormularioCpu marcas={marcas} sockets={sockets} />}
             {formularioActual === 'ram' && <FormularioRam marcas={marcas} />}

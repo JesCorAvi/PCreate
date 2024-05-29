@@ -10,7 +10,7 @@ import FormularioFuente from '@/Components/Formularios/Editar/FormularioFuente';
 import FormularioCaja from '@/Components/Formularios/Editar/FormularioCaja';
 import FormularioVentilador from '@/Components/Formularios/Editar/FormularioVentilador';
 import Alertas from '@/Components/Alertas';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 
 
 export default function Show({ auth, categorias, articulo, marcas, sockets }) {
@@ -56,6 +56,8 @@ export default function Show({ auth, categorias, articulo, marcas, sockets }) {
                 header={<h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center"></h2>}
                 categorias={categorias}
             />
+                        <Link href={"/perfil?tabla=Articulos"} className="underline px-10">Volver al dashboard</Link>
+
             <Formulario
                 articulo={articulo}
                 marcas={marcas}

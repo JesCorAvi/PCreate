@@ -5,6 +5,7 @@ import ArticulosTabla from '@/Components/TablasAdmin/ArticulosTabla';
 import MarcasTabla from './TablasAdmin/MarcasTabla';
 import PedidoTabla from './TablasAdmin/PedidoTabla';
 import ComentarioTabla from './TablasAdmin/ComentarioTabla';
+import SocketsTabla from './TablasAdmin/SocketsTabla';
 
 export default function AdminDashboard({ }) {
     useEffect(() => {
@@ -33,6 +34,9 @@ export default function AdminDashboard({ }) {
                 <button className={tablaActual === 'Usuarios' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('Usuarios')}>
                     Usuarios
                 </button>
+                <button className={tablaActual === 'Sockets' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('Sockets')}>
+                    Socket
+                </button>
                 <button className={tablaActual === 'Articulos' ? estilo_boton_seleccionado : estilo_boton_normal} onClick={() => handleBotonClick('Articulos')}>
                     Articulos
                 </button>
@@ -48,6 +52,7 @@ export default function AdminDashboard({ }) {
             </div>
             {tablaActual === 'Usuarios' && < UsuariosTabla/>}
             {tablaActual === 'Articulos' && < ArticulosTabla/>}
+            {tablaActual === 'Sockets' && < SocketsTabla/>}
             {tablaActual === 'Marcas' && < MarcasTabla/>}
             {tablaActual === 'Pedidos' && < PedidoTabla/>}
             {tablaActual === 'Comentarios' && < ComentarioTabla/>}
