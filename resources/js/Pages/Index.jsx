@@ -2,6 +2,7 @@ import LayoutLogueado from '@/Layouts/LayoutLogueado';
 import Footer from '@/Layouts/Footer';
 import { Head, Link } from '@inertiajs/react';
 import Pieza from '@/Components/Pieza';
+import ArticulosSlider from '@/Components/ArticulosSlider';
 
 export default function Index({ auth, categorias, articulos }) {
     return (
@@ -15,14 +16,14 @@ export default function Index({ auth, categorias, articulos }) {
             <Head title="Inicio" />
 
             <div className="pt-12">
-                <div className="w-all pt-3">
+                <Link href={"/configurador/crear"} className="w-all pt-3">
                     <picture>
                         <source media="(min-width: 1030px)" srcSet="http://127.0.0.1:8000/assets/carrousel.png" />
                         <source media="(min-width: 1024px)" srcSet="http://127.0.0.1:8000/assets/carrouselmd.png" />
                         <source media="(min-width: 420px)" srcSet="http://127.0.0.1:8000/assets/carrouselsm.png" />
                         <img src="http://127.0.0.1:8000/assets/carrousel.png" alt="Carrousel" />
                     </picture>
-                </div>
+                </Link>
                 <div className="w-all p-10">
                     <h2 className='text-center font-semibold text-3xl'>
                         Explore nuestros productos
@@ -38,21 +39,10 @@ export default function Index({ auth, categorias, articulos }) {
                 </div >
                 <div className='bg-black w-all pt-5'>
                     <h2 className='text-center font-semibold text-3xl text-white'>
-                        Productos destacados
+                        Nuevos componentes
                     </h2>
                 <div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 xl:gap-8 w-full max-w-5xl mx-auto pt-5">
-                        {articulos.map((articulo, index) => (
-                            <Pieza
-                                key={index}
-                                id={articulo.id}
-                                nombre={articulo.nombre}
-                                precio={articulo.precio}
-                                imagen={articulo.fotos[0].imagen}
-                                ruta={route("articulos.show", { id: articulo.id })}
-                            />
-                        ))}
-                    </div>
+                    <ArticulosSlider articulos={articulos} />
                 </div>
                 </div>
             </div>

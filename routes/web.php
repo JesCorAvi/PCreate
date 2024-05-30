@@ -19,11 +19,11 @@ use Illuminate\Http\Request;
 
 // Redirección a la página principal de artículos
 Route::get('/', function () {
-    return redirect()->route('articulo.index');
+    return redirect()->route('index');
 });
 
 // Ruta del Index
-Route::get('/index', function () {
+Route::get('/', function () {
     return Inertia::render('Index', [
         'categorias' => Categoria::all(),
         'articulos' => Articulo::with('fotos')->take(24)->get()
