@@ -10,6 +10,8 @@ use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PCController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocketController;
+use App\Models\Categoria;
+use App\Models\Articulo;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -20,10 +22,14 @@ Route::get('/', function () {
     return redirect()->route('articulo.index');
 });
 
-// Dashboard para usuarios autenticados y verificados
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Ruta del Index
+Route::get('/index', function () {
+    return Inertia::render('Index', [
+        'categorias' => Categoria::all(),
+        'articulos' => Articulo::with('fotos')->take(24)->get()
+    ]);
+
+})->name('index');
 
 // Rutas de perfil para usuarios autenticados
 Route::middleware('auth')->group(function () {

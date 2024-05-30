@@ -42,7 +42,7 @@ export default function Layout({ user, header, children, categorias }) {
                                 <Busqueda categorias = {categorias}></Busqueda>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex hover:bg-gray-800">
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
+                                <NavLink href={route('index')} active={route().current('index')}>
                                     <p className="text-white" >Ranking</p>
                                 </NavLink>
                             </div>
@@ -138,7 +138,7 @@ export default function Layout({ user, header, children, categorias }) {
 
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' md:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
+                        <ResponsiveNavLink href={route('index')} active={route().current('index')}>
                             Ranking
                         </ResponsiveNavLink>
                     </div>
