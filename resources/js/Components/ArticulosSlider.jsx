@@ -73,25 +73,25 @@ const ArticulosSlider = ({user, articulos }) => {
     return (
         <>
         <Modal className="p-6" show={isAddToCartModalVisible} onClose={handleCloseModal}>
-        <div className='flex flex-col items-center'>
-            <img
-                className={`w-32 y-32 m-5 pt-5 ${isAddToCartModalVisible ? 'aparecer' : ''}`}
-                src="http://127.0.0.1:8000/assets/exito.svg"
+            <div className='flex flex-col items-center'>
+                <img
+                    className={`w-32 y-32 m-5 pt-5 ${isAddToCartModalVisible ? 'aparecer' : ''}`}
+                    src="http://127.0.0.1:8000/assets/exito.svg"
 
-            ></img>
-            <h2 className="text-lg text-gray-900 font-semibold pt-5">
-                Producto añadido al carrito
-            </h2>
-        </div>
-        <BotonGrande onClick={handleCloseModal} texto={"Aceptar"}></BotonGrande>
-    </Modal>
+                ></img>
+                <h2 className="text-lg text-gray-900 font-semibold pt-5">
+                    Producto añadido al carrito
+                </h2>
+            </div>
+            <BotonGrande onClick={handleCloseModal} texto={"Aceptar"}></BotonGrande>
+        </Modal>
         <div className="w-full max-w-5xl mx-auto pt-5">
             <Slider {...settings}>
             {articulos.map(art => {
                 const estrellasValor = calcularNota(art);
                 return (
                     <Pieza
-                    className='ml-7'
+                        className='mx-auto'
                         key={art.id}
                         nombre={acortar(art.nombre, 50)}
                         imagen={art.fotos.find(foto => foto.orden === 0)?.imagen}
