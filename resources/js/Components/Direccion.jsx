@@ -4,6 +4,8 @@ import Modal from '@/Components/Modal';
 import DangerButton from './DangerButton';
 import SecondaryButton from './SecondaryButton';
 import { Link } from '@inertiajs/react';
+import CloseIcon from '@mui/icons-material/Close';
+
 
 export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_id, provincias, id, telefono, initialIsEditing, nombre, favorito, allDirecciones, setAllDirecciones }) {
     const [isEditing, setIsEditing] = useState(!!id);
@@ -126,7 +128,7 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                 <div className="border-2 border-solid border-black rounded-md my-5 relative">
                     {isEditing && (
                         <button type='button' className="bg-black rounded-xl w-6 h-6 absolute top-0 right-0 -mt-2 -mr-2" onClick={handleDeleteClick}>
-                            <p className="text-white">X</p>
+                    <CloseIcon  className="text-white p-1"/>
                         </button>
                     )}
 

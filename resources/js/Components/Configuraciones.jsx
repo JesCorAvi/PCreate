@@ -1,43 +1,52 @@
+import { Link, router } from '@inertiajs/react';
+import FiltroPc from '@/Components/FiltroPc';
+import Pc from '@/Components/Pc';
 import React, { useState, useEffect } from 'react';
-import Pc from "./Pc";
-import { Head } from '@inertiajs/react';
-import { Link } from '@inertiajs/react';
 import { useMediaQuery } from 'react-responsive';
 
-export default function Pcs({ pcs }) {
+export default function Configuraciones({ user, cantidad, pcs }) {
+    const [pcsFiltrados, setPcs] = useState(pcs);
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
-    const [visibleLinks, setVisibleLinks] = useState(pcs.links);
-    const [pcData, setPcData] = useState(pcs.data);
+    const [visibleLinks, setVisibleLinks] = useState(pcsFiltrados.links);
 
     useEffect(() => {
         if (isSmallScreen) {
-            const activeLink = pcs.links.find(link => link.active);
-            setVisibleLinks([pcs.links[0], activeLink, pcs.links[pcs.links.length - 1]]);
+            const activeLink = pcsFiltrados.links.find(link => link.active);
+            setVisibleLinks([pcsFiltrados.links[0], activeLink, pcsFiltrados.links[pcsFiltrados.links.length - 1]]);
         } else {
-            setVisibleLinks(pcs.links);
+            setVisibleLinks(pcsFiltrados.links);
         }
-    }, [isSmallScreen, pcs.links]);
+    }, [isSmallScreen, pcsFiltrados.links]);
 
-    const handleDeletePc = (id) => {
-        setPcData(pcData.filter(pc => pc.id !== id));
+    const filtrar = (criterio, precioMinimo, precioMaximo) => {
+        const params = {};
+
+        if (precioMinimo !== "") {
+            params.precioMinimo = precioMinimo;
+        }
+        if (precioMaximo !== "") {
+            params.precioMaximo = precioMaximo;
+        }
+        if (criterio !== "") {
+            params.criterio = criterio;
+        }
+
+        router.get(route('pc.index', params), {}, {
+            onSuccess: (page) => setPcs(page.props.pcs)
+        });
     };
 
     return (
-        <div>
-            <div className=" min-h-screen w-11/12 ">
-                <Head title="Mis PC" />
+        <>
+            <div className="flex min-h-screen">
+                <FiltroPc filtrar={filtrar} />
                 <div className="flex justify-center items-center w-full pb-10">
-                    {pcData.length === 0 ? (
+                    {pcsFiltrados.data.length === 0 ? (
                         <h1 className='font-semibold text-xl'>No hay ordenadores</h1>
                     ) : (
                         <section className='px-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-16'>
-                            {pcData.map(pc => (
-                                <Pc
-                                    key={pc.id}
-                                    pc={pc}
-                                    editable={true}
-                                    onDelete={handleDeletePc}
-                                />
+                            {pcsFiltrados.data.map(pc => (
+                                <Pc key={pc.id} pc={pc} editable={false} />
                             ))}
                         </section>
                     )}
@@ -59,6 +68,6 @@ export default function Pcs({ pcs }) {
                     </Link>
                 ))}
             </nav>
-        </div>
+        </>
     );
 }

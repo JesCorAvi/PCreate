@@ -14,7 +14,6 @@ import SecondaryButton from './SecondaryButton';
 import DangerButton from './DangerButton';
 
 export default function Configurador({ user, sockets, articulos, pc: initialPc }) {
-    console.log(initialPc);
     // Estado para mostrar advertencias
     const [showCoolingWarning, setShowCoolingWarning] = useState(false);
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
@@ -30,7 +29,6 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     const [puntuacionTotal, setPuntuacionTotal] = useState(0);
     const [isInitialLoad, setIsInitialLoad] = useState(true); // Nuevo estado para la carga inicial
     const [pc, setPc] = useState(initialPc); // Nuevo estado para pc
-
 
     // Estado para los artículos filtrados según el socket seleccionado
     const [filteredArticulos, setFilteredArticulos] = useState({
@@ -60,7 +58,16 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     function porcentaje() {
         return ((puntuacionTotal / 2500) * 100).toFixed(2);
     }
+    //Gestiona los errores del input nombre
+    const [errorNombre, setErrorNombre] = useState('');
 
+    useEffect(() => {
+        if (data.nombre && (data.nombre.length > 45 || /\b\w{31,}\b/.test(data.nombre))) {
+          setErrorNombre('El nombre no puede tener más de 45 caracteres o contener palabras de más de 30 caracteres.');
+        } else {
+          setErrorNombre('');
+        }
+      }, [data.nombre]);
     // Función para determinar la relación calidad/precio
 
     function calidadPrecioTotal() {
@@ -235,18 +242,18 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                         articulos.cajas.atx) || [],
                 }));
                 if (isInitialLoad) {
-                setData(prevData => ({
-                    ...prevData,
-                    cpu: null,
-                    disipador: null,
-                    ram: null,
-                    almacenamientoPrincipal: null,
-                    almacenamientoSecundario: null,
-                    grafica: null,
-                    caja: null,
-                    ventilacion: null,
-                }));
-            }
+                    setData(prevData => ({
+                        ...prevData,
+                        cpu: null,
+                        disipador: null,
+                        ram: null,
+                        almacenamientoPrincipal: null,
+                        almacenamientoSecundario: null,
+                        grafica: null,
+                        caja: null,
+                        ventilacion: null,
+                    }));
+                }
             }
         }
     }, [data.placa]);
@@ -419,10 +426,10 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
         data.ventiladorCount = ventiladorCount;
         data.precioTotal = precioTotal;
         data.puntuacionTotal = puntuacionTotal;
-        if(initialPc){
+        if (initialPc) {
             data.initialPc = initialPc.id;
             post(route('pc.update'));
-        }else{
+        } else {
             post(route('pc.store'));
         }
     }
@@ -462,9 +469,15 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                     className='w-56 h-10 self-center rounded-md'
                     value={data.nombre}
                     placeholder='Nombre para la configuración...'
-                    onChange={(e) => setData('nombre', e.target.value)}
+                    onChange={(e) => {
+                        setData('nombre', e.target.value);
+                        setErrorNombre('');
+                    }}
                 />
+
             </div>
+            <p className='text-red-500 font-semibold w-all text-center'>{errorNombre}</p>
+
             <div className="flex gap-12 justify-center flex-wrap mx-8">
                 {sockets.map((socket) => (
                     <Socket
@@ -616,9 +629,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                                     value={data.fuente ? { value: data.fuente, label: getArticuloInfo(articulos.fuentes, data.fuente, "nombre"), imagen: getArticuloInfo(articulos.fuentes, data.fuente, "fotos")[0]?.imagen } : null}
                                     onChange={(selectedOption) => setData('fuente', selectedOption.value)}
                                 />
-                                {data.fuente && (
-                                    <button onClick={() => limpiarSelect("fuente")} className='p-2 bg-red-500 text-white rounded'><DeleteIcon /></button>
-                                )}
+
                             </div>
                         </div>
                         <div>
@@ -673,7 +684,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                             </div>
                         )}
 
-                        {areEssentialComponentsSelected() ? (
+                        {areEssentialComponentsSelected() && !errorNombre ? (
                             <Boton texto="Guardar Configuración" onClick={guardarConfiguracion} className="w-full"></Boton>
                         ) : (
                             <p className='text-xl py-5'>Configure los elementos obligatorios para poder guardar su configuración.</p>
