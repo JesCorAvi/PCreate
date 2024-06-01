@@ -15,6 +15,15 @@ export default function Productos({ user, articulos, categorias, marcas, cantida
             return cadena.substring(0, longitud) + '...'; // Acorta la cadena y añade puntos suspensivos
         }
     }
+    function calcularNota(articulo) {
+        if (articulo.comentarios.length === 0) return 0;
+        let suma = 0;
+        articulo.comentarios.forEach(comentario => {
+            suma += comentario.estrellas;
+        });
+        return suma / articulo.comentarios.length;
+    }
+
     const [articulosFiltrados, setArticulos] = useState(articulos);
     const filtrar = (categoria, marca, precioMinimo, precioMaximo) => {
         const params = {};
@@ -81,18 +90,23 @@ export default function Productos({ user, articulos, categorias, marcas, cantida
                         <h1 className='font-semibold text-xl'>No hay artículos</h1>
                     ) : (
                         <section className='px-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-16'>
-                            {articulosFiltrados.data.map(art => (
-                                <Pieza
-                                    key={art.id}
-                                    nombre={acortar(art.nombre, 50)}
-                                    imagen={ art.fotos.find(foto => foto.orden === 0)?.imagen}
-                                    precio={art.precio}
-                                    ruta={route("articulos.show", { id: art.id })}
-                                    id={art.id}
-                                    handleAddToCartClick={handleAddToCartClick}
-                                    user={user}
-                                />
-                            ))}
+                            {articulosFiltrados.data.map(art => {
+                                const estrellasValor = calcularNota(art);
+                                return (
+                                    <Pieza
+                                        key={art.id}
+                                        nombre={acortar(art.nombre, 50)}
+                                        imagen={art.fotos.find(foto => foto.orden === 0)?.imagen}
+                                        precio={art.precio}
+                                        ruta={route("articulos.show", { id: art.id })}
+                                        id={art.id}
+                                        estrellas={estrellasValor}
+                                        valoraciones={art.comentarios.length}
+                                        handleAddToCartClick={handleAddToCartClick}
+                                        user={user}
+                                    />
+                                );
+                            })}
                         </section>
                     )}
                 </div>

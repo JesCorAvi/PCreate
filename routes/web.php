@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocketController;
 use App\Models\Categoria;
 use App\Models\Articulo;
+use App\Models\Comentario;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -26,7 +27,7 @@ Route::get('/', function () {
 Route::get('/', function () {
     return Inertia::render('Index', [
         'categorias' => Categoria::all(),
-        'articulos' => Articulo::with('fotos')->take(24)->get()
+        'articulos' => Articulo::with('fotos', 'comentarios')->latest()->take(12)->get()
     ]);
 
 })->name('index');

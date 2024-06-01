@@ -70,9 +70,12 @@ class ArticuloController extends Controller
         $precioMaximo = $request->input('precioMaximo');
         $palabrasClave = $request->input('palabras');
 
-        $query = Articulo::with(['fotos' => function ($query) {
-            $query->where('orden', 0);
-        }]);
+        $query = Articulo::with([
+            'fotos' => function ($query) {
+                $query->where('orden', 0);
+            },
+            'comentarios'
+        ]);
 
         if ($categorias) {
             $categoriaArray = explode(',', $categorias);

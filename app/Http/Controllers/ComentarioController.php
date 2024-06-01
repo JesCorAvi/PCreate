@@ -11,7 +11,7 @@ use App\Models\Pc;
 class ComentarioController extends Controller
 {
     public function getComentarios(Request $request)
-{
+    {
     $query = Comentario::with(['user', 'comentable'])->whereHasMorph('comentable', [Articulo::class]);
 
     if ($request->filled('search')) {
@@ -35,8 +35,12 @@ class ComentarioController extends Controller
     $comentarios = $query->orderBy('created_at', 'desc')->paginate(10);
 
     return response()->json($comentarios);
-}
-
+    }
+    public function getComentariosWhere(Request $request)
+    {
+        $Comentarios = Comentario::with('user')->where("comentable_type", 'App\\Models\\' . $request->type)->where('comentable_id', $request->id)->orderBy('created_at', 'desc')->paginate(10);
+        return response()->json($Comentarios);
+    }
 
     /**
      * Display a listing of the resource.

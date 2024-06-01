@@ -1,14 +1,13 @@
 import React from 'react';
 import Slider from 'react-slick';
-import { IconButton } from '@mui/material';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Pieza from './Pieza'; // Asegúrate de tener este componente
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { useState } from 'react';
+import BotonGrande from './BotonGrande';
+import Modal from './Modal';
 
-
-const ArticulosSlider = ({ articulos }) => {
+const ArticulosSlider = ({user, articulos }) => {
     const settings = {
         dots: true,
         infinite: true,
@@ -45,24 +44,70 @@ const ArticulosSlider = ({ articulos }) => {
             }
         ]
     };
+    function calcularNota(articulo) {
+        if (articulo.comentarios.length === 0) return 0;
+        let suma = 0;
+        articulo.comentarios.forEach(comentario => {
+            suma += comentario.estrellas;
+        });
+        return suma / articulo.comentarios.length;
+    }
+
+    function acortar(cadena, longitud) {
+        if (cadena.length <= longitud) {
+            return cadena; // Devuelve la cadena original si es igual o menor que la longitud especificada
+        } else {
+            return cadena.substring(0, longitud) + '...'; // Acorta la cadena y añade puntos suspensivos
+        }
+    }
+
+    const handleAddToCartClick = () => {
+        setIsAddToCartModalVisible(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsAddToCartModalVisible(false);
+    };
+    const [isAddToCartModalVisible, setIsAddToCartModalVisible] = useState(false);
 
     return (
+        <>
+        <Modal className="p-6" show={isAddToCartModalVisible} onClose={handleCloseModal}>
+        <div className='flex flex-col items-center'>
+            <img
+                className={`w-32 y-32 m-5 pt-5 ${isAddToCartModalVisible ? 'aparecer' : ''}`}
+                src="http://127.0.0.1:8000/assets/exito.svg"
+
+            ></img>
+            <h2 className="text-lg text-gray-900 font-semibold pt-5">
+                Producto añadido al carrito
+            </h2>
+        </div>
+        <BotonGrande onClick={handleCloseModal} texto={"Aceptar"}></BotonGrande>
+    </Modal>
         <div className="w-full max-w-5xl mx-auto pt-5">
             <Slider {...settings}>
-                {articulos.map((articulo, index) => (
-                    <div key={index} className="px-2 flex justify-center items-center">
-                        <Pieza
-                            className='ml-5'
-                            id={articulo.id}
-                            nombre={articulo.nombre}
-                            precio={articulo.precio}
-                            imagen={articulo.fotos[0].imagen}
-                            ruta={route("articulos.show", { id: articulo.id })}
-                        />
-                    </div>
-                ))}
+            {articulos.map(art => {
+                const estrellasValor = calcularNota(art);
+                return (
+                    <Pieza
+                    className='ml-7'
+                        key={art.id}
+                        nombre={acortar(art.nombre, 50)}
+                        imagen={art.fotos.find(foto => foto.orden === 0)?.imagen}
+                        precio={art.precio}
+                        ruta={route("articulos.show", { id: art.id })}
+                        id={art.id}
+                        estrellas={estrellasValor}
+                        valoraciones={art.comentarios.length}
+                        handleAddToCartClick={handleAddToCartClick}
+                        user={user}
+                    />
+                );
+            })}
             </Slider>
         </div>
+        </>
     );
 };
 

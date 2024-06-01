@@ -41,8 +41,8 @@ export default function Index({ auth, categorias, articulos }) {
                     <h2 className='text-center font-semibold text-3xl text-white'>
                         Nuevos componentes
                     </h2>
-                <div>
-                    <ArticulosSlider articulos={articulos} />
+                <div className='20'>
+                    <ArticulosSlider articulos={articulos} user={auth.user} />
                 </div>
                 </div>
             </div>
