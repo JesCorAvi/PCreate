@@ -4,7 +4,7 @@ import Configurador from '@/Components/Configurador';
 import { Head, Link } from '@inertiajs/react';
 import Configuraciones from '@/Components/Configuraciones';
 
-export default function Create({ auth, categorias, cantidad, pcs }) {
+export default function Create({ auth, categorias, cantidad, pcs, sockets }) {
     return (
         <>
             <LayoutLogueado
@@ -22,6 +22,7 @@ export default function Create({ auth, categorias, cantidad, pcs }) {
             </LayoutLogueado>
             <Configuraciones
                 pcs = {pcs}
+                sockets={sockets}
             ></Configuraciones>
             <Footer></Footer>
             <script src="../path/to/flowbite/dist/flowbite.min.js"></script>

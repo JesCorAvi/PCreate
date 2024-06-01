@@ -19,6 +19,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
     const [showInfoPotencial, setShowInfoPotencial] = useState(false);
     const [showFuenteWarning, setShowFuenteWarning] = useState(false);
+
     const [openModal, setOpenModal] = useState(false);
     // Estado para la cantidad de ventiladores y su límite
     const [ventiladorCount, setVentiladorCount] = useState(1);

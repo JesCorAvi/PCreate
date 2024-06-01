@@ -21,24 +21,28 @@ class PcController extends Controller
     public function index(Request $request)
     {
         $query = Pc::with('articulos.fotos', 'articulos.categoria', 'socket', 'user')
-            ->where('publicado', true);
+            ->where('publicado', true)
+            ->selectRaw('pcs.*, (SELECT SUM(precio) FROM articulo_pc JOIN articulos ON articulo_pc.articulo_id = articulos.id WHERE articulo_pc.pc_id = pcs.id) as total_precio');
 
-        // Aplicar filtros de precio si existen
-        if ($request->has('precioMinimo') && is_numeric($request->precioMinimo)) {
-            $query->whereHas('articulos', function($q) use ($request) {
-                $q->where('precio', '>=', $request->precioMinimo);
-            });
+        if ($request->has('precioMinimo') && is_numeric($request->input('precioMinimo'))) {
+            $query->whereRaw('(SELECT SUM(precio) FROM articulo_pc JOIN articulos ON articulo_pc.articulo_id = articulos.id WHERE articulo_pc.pc_id = pcs.id) >= ?', [$request->input('precioMinimo')]);
         }
 
-        if ($request->has('precioMaximo') && is_numeric($request->precioMaximo)) {
-            $query->whereHas('articulos', function($q) use ($request) {
-                $q->where('precio', '<=', $request->precioMaximo);
+        if ($request->has('precioMaximo') && is_numeric($request->input('precioMaximo'))) {
+            $query->whereRaw('(SELECT SUM(precio) FROM articulo_pc JOIN articulos ON articulo_pc.articulo_id = articulos.id WHERE articulo_pc.pc_id = pcs.id) <= ?', [$request->input('precioMaximo')]);
+        }
+
+        // Apply socket filters if they exist
+        if ($request->has('sockets')) {
+            $sockets = $request->input('sockets');
+            $query->whereHas('socket', function($q) use ($sockets) {
+                $q->whereIn('id', $sockets);
             });
         }
 
         // Ordenar según el criterio
         if ($request->has('criterio')) {
-            switch ($request->criterio) {
+            switch ($request->input('criterio')) {
                 case 'calidadPrecio':
                     $query->withAvg('articulos', 'puntuacionPrecio')
                           ->orderBy('articulos_avg_puntuacion_precio', 'desc');
@@ -67,6 +71,7 @@ class PcController extends Controller
             'cantidad' => $pcs->total(),
         ]);
     }
+
 
 
 

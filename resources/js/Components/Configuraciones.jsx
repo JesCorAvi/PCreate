@@ -4,7 +4,7 @@ import Pc from '@/Components/Pc';
 import React, { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-export default function Configuraciones({ user, cantidad, pcs }) {
+export default function Configuraciones({ user, cantidad, pcs, sockets }) {
     const [pcsFiltrados, setPcs] = useState(pcs);
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
     const [visibleLinks, setVisibleLinks] = useState(pcsFiltrados.links);
@@ -18,7 +18,7 @@ export default function Configuraciones({ user, cantidad, pcs }) {
         }
     }, [isSmallScreen, pcsFiltrados.links]);
 
-    const filtrar = (criterio, precioMinimo, precioMaximo) => {
+    const filtrar = (criterio, precioMinimo, precioMaximo, sockets) => {
         const params = {};
 
         if (precioMinimo !== "") {
@@ -30,6 +30,9 @@ export default function Configuraciones({ user, cantidad, pcs }) {
         if (criterio !== "") {
             params.criterio = criterio;
         }
+        if (sockets.length > 0) {
+            params.sockets = sockets;
+        }
 
         router.get(route('pc.index', params), {}, {
             onSuccess: (page) => setPcs(page.props.pcs)
@@ -39,7 +42,7 @@ export default function Configuraciones({ user, cantidad, pcs }) {
     return (
         <>
             <div className="flex min-h-screen">
-                <FiltroPc filtrar={filtrar} />
+                <FiltroPc filtrar={filtrar} sockets={sockets} />
                 <div className="flex justify-center items-center w-full pb-10">
                     {pcsFiltrados.data.length === 0 ? (
                         <h1 className='font-semibold text-xl'>No hay ordenadores</h1>

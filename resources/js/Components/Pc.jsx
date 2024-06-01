@@ -6,11 +6,14 @@ import Boton from "./Boton";
 import axios from "axios";
 import Modal from "./Modal";
 import ProgressBar from "./ProgressBar";
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function Pc({ pc, className = "", editable = false, onDelete }) {
-    console.log(pc);
     const [publicado, setPublicado] = useState(pc.publicado);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showInfoPotencial, setShowInfoPotencial] = useState(false);
+
 
     function Total() {
         let total = 0;
@@ -52,6 +55,9 @@ export default function Pc({ pc, className = "", editable = false, onDelete }) {
             return <p className="text-green-500 font-semibold">Calidad/Precio Alta</p>;
         }
     }
+    function cambioInfoPotencial() {
+        setShowInfoPotencial(!showInfoPotencial);
+    };
     return (
         <div className={"relative bg-white border-2 border-solid border-white shadow-2xl hover:border-purple-800 rounded-xl w-72 h-comp2 flex flex-col justify-between items-center " + className}>
             {editable &&
@@ -66,6 +72,16 @@ export default function Pc({ pc, className = "", editable = false, onDelete }) {
             <Link href={route("pc.edit", { id: pc.id })}
                 className={"flex flex-col justify-center items-center"}>
                 <img className='pb- mt-5' width="200px" height="200px" src={"http://127.0.0.1:8000/storage/uploads/articulos/" + imagenCaja()}></img>
+                <div className="mt-4 relative flex items-center">
+                                <p className="font-semibold text-lg pt-5 pb-3">Potencial PCreate™</p>
+                                <Tooltip title="Potencial PCreate™ indica cómo de cerca está su dispositivo de alcanzar el máximo posible de especificaciones establecido por nuestra empresa.">
+                                    <HelpOutlineIcon
+                                        className={`text-gray-400 h-5 w-5 cursor-pointer ml-1 ${showInfoPotencial ? 'text-gray-600' : ''}`}
+                                        onMouseEnter={cambioInfoPotencial}
+                                        onMouseLeave={cambioInfoPotencial}
+                                    />
+                                </Tooltip>
+                            </div>
                 <ProgressBar puntuacionTotal={pc.puntuacion}></ProgressBar>
                 <p>{porcentaje(pc.puntuacionTotal)}%</p>
                 <div>{calidadPrecioTotal()}</div>
