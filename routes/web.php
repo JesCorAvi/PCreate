@@ -84,12 +84,12 @@ Route::post('/tienda/restaurar/{id}', [ArticuloController::class, 'darDeAlta'])-
 Route::post('/articulos/getArticulos', [ArticuloController::class, 'getArticulos'])->name('articulo.getArticulos')->middleware('auth');
 
 // Rutas relacionadas con los PC
-Route::get('/ordenadores', [PCController::class, 'index'])->name('pc.index')->middleware('auth');
+Route::get('/ordenadores', [PCController::class, 'index'])->name('pc.index');
 Route::post('/publicar', [PCController::class, 'publicar'])->name('pc.publicar')->middleware('auth');
 Route::post('/pc/borrado', [PCController::class, 'destroy'])->name('pc.destroy')->middleware('auth');
 
 
-Route::get('/configurador/crear', [PCController::class, 'create'])->name('pc.create')->middleware('auth');
+Route::get('/configurador/crear', [PCController::class, 'create'])->name('pc.create');
 Route::post('/configurador/creado', [PCController::class, 'store'])->name('pc.store')->middleware('auth');
 Route::get('/configurador/edit', [PCController::class, 'edit'])->name('pc.edit')->middleware('auth');
 Route::post('/configurador/editado', [PCController::class, 'update'])->name('pc.update')->middleware('auth');

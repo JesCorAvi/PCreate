@@ -222,6 +222,7 @@ class PcController extends Controller
     {
         $pc = Pc::with('articulos')->find($request->id);
         $pcInicial = [
+            "user_id" => $pc->user_id,
             "id" => $pc->id,
             "nombre" => $pc->nombre,
             "socket" => $pc->socket_id,

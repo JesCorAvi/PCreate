@@ -19,7 +19,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
     const [showInfoPotencial, setShowInfoPotencial] = useState(false);
     const [showFuenteWarning, setShowFuenteWarning] = useState(false);
-
+    const originalUser = initialPc == undefined ? user.id : initialPc.user_id
     const [openModal, setOpenModal] = useState(false);
     // Estado para la cantidad de ventiladores y su límite
     const [ventiladorCount, setVentiladorCount] = useState(1);
@@ -42,7 +42,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
 
     // Inicialización del formulario
     const { data, setData, post, errors, reset } = useForm({
-        nombre: `PC de ${user.name} Nº${new Date().getTime().toString().slice(-4)}`,
+        nombre: `PC de ${user ? user.name : "invitado"} Nº${new Date().getTime().toString().slice(-4)}`,
         socket: pc == undefined ? null : pc.socket,
         placa: null,
         cpu: null,
@@ -684,12 +684,13 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                                 </div>
                             </div>
                         )}
-
-                        {areEssentialComponentsSelected() && !errorNombre ? (
-                            <Boton texto="Guardar Configuración" onClick={guardarConfiguracion} className="w-full"></Boton>
+                    {user && user.id == originalUser && (
+                        areEssentialComponentsSelected() && !errorNombre ? (
+                            <Boton texto="Guardar Configuración" onClick={guardarConfiguracion} ></Boton>
                         ) : (
                             <p className='text-xl py-5'>Configure los elementos obligatorios para poder guardar su configuración.</p>
-                        )}
+                        )
+                    )}
                     </div>
                     <div className='rounded-lg w-full lg:w-2/6 border shadow-xl p-5 flex flex-col gap-4 h-auto'>
                         <div className="flex flex-col justify-center items-center">
