@@ -49,7 +49,7 @@ export default function Configuraciones({ user, cantidad, pcs, sockets }) {
                     ) : (
                         <section className='px-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-16'>
                             {pcsFiltrados.data.map(pc => (
-                                <Pc key={pc.id} pc={pc} editable={false} />
+                                <Pc key={pc.id} pc={pc} editable={false} estrellas={pc.estrellas} valoraciones={pc.comentarios.length} />
                             ))}
                         </section>
                     )}

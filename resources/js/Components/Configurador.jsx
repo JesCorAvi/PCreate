@@ -12,14 +12,22 @@ import Tooltip from '@mui/material/Tooltip';
 import Modal from './Modal';
 import SecondaryButton from './SecondaryButton';
 import DangerButton from './DangerButton';
+import ComentariosPc from './ComentariosPc';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from '@mui/icons-material/Star';
 
 export default function Configurador({ user, sockets, articulos, pc: initialPc }) {
+    console.log(initialPc);
     // Estado para mostrar advertencias
     const [showCoolingWarning, setShowCoolingWarning] = useState(false);
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
     const [showInfoPotencial, setShowInfoPotencial] = useState(false);
     const [showFuenteWarning, setShowFuenteWarning] = useState(false);
+    // Estado para la cantidad de valoraciones y la nota
+    const [valoraciones, setValoraciones] = useState(initialPc == undefined ? null : initialPc.comentarios.length);
+    const [nota, setNota] = useState(initialPc == undefined ? null : calcularNota());
     const originalUser = initialPc == undefined ? user.id : initialPc.user_id
+    // Estado para el modal
     const [openModal, setOpenModal] = useState(false);
     // Estado para la cantidad de ventiladores y su límite
     const [ventiladorCount, setVentiladorCount] = useState(1);
@@ -62,13 +70,22 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     //Gestiona los errores del input nombre
     const [errorNombre, setErrorNombre] = useState('');
 
+    function calcularNota() {
+        if (initialPc.comentarios.length === 0) return 0;
+        let suma = 0;
+        initialPc.comentarios.forEach(comentario => {
+            suma += comentario.estrellas;
+        });
+        return suma / initialPc.comentarios.length;
+    }
+
     useEffect(() => {
         if (data.nombre && (data.nombre.length > 45 || /\b\w{31,}\b/.test(data.nombre))) {
-          setErrorNombre('El nombre no puede tener más de 45 caracteres o contener palabras de más de 30 caracteres.');
+            setErrorNombre('El nombre no puede tener más de 45 caracteres o contener palabras de más de 30 caracteres.');
         } else {
-          setErrorNombre('');
+            setErrorNombre('');
         }
-      }, [data.nombre]);
+    }, [data.nombre]);
     // Función para determinar la relación calidad/precio
 
     function calidadPrecioTotal() {
@@ -446,6 +463,22 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     // Mensaje cuando no hay opciones disponibles
     const noOptionsMessage = () => 'No hay opciones disponibles';
 
+    function handleComentarioCreado(nuevaNota) {
+        setValoraciones(valoraciones + 1);
+        let resultado;
+        if (valoraciones === 0) {
+            resultado = nuevaNota; // o cualquier valor que tenga sentido en este contexto
+        } else {
+            resultado = (nota * valoraciones + nuevaNota) / (valoraciones + 1);
+        }
+        setNota(resultado);
+
+    };
+
+    function handleComentarioBorrado(nuevaNota) {
+        setValoraciones(valoraciones - 1);
+        setNota((nota * valoraciones - nuevaNota) / (valoraciones - 1));
+    };
     return (
         <div className="min-h-screen flex flex-col gap-7 mb-20">
             <Modal show={openModal} onClose={cerrarModal}>
@@ -464,8 +497,13 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                 </div>
             </Modal>
             <Head title="Configurador" />
+
             <div className='flex flex-col sm:flex-row justify-center pt-24 gap-4'>
-                <h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Configurador de PC:</h2>
+
+                <h2 className="font-semibold text-4xl text-gray-800 leading-tight text-center">Configuración de PC:</h2>
+                <div className='flex'>
+
+                </div>
                 <input
                     className='w-56 h-10 self-center rounded-md'
                     value={data.nombre}
@@ -474,8 +512,22 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                         setData('nombre', e.target.value);
                         setErrorNombre('');
                     }}
+                    {...(initialPc ? { disabled: true } : {})}
                 />
 
+            {initialPc && (
+            <>
+                {[...Array(5)].map((star, index) => {
+                const starValue = index + 1;
+                return (
+                    <span key={starValue} className='text-purple-800'>
+                    {starValue <= nota ? <StarIcon /> : <StarBorderIcon className="text-gray-400" />}
+                    </span>
+                );
+                })}
+                <p className='text-purple-800 font-semibold'>{valoraciones} valoraciones</p>
+            </>
+            )}
             </div>
             <p className='text-red-500 font-semibold w-all text-center'>{errorNombre}</p>
 
@@ -684,13 +736,13 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                                 </div>
                             </div>
                         )}
-                    {user && user.id == originalUser && (
-                        areEssentialComponentsSelected() && !errorNombre ? (
-                            <Boton texto="Guardar Configuración" onClick={guardarConfiguracion} ></Boton>
-                        ) : (
-                            <p className='text-xl py-5'>Configure los elementos obligatorios para poder guardar su configuración.</p>
-                        )
-                    )}
+                        {user && user.id == originalUser && (
+                            areEssentialComponentsSelected() && !errorNombre ? (
+                                <Boton texto="Guardar Configuración" onClick={guardarConfiguracion} ></Boton>
+                            ) : (
+                                <p className='text-xl py-5'>Configure los elementos obligatorios para poder guardar su configuración.</p>
+                            )
+                        )}
                     </div>
                     <div className='rounded-lg w-full lg:w-2/6 border shadow-xl p-5 flex flex-col gap-4 h-auto'>
                         <div className="flex flex-col justify-center items-center">
@@ -848,6 +900,15 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
 
                 </div>
             )}
+            {initialPc &&
+                <ComentariosPc
+                    onComentarioCreado={handleComentarioCreado}
+                    onComentarioBorrado={handleComentarioBorrado}
+                    user={user}
+                    id={initialPc ? initialPc.id : null}
+
+                />
+            }
         </div>
     )
 }

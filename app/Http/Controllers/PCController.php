@@ -20,7 +20,7 @@ class PcController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Pc::with('articulos.fotos', 'articulos.categoria', 'socket', 'user')
+        $query = Pc::with('articulos.fotos', 'articulos.categoria', 'socket', 'user', 'comentarios')
             ->where('publicado', true)
             ->selectRaw('pcs.*, (SELECT SUM(precio) FROM articulo_pc JOIN articulos ON articulo_pc.articulo_id = articulos.id WHERE articulo_pc.pc_id = pcs.id) as total_precio');
 
@@ -236,7 +236,8 @@ class PcController extends Controller
             "almacenamientoSecundario" => optional($pc->articulos->where('pivot.parte', 'almacenamientoSecundario')->first())->id,
             "grafica" => optional($pc->articulos->where('pivot.parte', 'grafica')->first())->id,
             "ventilacion" => optional($pc->articulos->where('pivot.parte', 'ventilacion')->first())->id,
-            "ventiladorCount" => optional($pc->articulos->firstWhere('pivot.parte', 'ventilacion'))->pivot->cantidad ?? null
+            "ventiladorCount" => optional($pc->articulos->firstWhere('pivot.parte', 'ventilacion'))->pivot->cantidad ?? null,
+            "comentarios" =>$pc->comentarios,
         ];
 
         $articulos = Articulo::with('fotos', 'marca', 'categoria')->get();
@@ -259,6 +260,7 @@ class PcController extends Controller
             'sockets' => Socket::all(),
             'articulos' => $articulos,
             'pc' => $pcInicial,
+            'user'=> $request->user()->load('comentarios'),
         ]);
     }
 

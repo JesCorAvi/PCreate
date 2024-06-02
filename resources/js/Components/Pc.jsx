@@ -8,8 +8,10 @@ import Modal from "./Modal";
 import ProgressBar from "./ProgressBar";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Tooltip from '@mui/material/Tooltip';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from '@mui/icons-material/Star';
 
-export default function Pc({ pc, className = "", editable = false, onDelete }) {
+export default function Pc({ pc, estrellas, valoraciones, className = "", editable = false, onDelete }) {
     const [publicado, setPublicado] = useState(pc.publicado);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showInfoPotencial, setShowInfoPotencial] = useState(false);
@@ -61,31 +63,43 @@ export default function Pc({ pc, className = "", editable = false, onDelete }) {
     return (
         <div className={"relative bg-white border-2 border-solid border-white shadow-2xl hover:border-purple-800 rounded-xl w-72 h-comp2 flex flex-col justify-between items-center " + className}>
             {editable &&
-            <button
-                aria-label="delete"
-                className="absolute top-0 right-0 -mt-2 -mr-2 bg-purple-700 rounded-full"
-                onClick={() => setIsModalOpen(true)}
-            >
-                <CloseIcon  className="text-white p-1"/>
-            </button>
+                <button
+                    aria-label="delete"
+                    className="absolute top-0 right-0 -mt-2 -mr-2 bg-purple-700 rounded-full"
+                    onClick={() => setIsModalOpen(true)}
+                >
+                    <CloseIcon className="text-white p-1" />
+                </button>
             }
             <Link href={route("pc.edit", { id: pc.id })}
                 className={"flex flex-col justify-center items-center"}>
                 <img className='pb- mt-5' width="200px" height="200px" src={"http://127.0.0.1:8000/storage/uploads/articulos/" + imagenCaja()}></img>
                 <div className="mt-4 relative flex items-center">
-                                <p className="font-semibold text-lg pt-5 pb-3">Potencial PCreate™</p>
-                                <Tooltip title="Potencial PCreate™ indica cómo de cerca está su dispositivo de alcanzar el máximo posible de especificaciones establecido por nuestra empresa.">
-                                    <HelpOutlineIcon
-                                        className={`text-gray-400 h-5 w-5 cursor-pointer ml-1 ${showInfoPotencial ? 'text-gray-600' : ''}`}
-                                        onMouseEnter={cambioInfoPotencial}
-                                        onMouseLeave={cambioInfoPotencial}
-                                    />
-                                </Tooltip>
-                            </div>
+                    <p className="font-semibold text-lg pt-5 pb-3">Potencial PCreate™</p>
+                    <Tooltip title="Potencial PCreate™ indica cómo de cerca está su dispositivo de alcanzar el máximo posible de especificaciones establecido por nuestra empresa.">
+                        <HelpOutlineIcon
+                            className={`text-gray-400 h-5 w-5 cursor-pointer ml-1 ${showInfoPotencial ? 'text-gray-600' : ''}`}
+                            onMouseEnter={cambioInfoPotencial}
+                            onMouseLeave={cambioInfoPotencial}
+                        />
+                    </Tooltip>
+                </div>
                 <ProgressBar puntuacionTotal={pc.puntuacion}></ProgressBar>
                 <p>{porcentaje(pc.puntuacionTotal)}%</p>
                 <div>{calidadPrecioTotal()}</div>
                 <div className="px-5 min-h-24">
+                    <div className="flex">
+                        {[...Array(5)].map((star, index) => {
+                            const starValue = index + 1;
+                            return (
+                                <span key={starValue}
+                                    className='text-purple-800'
+                                >
+                                    {starValue <= estrellas ? <StarIcon /> : <StarBorderIcon className="text-gray-400" />}
+                                </span>
+                            );
+                        })}<p className='text-purple-800 font-semibold'>{valoraciones} valoraciones</p>
+                    </div>
                     <p className='font-semibold text-lg'>{pc.nombre}</p>
                     <p>{pc.socket.nombre}</p>
                 </div>

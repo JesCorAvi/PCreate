@@ -194,7 +194,11 @@ export default function Muestra({ user, active = false, classNameName = '', chil
                             </table>
                         </div>
                     </section>
-                    <Comentarios onComentarioCreado={handleComentarioCreado} onComentarioBorrado={handleComentarioBorrado} id={articulo.id} user={user}></Comentarios>
+                    <Comentarios
+                    onComentarioCreado={handleComentarioCreado}
+                    onComentarioBorrado={handleComentarioBorrado}
+                    id={articulo.id}
+                    user={user}></Comentarios>
                 </article>
                 {lightboxVisible && (
                     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={handleCloseLightbox}>
