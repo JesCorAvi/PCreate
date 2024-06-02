@@ -10,16 +10,70 @@ use App\Models\Marca;
 use Inertia\Inertia;
 use App\Models\Socket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class PcController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = Pc::with('articulos.fotos', 'articulos.categoria', 'socket', 'user')
+            ->where('publicado', true)
+            ->selectRaw('pcs.*, (SELECT SUM(precio) FROM articulo_pc JOIN articulos ON articulo_pc.articulo_id = articulos.id WHERE articulo_pc.pc_id = pcs.id) as total_precio');
+
+        if ($request->has('precioMinimo') && is_numeric($request->input('precioMinimo'))) {
+            $query->whereRaw('(SELECT SUM(precio) FROM articulo_pc JOIN articulos ON articulo_pc.articulo_id = articulos.id WHERE articulo_pc.pc_id = pcs.id) >= ?', [$request->input('precioMinimo')]);
+        }
+
+        if ($request->has('precioMaximo') && is_numeric($request->input('precioMaximo'))) {
+            $query->whereRaw('(SELECT SUM(precio) FROM articulo_pc JOIN articulos ON articulo_pc.articulo_id = articulos.id WHERE articulo_pc.pc_id = pcs.id) <= ?', [$request->input('precioMaximo')]);
+        }
+
+        // Apply socket filters if they exist
+        if ($request->has('sockets')) {
+            $sockets = $request->input('sockets');
+            $query->whereHas('socket', function($q) use ($sockets) {
+                $q->whereIn('id', $sockets);
+            });
+        }
+
+        // Ordenar según el criterio
+        if ($request->has('criterio')) {
+            switch ($request->input('criterio')) {
+                case 'calidadPrecio':
+                    $query->withAvg('articulos', 'puntuacionPrecio')
+                          ->orderBy('articulos_avg_puntuacion_precio', 'desc');
+                    break;
+                case 'potencia':
+                    $query->withSum('articulos', 'puntuacion')
+                          ->orderBy('articulos_sum_puntuacion', 'desc');
+                    break;
+            }
+        }
+
+        // Obtener los PCs con paginación
+        $pcs = $query->paginate(12);
+
+        // Calcular las puntuaciones y calidad/precio
+        $pcs->getCollection()->transform(function($pc) {
+            $pc->puntuacion = $pc->articulos->sum('puntuacion');
+            $pc->calidad_precio = $pc->articulos->avg('puntuacionPrecio');
+            return $pc;
+        });
+
+        return Inertia::render('PC/Index', [
+            'categorias' => Categoria::all(),
+            'sockets' => Socket::all(),
+            'pcs' => $pcs,
+            'cantidad' => $pcs->total(),
+        ]);
     }
+
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -57,9 +111,84 @@ class PcController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre' => 'required',
+            'nombre' => 'required|max:45',
             'socket' => 'required',
+            'placa' => 'numeric|exists:articulos,id',
+            'cpu' => 'numeric|exists:articulos,id',
+            'disipador' => 'numeric|exists:articulos,id',
+            'ram' => 'numeric|exists:articulos,id',
+            'fuente' => 'numeric|exists:articulos,id',
+            'caja' => 'numeric|exists:articulos,id',
+            'almacenamientoPrincipal' => 'numeric|exists:articulos,id',
+            'almacenamientoSecundario' => 'numeric|exists:articulos,id|nullable',
+            'grafica' => 'numeric|exists:articulos,id|nullable',
+            'ventilacion' => 'numeric|exists:articulos,id|nullable',
+            'ventiladorCount' => 'numeric|nullable',
         ]);
+
+        $validator = Validator::make($request->all(), [
+            'placa' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 1);
+                }),
+            ],
+            'cpu' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 5);
+                }),
+            ],
+            'disipador' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 6);
+                }),
+            ],
+            'ram' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 3);
+                }),
+            ],
+            'fuente' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 4);
+                }),
+            ],
+            'caja' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 7);
+                }),
+            ],
+            'almacenamientoPrincipal' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 9);
+                }),
+            ],
+            'almacenamientoSecundario' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 9);
+                }),
+            ],
+            'grafica' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 2);
+                }),
+            ],
+            'ventilacion' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 8);
+                }),
+            ],
+        ]);
+
         $pc = Pc::create([
             'nombre' => $request->nombre,
             'socket_id' => $request->socket,
@@ -84,15 +213,6 @@ class PcController extends Controller
             }
         }
         return redirect("/perfil?seccion=pc")->with("success", "PC guardado correctamente.");
-
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(PC $pc)
-    {
-        //
     }
 
     /**
@@ -102,6 +222,7 @@ class PcController extends Controller
     {
         $pc = Pc::with('articulos')->find($request->id);
         $pcInicial = [
+            "user_id" => $pc->user_id,
             "id" => $pc->id,
             "nombre" => $pc->nombre,
             "socket" => $pc->socket_id,
@@ -147,10 +268,83 @@ class PcController extends Controller
     public function update(Request $request)
     {
         $pc = Pc::find($request->initialPc);
-
         $request->validate([
-            'nombre' => 'required',
+            'nombre' => 'required|max:45',
             'socket' => 'required',
+            'placa' => 'numeric|exists:articulos,id',
+            'cpu' => 'numeric|exists:articulos,id',
+            'disipador' => 'numeric|exists:articulos,id',
+            'ram' => 'numeric|exists:articulos,id',
+            'fuente' => 'numeric|exists:articulos,id',
+            'caja' => 'numeric|exists:articulos,id',
+            'almacenamientoPrincipal' => 'numeric|exists:articulos,id',
+            'almacenamientoSecundario' => 'numeric|exists:articulos,id|nullable',
+            'grafica' => 'numeric|exists:articulos,id|nullable',
+            'ventilacion' => 'numeric|exists:articulos,id|nullable',
+            'ventiladorCount' => 'numeric|nullable',
+        ]);
+
+        $validator = Validator::make($request->all(), [
+            'placa' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 1);
+                }),
+            ],
+            'cpu' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 5);
+                }),
+            ],
+            'disipador' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 6);
+                }),
+            ],
+            'ram' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 3);
+                }),
+            ],
+            'fuente' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 4);
+                }),
+            ],
+            'caja' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 7);
+                }),
+            ],
+            'almacenamientoPrincipal' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 9);
+                }),
+            ],
+            'almacenamientoSecundario' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 9);
+                }),
+            ],
+            'grafica' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 2);
+                }),
+            ],
+            'ventilacion' => [
+                'numeric',
+                Rule::exists('articulos')->where(function ($query) {
+                    $query->where('categoria_id', 8);
+                }),
+            ],
         ]);
 
         $pc->update([
@@ -185,10 +379,14 @@ class PcController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PC $pc)
+    public function destroy(Request $request)
     {
-        //
+        $pc = Pc::find($request->id);
+        $pc->articulos()->detach();
+        $pc->delete();
+        return redirect("/perfil?seccion=pc")->with("success", "PC eliminado correctamente.");
     }
+
     private function subdividePorSocket($articulos)
     {
         if ($articulos === null) {
@@ -198,6 +396,14 @@ class PcController extends Controller
         return $articulos->groupBy(function ($articulo) {
             return $articulo->datos->socket_id;
         });
+    }
+
+    public function publicar(Request $request)
+    {
+        $pc = Pc::find($request->id);
+        $pc->publicado = !$pc->publicado;
+        $pc->save();
+        return redirect("/perfil?seccion=pc")->with("success", "Estado de pc cambiado correctamente.");
     }
 
     private function subdivideCaja($cajas)

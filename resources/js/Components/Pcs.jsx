@@ -1,42 +1,50 @@
+import React, { useState, useEffect } from 'react';
 import Pc from "./Pc";
 import { Head } from '@inertiajs/react';
-import {Link} from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { useMediaQuery } from 'react-responsive';
-import React, { useState, useEffect } from 'react';
 
 export default function Pcs({ pcs }) {
-
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
     const [visibleLinks, setVisibleLinks] = useState(pcs.links);
+    const [pcData, setPcData] = useState(pcs.data);
+
     useEffect(() => {
         if (isSmallScreen) {
-            // Mostrar solo el primer enlace, el último enlace y el enlace activo en pantallas pequeñas
             const activeLink = pcs.links.find(link => link.active);
             setVisibleLinks([pcs.links[0], activeLink, pcs.links[pcs.links.length - 1]]);
         } else {
-            // Mostrar todos los enlaces en pantallas grandes
             setVisibleLinks(pcs.links);
         }
     }, [isSmallScreen, pcs.links]);
 
+    const handleDeletePc = (id) => {
+        setPcData(pcData.filter(pc => pc.id !== id));
+    };
+
     return (
-        <>
-            <div className=" min-h-screen w-11/12  xl:w-7/12">
+        <div>
+            <div className=" min-h-screen w-11/12 ">
                 <Head title="Mis PC" />
-                {pcs.data && pcs.data.length ? (
-                    pcs.data.map((pc) => (
-                        <div key={pc.id}>
-                            <Pc
-                                pc={pc}
-                            />
-                        </div>
-                    ))
-                ) : (
-                    <h1 className='text-2xl font-semibold pt-40 p-10 text-center'>No hay Configuraciones</h1>
-                )}
+                <div className="flex justify-center items-center w-full pb-10">
+                    {pcData.length === 0 ? (
+                        <h1 className='font-semibold text-xl'>No hay ordenadores</h1>
+                    ) : (
+                        <section className='px-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-16'>
+                            {pcData.map(pc => (
+                                <Pc
+                                    key={pc.id}
+                                    pc={pc}
+                                    editable={true}
+                                    onDelete={handleDeletePc}
+                                />
+                            ))}
+                        </section>
+                    )}
+                </div>
             </div>
             <nav className="flex items-center justify-center py-4">
-            {visibleLinks.map((link, index) => (
+                {visibleLinks.map((link, index) => (
                     <Link
                         key={index}
                         className={`
@@ -51,6 +59,6 @@ export default function Pcs({ pcs }) {
                     </Link>
                 ))}
             </nav>
-        </>
+        </div>
     );
 }

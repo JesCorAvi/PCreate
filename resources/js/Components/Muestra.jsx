@@ -167,7 +167,7 @@ export default function Muestra({ user, active = false, classNameName = '', chil
                     </section>
 
                 </article>
-                <article className='block xl:flex px-5'>
+                <article className='block xl:flex px-5 pb-10'>
                     <section className="flex-1 flex flex-col text-justify ">
                         <h2 id="descripcion-completa" className="font-bold text-2xl pt-10 xl:px-20">Sobre el producto</h2>
                         <p className='py-10 xl:px-20 max-w-4xl overflow-hidden whitespace-pre-wrap'>{articulo.descripcion}</p>
@@ -194,8 +194,6 @@ export default function Muestra({ user, active = false, classNameName = '', chil
                             </table>
                         </div>
                     </section>
-
-
                     <Comentarios onComentarioCreado={handleComentarioCreado} onComentarioBorrado={handleComentarioBorrado} id={articulo.id} user={user}></Comentarios>
                 </article>
                 {lightboxVisible && (

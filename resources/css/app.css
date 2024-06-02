@@ -58,6 +58,11 @@
 .h-comp {
     height: 28rem
 }
+
+.h-comp2 {
+    height: 36rem
+}
+
 @keyframes aparecer {
     0% {
       transform: scale(0); /* Comienza invisible */

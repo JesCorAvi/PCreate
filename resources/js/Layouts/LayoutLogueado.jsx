@@ -42,8 +42,8 @@ export default function Layout({ user, header, children, categorias }) {
                                 <Busqueda categorias = {categorias}></Busqueda>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex hover:bg-gray-800">
-                                <NavLink href={route('index')} active={route().current('index')}>
-                                    <p className="text-white" >Ranking</p>
+                                <NavLink href={route('pc.index')} active={route().current('pc.index')}>
+                                    <p className="text-white" >Ordenadores PCreate</p>
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex hover:bg-gray-800">

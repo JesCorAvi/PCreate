@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId("socket_id")->constrained();
             $table->foreignId("user_id")->constrained();
             $table->string("nombre");
+            $table->boolean('publicado')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
