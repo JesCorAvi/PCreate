@@ -4,7 +4,7 @@ import Pc from '@/Components/Pc';
 import React, { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-export default function Configuraciones({ user, cantidad, pcs, sockets }) {
+export default function Configuraciones({cantidad, pcs, sockets }) {
     const [pcsFiltrados, setPcs] = useState(pcs);
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
     const [visibleLinks, setVisibleLinks] = useState(pcsFiltrados.links);

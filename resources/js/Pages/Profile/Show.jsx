@@ -32,6 +32,7 @@ export default function Show({ auth, mustVerifyEmail, status, categorias, avatar
                     mustVerifyEmail={mustVerifyEmail}
                     facturas = {facturas}
                     pcs = {pcs}
+                    user = {auth.user}
                 ></ShowUsuario>
             )
             : (

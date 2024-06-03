@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
 import { useMediaQuery } from 'react-responsive';
 
-export default function Pcs({ pcs }) {
+export default function Pcs({user, pcs }) {
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
     const [visibleLinks, setVisibleLinks] = useState(pcs.links);
     const [pcData, setPcData] = useState(pcs.data);
@@ -18,7 +18,7 @@ export default function Pcs({ pcs }) {
         }
     }, [isSmallScreen, pcs.links]);
 
-    const handleDeletePc = (id) => {
+    function handleDeletePc(id){
         setPcData(pcData.filter(pc => pc.id !== id));
     };
     function calcularNota(articulo) {
@@ -44,9 +44,10 @@ export default function Pcs({ pcs }) {
                                 <Pc
                                     key={pc.id}
                                     pc={pc}
-                                    editable={false}
+                                    editable={user.id === pc.user_id ? true : false}
                                     estrellas={estrellasValor}
                                     valoraciones={pc.comentarios.length}
+                                    onDelete={handleDeletePc}
                                     />
                                 );
                             })}
