@@ -71,7 +71,7 @@ class PcController extends Controller
 
         $pcs->getCollection()->transform(function($pc) {
             $pc->puntuacion = $pc->articulos->sum('puntuacion');
-            $pc->calidad_precio = $pc->articulos->avg('puntuacionPrecio');
+            $pc->calidad_precio = $pc->puntuacion / $pc->total_precio;
             return $pc;
         });
 

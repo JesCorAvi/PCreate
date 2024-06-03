@@ -65,7 +65,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     });
     // Función para calcular el porcentaje de la puntuación total
     function porcentaje() {
-        return ((puntuacionTotal / 2500) * 100).toFixed(2);
+        return ((puntuacionTotal / 2400) * 100).toFixed(2);
     }
     //Gestiona los errores del input nombre
     const [errorNombre, setErrorNombre] = useState('');
@@ -172,8 +172,8 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
             const cpuSeleccionado = filteredArticulos.cpu.find(cpu => cpu.id === data.cpu);
             const fuenteSeleccionado = articulos.fuentes.find(fuente => fuente.id === data.fuente);
             const graficaSeleccionado = articulos.graficas.find(grafica => grafica.id === data.grafica);
-            let consumo = cpuSeleccionado.datos.consumo + graficaSeleccionado.datos.consumo;
-            let maximoConsumo = parseInt(fuenteSeleccionado.datos.poder) * 0.8;
+            let consumo = parseInt(cpuSeleccionado.datos.consumo) + parseInt(graficaSeleccionado.datos.consumo);
+            let maximoConsumo = parseInt(fuenteSeleccionado.datos.poder) * 0.9;
             if (consumo > maximoConsumo) {
                 setShowFuenteWarning(true);
             } else {

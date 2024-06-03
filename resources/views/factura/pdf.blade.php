@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Factura #{{ $factura->id }}</title>
+    <title>Albarán #{{ $factura->id }}</title>
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
@@ -39,7 +39,7 @@
 <body class="p-6">
     <div class="container mx-auto text-center">
         <div class="company-name">PCreate</div>
-        <h1 class="text-2xl font-bold">Factura #{{ $factura->id }}</h1>
+        <h1 class="text-2xl font-bold">Albarán #{{ $factura->id }}</h1>
         <p><strong>Usuario:</strong> {{ $factura->user->name }}</p>
         <p><strong>Correo electrónico:</strong> {{ $factura->user->email }}</p>
         <p><strong>Fecha de pedido:</strong> {{ \Carbon\Carbon::parse($factura->fecha_creacion)->format('d-m-Y') }}</p>

@@ -16,15 +16,6 @@ export default function Pc({ pc, estrellas, valoraciones, className = "", editab
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showInfoPotencial, setShowInfoPotencial] = useState(false);
 
-
-    function Total() {
-        let total = 0;
-        pc.articulos.forEach(articulo => {
-            total += articulo.precio * articulo.pivot.cantidad;
-        });
-        return total.toFixed(2);
-    }
-
     function imagenCaja() {
         let caja = pc.articulos.find(articulo => articulo.categoria.nombre === "Caja");
         return caja.fotos[0].imagen;
@@ -38,7 +29,7 @@ export default function Pc({ pc, estrellas, valoraciones, className = "", editab
         });
     }
     function porcentaje() {
-        return ((pc.puntuacion / 2500) * 100).toFixed(2);
+        return ((pc.puntuacion / 2400) * 100).toFixed(2);
     }
     function borrarPc() {
         axios.post(route("pc.destroy", { id: pc.id })).then(response => {
@@ -104,7 +95,7 @@ export default function Pc({ pc, estrellas, valoraciones, className = "", editab
                     <p className='font-semibold text-lg'>{pc.nombre}</p>
                     <p>{pc.socket.nombre}</p>
                 </div>
-                <p className="text-2xl font-bold pt-5">{Total()}€</p>
+                <p className="text-2xl font-bold pt-5">{pc.total_precio}€</p>
             </Link>
 
             {editable && (

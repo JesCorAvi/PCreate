@@ -171,6 +171,8 @@ export default function Muestra({ user, active = false, classNameName = '', chil
                     <section className="flex-1 flex flex-col text-justify ">
                         <h2 id="descripcion-completa" className="font-bold text-2xl pt-10 xl:px-20">Sobre el producto</h2>
                         <p className='py-10 xl:px-20 max-w-4xl overflow-hidden whitespace-pre-wrap'>{articulo.descripcion}</p>
+                        <h2  className="font-bold text-2xl py-5 xl:px-20">Especificaciones</h2>
+
                         <div className="flex justify-center">
                             <table className="border-2 border-solid border-black rounded-md w-96">
                                 <tbody className="border-2 border-solid border-black">

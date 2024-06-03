@@ -36,7 +36,7 @@ export default function Pedido({ factura }) {
 
                 <div className="ml-auto">
                     <p><strong>PEDIDO #</strong> {factura.id}</p>
-                    <button onClick={handleDownload} className='underline'>Descargar Factura</button>
+                    <button onClick={handleDownload} className='underline'>Descargar Albarán</button>
                 </div>
             </div>
             <div className='px-2 py-1'>

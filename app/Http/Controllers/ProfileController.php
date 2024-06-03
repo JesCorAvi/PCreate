@@ -46,7 +46,8 @@ class ProfileController extends Controller
         // Calcular las puntuaciones y calidad/precio
         $pcs->getCollection()->transform(function($pc) {
         $pc->puntuacion = $pc->articulos->sum('puntuacion');
-        $pc->calidad_precio = $pc->articulos->avg('puntuacionPrecio');
+        $pc-> total_precio = $pc->articulos->sum('precio');
+        $pc->calidad_precio = $pc->puntuacion / $pc->total_precio;
         return $pc;
         });
 
