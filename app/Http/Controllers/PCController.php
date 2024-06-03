@@ -10,6 +10,7 @@ use App\Models\Marca;
 use Inertia\Inertia;
 use App\Models\Socket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -32,7 +33,6 @@ class PcController extends Controller
             $query->whereRaw('(SELECT SUM(precio) FROM articulo_pc JOIN articulos ON articulo_pc.articulo_id = articulos.id WHERE articulo_pc.pc_id = pcs.id) <= ?', [$request->input('precioMaximo')]);
         }
 
-        // Apply socket filters if they exist
         if ($request->has('sockets')) {
             $sockets = $request->input('sockets');
             $query->whereHas('socket', function($q) use ($sockets) {
@@ -40,9 +40,12 @@ class PcController extends Controller
             });
         }
 
-        // Ordenar según el criterio
         if ($request->has('criterio')) {
             switch ($request->input('criterio')) {
+                case ('precio_bajo'):
+                    $query->withSum('articulos', 'precio')
+                          ->orderBy('articulos_sum_precio', 'asc');
+                    break;
                 case 'calidadPrecio':
                     $query->withAvg('articulos', 'puntuacionPrecio')
                           ->orderBy('articulos_avg_puntuacion_precio', 'desc');
@@ -51,13 +54,20 @@ class PcController extends Controller
                     $query->withSum('articulos', 'puntuacion')
                           ->orderBy('articulos_sum_puntuacion', 'desc');
                     break;
+                case 'mejor_valorados':
+                    $query->withCount(['comentarios as promedio_estrellas' => function ($query) {
+                        $query->select(DB::raw('coalesce(avg(estrellas), 0)'));
+                    }])->orderBy('promedio_estrellas', 'desc');
+                    break;
+                case 'mas_valorados':
+                    $query->withCount('comentarios')
+                          ->orderBy('comentarios_count', 'desc');
+                    break;
             }
         }
 
-        // Obtener los PCs con paginación
         $pcs = $query->paginate(12);
 
-        // Calcular las puntuaciones y calidad/precio
         $pcs->getCollection()->transform(function($pc) {
             $pc->puntuacion = $pc->articulos->sum('puntuacion');
             $pc->calidad_precio = $pc->articulos->avg('puntuacionPrecio');

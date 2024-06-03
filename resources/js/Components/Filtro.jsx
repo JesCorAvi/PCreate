@@ -15,6 +15,8 @@ export default function Filtro({ categorias, marcas, filtrar }) {
             setPlegado(true);
         }
     }, [isSmallScreen]);
+    const [orden, setOrden] = useState(getQueryParam("orden") || "");
+
 
     const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState(
         getQueryParam("categoria") ? getQueryParam("categoria").split(",") : []
@@ -52,7 +54,7 @@ export default function Filtro({ categorias, marcas, filtrar }) {
         if (error) {
             return;
         }
-        filtrar(categoriasSeleccionadas.join(","), marcasSeleccionadas.join(","), precioMinimo, precioMaximo);
+        filtrar(categoriasSeleccionadas.join(","), marcasSeleccionadas.join(","), precioMinimo, precioMaximo, orden);
     };
 
     const borrarFiltros = () => {
@@ -60,9 +62,10 @@ export default function Filtro({ categorias, marcas, filtrar }) {
         setMarcasSeleccionadas([]);
         setPrecioMinimo("");
         setPrecioMaximo("");
+        setOrden("");
         setError("");
         window.history.pushState({}, "", window.location.pathname);
-        filtrar("", "", "", "");
+        filtrar("", "", "", "", "");
     };
 
     const toggleCategoria = (id) => {
@@ -85,6 +88,15 @@ export default function Filtro({ categorias, marcas, filtrar }) {
                 aria-label="Sidebar"
             >
                 <form className="px-20 lg:px-0" action="" onSubmit={handleSubmit}>
+                <h2 className="text-center lg:text-left font-bold text-2xl py-2">Ordenar por</h2>
+                    <div className="my-3 overflow-y-auto flex gap-3 align-middle justify-center  md:justify-start dark:bg-gray-800">
+                        <select value={orden} onChange={(e) => setOrden(e.target.value)} className="w-52 border-blue-800 text-blue-800 rounded-md placeholder-blue-800">
+                            <option value="">Seleccionar</option>
+                            <option value="precio_bajo">Precio más bajo</option>
+                            <option value="mejor_valorados">Mejor valorados</option>
+                            <option value="mas_valorados">Más valorados</option>
+                        </select>
+                    </div>
                     <h2 className="text-center lg:text-left font-bold text-2xl pb-2">Categorias</h2>
                     <div className="my-3 max-h-52 lg:max-h-72 overflow-y-auto  dark:bg-gray-800p-">
                         <fieldset className="p-2">

@@ -4,7 +4,7 @@ import Pc from '@/Components/Pc';
 import React, { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-export default function Configuraciones({cantidad, pcs, sockets }) {
+export default function Configuraciones({ cantidad, pcs, sockets }) {
     const [pcsFiltrados, setPcs] = useState(pcs);
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
     const [visibleLinks, setVisibleLinks] = useState(pcsFiltrados.links);
@@ -38,6 +38,7 @@ export default function Configuraciones({cantidad, pcs, sockets }) {
             onSuccess: (page) => setPcs(page.props.pcs)
         });
     };
+
     function calcularNota(articulo) {
         if (articulo.comentarios.length === 0) return 0;
         let suma = 0;
@@ -46,6 +47,7 @@ export default function Configuraciones({cantidad, pcs, sockets }) {
         });
         return suma / articulo.comentarios.length;
     }
+
     return (
         <>
             <div className="flex min-h-screen">
@@ -58,12 +60,12 @@ export default function Configuraciones({cantidad, pcs, sockets }) {
                             {pcsFiltrados.data.map(pc => {
                                 const estrellasValor = calcularNota(pc);
                                 return (
-                                <Pc
-                                    key={pc.id}
-                                    pc={pc}
-                                    editable={false}
-                                    estrellas={estrellasValor}
-                                    valoraciones={pc.comentarios.length}
+                                    <Pc
+                                        key={pc.id}
+                                        pc={pc}
+                                        editable={false}
+                                        estrellas={estrellasValor}
+                                        valoraciones={pc.comentarios.length}
                                     />
                                 );
                             })}
