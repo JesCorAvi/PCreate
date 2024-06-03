@@ -21,7 +21,14 @@ export default function Pcs({ pcs }) {
     const handleDeletePc = (id) => {
         setPcData(pcData.filter(pc => pc.id !== id));
     };
-
+    function calcularNota(articulo) {
+        if (articulo.comentarios.length === 0) return 0;
+        let suma = 0;
+        articulo.comentarios.forEach(comentario => {
+            suma += comentario.estrellas;
+        });
+        return suma / articulo.comentarios.length;
+    }
     return (
         <div>
             <div className=" min-h-screen w-11/12 ">
@@ -31,14 +38,18 @@ export default function Pcs({ pcs }) {
                         <h1 className='font-semibold text-xl'>No hay ordenadores</h1>
                     ) : (
                         <section className='px-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-16'>
-                            {pcData.map(pc => (
+                            {pcs.data.map(pc => {
+                            const estrellasValor = calcularNota(pc);
+                                return (
                                 <Pc
                                     key={pc.id}
                                     pc={pc}
-                                    editable={true}
-                                    onDelete={handleDeletePc}
-                                />
-                            ))}
+                                    editable={false}
+                                    estrellas={estrellasValor}
+                                    valoraciones={pc.comentarios.length}
+                                    />
+                                );
+                            })}
                         </section>
                     )}
                 </div>

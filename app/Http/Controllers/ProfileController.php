@@ -39,7 +39,7 @@ class ProfileController extends Controller
         ->orderByDesc('id')
         ->paginate(6);
 
-        $pcs = $request->user()->pcs()->with('articulos.fotos', 'articulos.categoria', 'socket', 'user')
+        $pcs = $request->user()->pcs()->with('articulos.fotos', 'articulos.categoria', 'socket', 'user', 'comentarios')
         ->orderByDesc('id')
         ->paginate(12);
 
@@ -48,7 +48,7 @@ class ProfileController extends Controller
         $pc->puntuacion = $pc->articulos->sum('puntuacion');
         $pc->calidad_precio = $pc->articulos->avg('puntuacionPrecio');
         return $pc;
-    });
+        });
 
         $domicilios = $request->user()->domicilios()
         ->with('provincia')

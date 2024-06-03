@@ -90,6 +90,7 @@ export default function Pc({ pc, estrellas, valoraciones, className = "", editab
                 <div className="px-5 min-h-24">
                     <div className="flex">
                         {[...Array(5)].map((star, index) => {
+
                             const starValue = index + 1;
                             return (
                                 <span key={starValue}

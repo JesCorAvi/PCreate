@@ -138,8 +138,8 @@ export default function Layout({ user, header, children, categorias }) {
 
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' md:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('index')} active={route().current('index')}>
-                            Ranking
+                        <ResponsiveNavLink href={route('pc.index')} active={route().current('pc.index')}>
+                            Ordenadores PCreate
                         </ResponsiveNavLink>
                     </div>
                     <div className="pt-2 pb-3 space-y-1">

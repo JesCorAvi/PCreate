@@ -38,7 +38,14 @@ export default function Configuraciones({ user, cantidad, pcs, sockets }) {
             onSuccess: (page) => setPcs(page.props.pcs)
         });
     };
-
+    function calcularNota(articulo) {
+        if (articulo.comentarios.length === 0) return 0;
+        let suma = 0;
+        articulo.comentarios.forEach(comentario => {
+            suma += comentario.estrellas;
+        });
+        return suma / articulo.comentarios.length;
+    }
     return (
         <>
             <div className="flex min-h-screen">
@@ -48,9 +55,18 @@ export default function Configuraciones({ user, cantidad, pcs, sockets }) {
                         <h1 className='font-semibold text-xl'>No hay ordenadores</h1>
                     ) : (
                         <section className='px-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-16'>
-                            {pcsFiltrados.data.map(pc => (
-                                <Pc key={pc.id} pc={pc} editable={false} estrellas={pc.estrellas} valoraciones={pc.comentarios.length} />
-                            ))}
+                            {pcsFiltrados.data.map(pc => {
+                                const estrellasValor = calcularNota(pc);
+                                return (
+                                <Pc
+                                    key={pc.id}
+                                    pc={pc}
+                                    editable={false}
+                                    estrellas={estrellasValor}
+                                    valoraciones={pc.comentarios.length}
+                                    />
+                                );
+                            })}
                         </section>
                     )}
                 </div>
