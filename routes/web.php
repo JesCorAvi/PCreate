@@ -85,14 +85,14 @@ Route::post('/articulos/getArticulos', [ArticuloController::class, 'getArticulos
 
 // Rutas relacionadas con los PC
 Route::get('/ordenadores', [PCController::class, 'index'])->name('pc.index');
-Route::post('/publicar', [PCController::class, 'publicar'])->name('pc.publicar')->middleware('auth');
-Route::post('/pc/borrado', [PCController::class, 'destroy'])->name('pc.destroy')->middleware('auth');
+Route::post('/publicar', [PCController::class, 'publicar'])->name('pc.publicar')->middleware('auth', 'verified');
+Route::post('/pc/borrado', [PCController::class, 'destroy'])->name('pc.destroy')->middleware('auth', 'verified');
 
 
-Route::get('/configurador/crear', [PCController::class, 'create'])->name('pc.create');
+Route::get('/configurador/crear', [PCController::class, 'create'])->name('pc.create')->middleware('auth');
 Route::post('/configurador/creado', [PCController::class, 'store'])->name('pc.store')->middleware('auth');
-Route::get('/configurador/edit', [PCController::class, 'edit'])->name('pc.edit')->middleware('auth');
-Route::post('/configurador/editado', [PCController::class, 'update'])->name('pc.update')->middleware('auth');
+Route::get('/configurador/ver', [PCController::class, 'edit'])->name('pc.edit')->middleware('auth');
+Route::post('/configurador/editado', [PCController::class, 'update'])->name('pc.update')->middleware('auth', 'verified');
 
 // Rutas relacionadas con el carrito de compras
 Route::post('/carrito/store', [CarritoController::class, 'store'])->name('carrito.store')->middleware('auth');
@@ -114,7 +114,7 @@ Route::post('/marca/restaurar/{id}', [MarcaController::class, 'darDeALta'])->nam
 Route::post('/facturas/getMarcas', [FacturaController::class, 'getFacturas'])->name('factura.getFacturas')->middleware('auth');
 Route::post('/factura/update', [FacturaController::class, 'update'])->name('factura.update')->middleware('auth');
 Route::post('/factura/destroy', [FacturaController::class, 'destroy'])->name('factura.destroy')->middleware('auth');
-Route::get('/factura/{id}/download', [FacturaController::class, 'download'])->name('factura.download');
+Route::get('/factura/{id}/download', [FacturaController::class, 'download'])->name('factura.download')->middleware('auth');
 
 // Rutas relacionadas con comentarios
 Route::post('/tienda/comentarios/getComentario', [ComentarioController::class, 'getComentarios'])->name('comentario.getComentarios');

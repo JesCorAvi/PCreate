@@ -21,7 +21,7 @@ class FacturaPolicy
      */
     public function view(User $user, Factura $factura): bool
     {
-        //
+        return ($user->role === 'admin' || $user->id === 1 || $factura->user_id === $user->id);
     }
 
     /**
@@ -35,17 +35,18 @@ class FacturaPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Factura $factura): bool
+    public function update(User $user): bool
     {
-        //
+        return ($user->role === 'admin' || $user->id === 1);
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Factura $factura): bool
+    public function delete(User $user): bool
     {
-        //
+        $user = auth()->user();
+        return ($user->role === 'admin' || $user->id === 1);
     }
 
     /**

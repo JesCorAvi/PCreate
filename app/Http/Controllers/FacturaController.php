@@ -11,6 +11,7 @@ use App\Models\Provincia;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class FacturaController extends Controller
 {
@@ -105,6 +106,9 @@ class FacturaController extends Controller
     public function update(Request $request)
     {
         $factura = Factura::find($request->id);
+        if (!Gate::allows('update', $factura )) {
+            abort(403);
+        }
         $fecha_creacion = $factura->fecha_creacion;
 
         $request->validate([
@@ -125,12 +129,21 @@ class FacturaController extends Controller
      */
     public function destroy(Request $request)
     {
+
         $factura = Factura::find($request->id);
+        if (!Gate::allows('view', $factura )) {
+            abort(403);
+        }
         $factura->delete();
     }
     public function download($id)
     {
+
         $factura = Factura::with('articulos', 'domicilio', 'domicilio.provincia', 'user')->findOrFail($id);
+
+        if (!Gate::allows('view', $factura )) {
+            abort(403);
+        }
 
         $pdf = Pdf::loadView('factura.pdf', compact('factura'));
 

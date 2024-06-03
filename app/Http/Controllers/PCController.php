@@ -11,6 +11,7 @@ use Inertia\Inertia;
 use App\Models\Socket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -280,6 +281,9 @@ class PcController extends Controller
     public function update(Request $request)
     {
         $pc = Pc::find($request->initialPc);
+        if (!Gate::allows('update', $pc )) {
+            abort(403);
+        }
         $request->validate([
             'nombre' => 'required|max:45',
             'socket' => 'required',
@@ -394,6 +398,9 @@ class PcController extends Controller
     public function destroy(Request $request)
     {
         $pc = Pc::find($request->id);
+        if (!Gate::allows('update', $pc )) {
+            abort(403);
+        }
         $pc->articulos()->detach();
         $pc->delete();
         return redirect("/perfil?seccion=pc")->with("success", "PC eliminado correctamente.");
