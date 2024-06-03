@@ -543,7 +543,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                     />
                 ))}
             </div>
-            {data.socket && (
+            {data.socket ? (
                 <div className='flex justify-center mt-8'>
                     <div className="w-9/12">
                         <div>
@@ -576,8 +576,15 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                         </div>
                     </div>
                 </div>
-            )}
-            {data.placa && (
+            )
+            :
+            (
+                <div className='flex justify-center mt-8'>
+                    <p className='font-semibold text-2xl pt-20'>Seleccione un socket para continuar</p>
+                </div>
+            )
+            }
+            {data.placa ? (
                 <div className='flex flex-col lg:flex-row gap-14 max-w-all justify-center mt-8'>
                     <div className='rounded-lg w-all lg:w-2/6'>
                         <div>
@@ -899,7 +906,15 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                     </div>
 
                 </div>
-            )}
+            )
+            :
+            data.socket &&
+            (
+                <div className='flex justify-center mt-8'>
+                    <p className='font-semibold text-2xl pt-20'>Seleccione una placa base para continuar</p>
+                </div>
+            )
+            }
             {initialPc &&
                 <ComentariosPc
                     onComentarioCreado={handleComentarioCreado}
