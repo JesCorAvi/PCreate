@@ -43,33 +43,23 @@ class ComentarioController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request, $commentableType, $commentableId)
     {
         $request->validate([
-            'contenido' => "required|regex:/^(?!.*\b\w{31,}\b).*$/s",
-            'estrellas' => 'required',
+            'contenido' => 'required|max:500|regex:/^(?!.*\b\w{31,}\b).*$/s',
+            'estrellas' => 'required|numeric|min:0|max:5',
         ]);
 
         // Obtén una instancia del modelo correcto
         $commentable = ('App\\Models\\' . $commentableType)::find($commentableId);
+
+        // Check if the user has already commented on this product
+        if ($commentable->comentarios()->where('user_id', auth()->user()->id)->exists()) {
+            return redirect()->back()->with('error', 'Ya has comentado en este producto.');
+        }
+
         // Crea y guarda el nuevo comentario
         $comment = new Comentario([
             'user_id' => auth()->user()->id,
@@ -80,27 +70,6 @@ class ComentarioController extends Controller
 
         return redirect()->back()->with('success', 'Comentario creado exitosamente.');
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Comentario $Comentario)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comentario $Comentario)
-    {
-
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
 
 
     /**

@@ -6,7 +6,6 @@ import { useMediaQuery } from 'react-responsive';
 import Modal from '@/Components/Modal';
 import BotonGrande from '@/Components/BotonGrande';
 
-
 export default function Productos({ user, articulos, categorias, marcas, cantidad, active = false, classNameName = '', children, ...props }) {
     function acortar(cadena, longitud) {
         if (cadena.length <= longitud) {
@@ -15,6 +14,7 @@ export default function Productos({ user, articulos, categorias, marcas, cantida
             return cadena.substring(0, longitud) + '...'; // Acorta la cadena y añade puntos suspensivos
         }
     }
+
     function calcularNota(articulo) {
         if (articulo.comentarios.length === 0) return 0;
         let suma = 0;
@@ -25,7 +25,7 @@ export default function Productos({ user, articulos, categorias, marcas, cantida
     }
 
     const [articulosFiltrados, setArticulos] = useState(articulos);
-    const filtrar = (categoria, marca, precioMinimo, precioMaximo) => {
+    const filtrar = (categoria, marca, precioMinimo, precioMaximo, orden) => {
         const params = {};
         if (categoria != "") {
             params.categoria = categoria;
@@ -39,11 +39,15 @@ export default function Productos({ user, articulos, categorias, marcas, cantida
         if (precioMaximo != "") {
             params.precioMaximo = precioMaximo;
         }
+        if (orden != "") {
+            params.orden = orden;
+        }
         router.get(route('articulo.index', params));
-
     };
+
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
     const [visibleLinks, setVisibleLinks] = useState(articulosFiltrados.links);
+
     useEffect(() => {
         if (isSmallScreen) {
             // Mostrar solo el primer enlace, el último enlace y el enlace activo en pantallas pequeñas
@@ -64,6 +68,7 @@ export default function Productos({ user, articulos, categorias, marcas, cantida
     const handleCloseModal = () => {
         setIsAddToCartModalVisible(false);
     };
+
     return (
         <>
             <div className="flex min-h-screen">
@@ -77,7 +82,6 @@ export default function Productos({ user, articulos, categorias, marcas, cantida
                         <img
                             className={`w-32 y-32 m-5 pt-5 ${isAddToCartModalVisible ? 'aparecer' : ''}`}
                             src="http://127.0.0.1:8000/assets/exito.svg"
-
                         ></img>
                         <h2 className="text-lg text-gray-900 font-semibold pt-5">
                             Producto añadido al carrito

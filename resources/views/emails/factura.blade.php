@@ -57,7 +57,7 @@
             <img src="https://i.imgur.com/ssvdSw5.png" alt="PCreate">
         </div>
         <h1>Gracias por tu pedido</h1>
-        <p>Adjunto encontrarás la factura de tu pedido.</p>
+        <p>Adjunto encontrarás el albarán de tu pedido.</p>
         <div class="info">
             <p><strong>Usuario:</strong> {{ $factura->user->name }}</p>
             <p><strong>Correo electrónico:</strong> {{ $factura->user->email }}</p>

@@ -171,6 +171,8 @@ export default function Muestra({ user, active = false, classNameName = '', chil
                     <section className="flex-1 flex flex-col text-justify ">
                         <h2 id="descripcion-completa" className="font-bold text-2xl pt-10 xl:px-20">Sobre el producto</h2>
                         <p className='py-10 xl:px-20 max-w-4xl overflow-hidden whitespace-pre-wrap'>{articulo.descripcion}</p>
+                        <h2  className="font-bold text-2xl py-5 xl:px-20">Especificaciones</h2>
+
                         <div className="flex justify-center">
                             <table className="border-2 border-solid border-black rounded-md w-96">
                                 <tbody className="border-2 border-solid border-black">
@@ -194,7 +196,11 @@ export default function Muestra({ user, active = false, classNameName = '', chil
                             </table>
                         </div>
                     </section>
-                    <Comentarios onComentarioCreado={handleComentarioCreado} onComentarioBorrado={handleComentarioBorrado} id={articulo.id} user={user}></Comentarios>
+                    <Comentarios
+                    onComentarioCreado={handleComentarioCreado}
+                    onComentarioBorrado={handleComentarioBorrado}
+                    id={articulo.id}
+                    user={user}></Comentarios>
                 </article>
                 {lightboxVisible && (
                     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={handleCloseLightbox}>

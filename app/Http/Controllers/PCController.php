@@ -10,6 +10,8 @@ use App\Models\Marca;
 use Inertia\Inertia;
 use App\Models\Socket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -20,7 +22,7 @@ class PcController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Pc::with('articulos.fotos', 'articulos.categoria', 'socket', 'user')
+        $query = Pc::with('articulos.fotos', 'articulos.categoria', 'socket', 'user', 'comentarios')
             ->where('publicado', true)
             ->selectRaw('pcs.*, (SELECT SUM(precio) FROM articulo_pc JOIN articulos ON articulo_pc.articulo_id = articulos.id WHERE articulo_pc.pc_id = pcs.id) as total_precio');
 
@@ -32,7 +34,6 @@ class PcController extends Controller
             $query->whereRaw('(SELECT SUM(precio) FROM articulo_pc JOIN articulos ON articulo_pc.articulo_id = articulos.id WHERE articulo_pc.pc_id = pcs.id) <= ?', [$request->input('precioMaximo')]);
         }
 
-        // Apply socket filters if they exist
         if ($request->has('sockets')) {
             $sockets = $request->input('sockets');
             $query->whereHas('socket', function($q) use ($sockets) {
@@ -40,9 +41,12 @@ class PcController extends Controller
             });
         }
 
-        // Ordenar según el criterio
         if ($request->has('criterio')) {
             switch ($request->input('criterio')) {
+                case ('precio_bajo'):
+                    $query->withSum('articulos', 'precio')
+                          ->orderBy('articulos_sum_precio', 'asc');
+                    break;
                 case 'calidadPrecio':
                     $query->withAvg('articulos', 'puntuacionPrecio')
                           ->orderBy('articulos_avg_puntuacion_precio', 'desc');
@@ -51,16 +55,23 @@ class PcController extends Controller
                     $query->withSum('articulos', 'puntuacion')
                           ->orderBy('articulos_sum_puntuacion', 'desc');
                     break;
+                case 'mejor_valorados':
+                    $query->withCount(['comentarios as promedio_estrellas' => function ($query) {
+                        $query->select(DB::raw('coalesce(avg(estrellas), 0)'));
+                    }])->orderBy('promedio_estrellas', 'desc');
+                    break;
+                case 'mas_valorados':
+                    $query->withCount('comentarios')
+                          ->orderBy('comentarios_count', 'desc');
+                    break;
             }
         }
 
-        // Obtener los PCs con paginación
         $pcs = $query->paginate(12);
 
-        // Calcular las puntuaciones y calidad/precio
         $pcs->getCollection()->transform(function($pc) {
             $pc->puntuacion = $pc->articulos->sum('puntuacion');
-            $pc->calidad_precio = $pc->articulos->avg('puntuacionPrecio');
+            $pc->calidad_precio = $pc->puntuacion / $pc->total_precio;
             return $pc;
         });
 
@@ -236,7 +247,8 @@ class PcController extends Controller
             "almacenamientoSecundario" => optional($pc->articulos->where('pivot.parte', 'almacenamientoSecundario')->first())->id,
             "grafica" => optional($pc->articulos->where('pivot.parte', 'grafica')->first())->id,
             "ventilacion" => optional($pc->articulos->where('pivot.parte', 'ventilacion')->first())->id,
-            "ventiladorCount" => optional($pc->articulos->firstWhere('pivot.parte', 'ventilacion'))->pivot->cantidad ?? null
+            "ventiladorCount" => optional($pc->articulos->firstWhere('pivot.parte', 'ventilacion'))->pivot->cantidad ?? null,
+            "comentarios" =>$pc->comentarios,
         ];
 
         $articulos = Articulo::with('fotos', 'marca', 'categoria')->get();
@@ -259,6 +271,7 @@ class PcController extends Controller
             'sockets' => Socket::all(),
             'articulos' => $articulos,
             'pc' => $pcInicial,
+            'user'=> $request->user()->load('comentarios'),
         ]);
     }
 
@@ -268,6 +281,9 @@ class PcController extends Controller
     public function update(Request $request)
     {
         $pc = Pc::find($request->initialPc);
+        if (!Gate::allows('update', $pc )) {
+            abort(403);
+        }
         $request->validate([
             'nombre' => 'required|max:45',
             'socket' => 'required',
@@ -382,6 +398,9 @@ class PcController extends Controller
     public function destroy(Request $request)
     {
         $pc = Pc::find($request->id);
+        if (!Gate::allows('update', $pc )) {
+            abort(403);
+        }
         $pc->articulos()->detach();
         $pc->delete();
         return redirect("/perfil?seccion=pc")->with("success", "PC eliminado correctamente.");

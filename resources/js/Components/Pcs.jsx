@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
 import { useMediaQuery } from 'react-responsive';
 
-export default function Pcs({ pcs }) {
+export default function Pcs({user, pcs }) {
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
     const [visibleLinks, setVisibleLinks] = useState(pcs.links);
     const [pcData, setPcData] = useState(pcs.data);
@@ -18,10 +18,17 @@ export default function Pcs({ pcs }) {
         }
     }, [isSmallScreen, pcs.links]);
 
-    const handleDeletePc = (id) => {
+    function handleDeletePc(id){
         setPcData(pcData.filter(pc => pc.id !== id));
     };
-
+    function calcularNota(articulo) {
+        if (articulo.comentarios.length === 0) return 0;
+        let suma = 0;
+        articulo.comentarios.forEach(comentario => {
+            suma += comentario.estrellas;
+        });
+        return suma / articulo.comentarios.length;
+    }
     return (
         <div>
             <div className=" min-h-screen w-11/12 ">
@@ -31,14 +38,19 @@ export default function Pcs({ pcs }) {
                         <h1 className='font-semibold text-xl'>No hay ordenadores</h1>
                     ) : (
                         <section className='px-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-16'>
-                            {pcData.map(pc => (
+                            {pcs.data.map(pc => {
+                            const estrellasValor = calcularNota(pc);
+                                return (
                                 <Pc
                                     key={pc.id}
                                     pc={pc}
-                                    editable={true}
+                                    editable={user.id === pc.user_id ? true : false}
+                                    estrellas={estrellasValor}
+                                    valoraciones={pc.comentarios.length}
                                     onDelete={handleDeletePc}
-                                />
-                            ))}
+                                    />
+                                );
+                            })}
                         </section>
                     )}
                 </div>

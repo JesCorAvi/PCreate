@@ -110,6 +110,9 @@ export default function FiltroPc({ filtrar, sockets }) {
                                 <option value="">Seleccionar</option>
                                 <option value="calidadPrecio">Calidad/Precio</option>
                                 <option value="potencia">Potencia</option>
+                                <option value="precio_bajo">Precio mas bajo</option>
+                                <option value="mejor_valorados">Mejor Valorados</option>
+                                <option value="mas_valorados">Más Valorados</option>
                             </select>
                         </div>
                     </div>

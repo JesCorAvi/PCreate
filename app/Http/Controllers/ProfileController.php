@@ -39,16 +39,17 @@ class ProfileController extends Controller
         ->orderByDesc('id')
         ->paginate(6);
 
-        $pcs = $request->user()->pcs()->with('articulos.fotos', 'articulos.categoria', 'socket', 'user')
+        $pcs = $request->user()->pcs()->with('articulos.fotos', 'articulos.categoria', 'socket', 'user', 'comentarios')
         ->orderByDesc('id')
         ->paginate(12);
 
         // Calcular las puntuaciones y calidad/precio
         $pcs->getCollection()->transform(function($pc) {
         $pc->puntuacion = $pc->articulos->sum('puntuacion');
-        $pc->calidad_precio = $pc->articulos->avg('puntuacionPrecio');
+        $pc-> total_precio = $pc->articulos->sum('precio');
+        $pc->calidad_precio = $pc->puntuacion / $pc->total_precio;
         return $pc;
-    });
+        });
 
         $domicilios = $request->user()->domicilios()
         ->with('provincia')

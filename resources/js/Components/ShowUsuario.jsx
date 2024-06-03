@@ -6,7 +6,7 @@ import Pedidos from '@/Components/Pedidos';
 import Direcciones from '@/Components/Direcciones';
 import Pcs from './Pcs';
 
-export default function ShowUsuario({ mustVerifyEmail, avatar, pedidos, domicilios, provincias, facturas, pcs }) {
+export default function ShowUsuario({ mustVerifyEmail, avatar, pedidos, domicilios, provincias, facturas, pcs, user }) {
     const [seccionActual, setSeccionActual] = useState("pedidos");
 
     useEffect(() => {
@@ -59,6 +59,7 @@ export default function ShowUsuario({ mustVerifyEmail, avatar, pedidos, domicili
                     {seccionActual === 'pc' && <Pcs
                     mustVerifyEmail={mustVerifyEmail}
                     pcs = {pcs}
+                    user={user}
                 />}
                 {seccionActual === 'edit' && <Edit
                     mustVerifyEmail={mustVerifyEmail}

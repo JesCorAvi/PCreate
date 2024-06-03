@@ -4,7 +4,7 @@ import Pc from '@/Components/Pc';
 import React, { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-export default function Configuraciones({ user, cantidad, pcs, sockets }) {
+export default function Configuraciones({ cantidad, pcs, sockets }) {
     const [pcsFiltrados, setPcs] = useState(pcs);
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
     const [visibleLinks, setVisibleLinks] = useState(pcsFiltrados.links);
@@ -39,6 +39,15 @@ export default function Configuraciones({ user, cantidad, pcs, sockets }) {
         });
     };
 
+    function calcularNota(articulo) {
+        if (articulo.comentarios.length === 0) return 0;
+        let suma = 0;
+        articulo.comentarios.forEach(comentario => {
+            suma += comentario.estrellas;
+        });
+        return suma / articulo.comentarios.length;
+    }
+
     return (
         <>
             <div className="flex min-h-screen">
@@ -48,9 +57,18 @@ export default function Configuraciones({ user, cantidad, pcs, sockets }) {
                         <h1 className='font-semibold text-xl'>No hay ordenadores</h1>
                     ) : (
                         <section className='px-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-16'>
-                            {pcsFiltrados.data.map(pc => (
-                                <Pc key={pc.id} pc={pc} editable={false} />
-                            ))}
+                            {pcsFiltrados.data.map(pc => {
+                                const estrellasValor = calcularNota(pc);
+                                return (
+                                    <Pc
+                                        key={pc.id}
+                                        pc={pc}
+                                        editable={false}
+                                        estrellas={estrellasValor}
+                                        valoraciones={pc.comentarios.length}
+                                    />
+                                );
+                            })}
                         </section>
                     )}
                 </div>

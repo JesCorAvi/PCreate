@@ -20,6 +20,7 @@ use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use App\Rules\ImagenOCadena;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class ArticuloController extends Controller
@@ -63,7 +64,10 @@ class ArticuloController extends Controller
             'precioMinimo' => 'nullable|numeric',
             'precioMaximo' => 'nullable|numeric',
             'palabras' => 'nullable|string',
+            'orden' => 'nullable|string',
+
         ]);
+        $orden = $request->input('orden');
         $categorias = $request->input('categoria');
         $marcas = $request->input('marca');
         $precioMinimo = $request->input('precioMinimo');
@@ -76,6 +80,18 @@ class ArticuloController extends Controller
             },
             'comentarios'
         ]);
+        if ($orden) {
+            if ($orden == 'precio_bajo') {
+                $query->orderBy('precio', 'asc');
+            } elseif ($orden == 'mejor_valorados') {
+                $query->withCount(['comentarios as promedio_estrellas' => function ($query) {
+                    $query->select(DB::raw('coalesce(avg(estrellas), 0)'));
+                }])->orderBy('promedio_estrellas', 'desc');
+            } elseif ($orden == 'mas_valorados') {
+                $query->withCount('comentarios')
+                    ->orderBy('comentarios_count', 'desc');
+            }
+        }
 
         if ($categorias) {
             $categoriaArray = explode(',', $categorias);
@@ -191,13 +207,11 @@ class ArticuloController extends Controller
                 break;
 
             case "Tarjeta gráfica":
-                $puntuacion = $request->memoria * 30;
-
                 if (strpos($request->gddr, 'x') !== false) {
                     $gddr = str_replace('x', '', $request->gddr);
-                    $puntuacion *= $gddr + 0.5;
+                    $puntuacion = ($request->memoria +  $gddr + 0.5) * 40;
                 } else {
-                    $puntuacion *= $request->gddr;
+                    $puntuacion = ($request->memoria + $request->gddr + 0.5) * 40;
                 }
                 $request->validate([
                     "memoria" => "required|regex:/^\d+$/",
@@ -436,13 +450,11 @@ class ArticuloController extends Controller
                 break;
 
             case "Tarjeta gráfica":
-                $puntuacion = $request->memoria * 10;
-
                 if (strpos($request->gddr, 'x') !== false) {
                     $gddr = str_replace('x', '', $request->gddr);
-                    $puntuacion *= ($gddr + 0.5)/2;
+                    $puntuacion = ($request->memoria +  $gddr + 0.5) * 40;
                 } else {
-                    $puntuacion *= $request->gddr;
+                    $puntuacion = ($request->memoria + $request->gddr + 0.5) * 40;
                 }
                 $request->validate([
                     "memoria" => "required|regex:/^\d+$/",
@@ -583,7 +595,7 @@ class ArticuloController extends Controller
             Foto::create([
                 "articulo_id" => $articulo->id,
                 "orden" => 0,
-                "imagen" => subirImagen($request->file("imagenpr"), 'uploads/articulos')
+                "imagen" => subirImagen($request->file("imagenpr"), 'uploads/articulos', 500)
             ]);
 
             Foto::create([
@@ -635,10 +647,9 @@ class ArticuloController extends Controller
         $articulo->restore();
         $articulo->fotos()->restore();
     }
-
 }
 
-function subirImagen($image, $ruta)
+function subirImagen($image, $ruta, $tamaño = 1000)
 {
     // Generar un nombre único para la imagen
     $name = hash('sha256', Str::random(15) . time()) . ".png";
@@ -649,7 +660,7 @@ function subirImagen($image, $ruta)
 
     $manager = new ImageManager(new Driver());
     $imageR = $manager->read(Storage::disk('public')->get('uploads/articulos/' . $name));
-    $imageR->scaleDown(1000); // Ajusta segun e tamaño de la imagen
+    $imageR->scaleDown($tamaño); // Ajusta segun e tamaño de la imagen
 
     // Guardar la imagen procesada
     $imageR->save(public_path('storage/uploads/articulos/' . $name));

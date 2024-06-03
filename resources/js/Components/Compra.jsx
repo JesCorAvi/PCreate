@@ -37,6 +37,13 @@ export default function Compra({ user, domicilios, articulos }) {
             });
         return cantidad;
     }
+    function FechaEntrega() {
+        var fecha = new Date();
+        fecha.setDate(fecha.getDate() + 5);
+
+        var opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return fecha.toLocaleDateString('es-ES', opciones);
+    }
 
     return (
         <div className='min-h-screen lg:flex w-full gap-16 lg:p-20'>
@@ -65,9 +72,11 @@ export default function Compra({ user, domicilios, articulos }) {
                         +
                     </Link>
             </div>
-            <div className='h-60 w-full xl:mt-16 lg:w-1/4 flex flex-col text-center justify-center items-center lg:block border border-solid border-gray-300 rounded-md'>
+            <div className='h-72 w-full xl:mt-16 lg:w-1/4 flex flex-col text-center justify-center items-center lg:block border border-solid border-gray-300 rounded-md'>
                 <p className="font-semibold text-2xl p-5">RESUMEN</p>
                 <p className='p-3'>{Cantidad()}  articulos en el carrito</p>
+                <p className='p-3 font-semibold'>Fecha de entrega aproximada:</p>
+                <p>{FechaEntrega()}</p>
                 <p className='p-4 text-3xl font-semibold'>{data.total} €</p>
                 <button onClick={comprar}
 className='bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-800  hover:to-purple-800 text-white text-xl font-bold text-center flex justify-center items-center rounded-md w-full px-3 py-5 border-b-2 border-t-2 border-gray-300 cursor-pointer'
