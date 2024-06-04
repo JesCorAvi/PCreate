@@ -29,6 +29,8 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     const originalUser = initialPc == undefined ? user.id : initialPc.user_id
     // Estado para el modal
     const [openModal, setOpenModal] = useState(false);
+    const [openModalComentarios, setOpenModalComentarios] = useState(false);
+
     // Estado para la cantidad de ventiladores y su límite
     const [ventiladorCount, setVentiladorCount] = useState(1);
     const [maxVentiladores, setMaxVentiladores] = useState(0);
@@ -424,8 +426,11 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     function abrirModal() {
         setOpenModal(true);
     }
-    function cerrarModal() {
-        setOpenModal(false);
+    function abrirModalComentarios() {
+        setOpenModalComentarios(true);
+    }
+    function cerrarModalComentarios() {
+        setOpenModalComentarios(false);
     }
     function procesarCarrito() {
         if (showAlmacenamientoPrincipalWarning || showCoolingWarning || showFuenteWarning) {
@@ -494,6 +499,23 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                 <div className="mt-6 flex justify-end p-6 gap-3">
                     <DangerButton className="ms-3 p-1" type='button' onClick={añadirAlCarrito} text="Entiendo los riesgos y quiero añadir al carrito"></DangerButton>
                     <SecondaryButton type='button' onClick={cerrarModal}>Cancelar</SecondaryButton>
+                </div>
+            </Modal>
+            <Modal show={openModalComentarios} onClose={cerrarModalComentarios}>
+                <h2 className="text-lg font-medium text-gray-900 font-semibold p-10">
+                    Alerta de modificación
+                </h2>
+                <p className="mt-1 text-lg px-10 text-gray-600">
+                    Hemos decidido reinicar las valoraciones de su configuración en el caso de realizar modificaciones a esta.
+                    De esta forma,
+                    Todas las valoraciones y comentarios serán eliminados si decide continuar.
+                </p>
+                <p className="mt-1 text-lg px-10 text-gray-600">
+                    ¿Seguro que desea continuar?
+                </p>
+                <div className="mt-6 flex justify-end p-6 gap-3">
+                    <DangerButton className="ms-3 p-1" type='button' onClick={guardarConfiguracion} text="Entiendo los riesgos y quiero añadir al carrito"></DangerButton>
+                    <SecondaryButton type='button' onClick={cerrarModalComentarios}>Cancelar</SecondaryButton>
                 </div>
             </Modal>
             <Head title="Configurador" />

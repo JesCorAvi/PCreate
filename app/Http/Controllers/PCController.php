@@ -389,6 +389,8 @@ class PcController extends Controller
                 $pc->articulos()->attach($request->{$componente[0]}, ['cantidad' => $componente[1], 'parte' => $componente[0]]);
             }
         }
+        $pc->comentarios()->delete();
+
         return redirect("/perfil?seccion=pc")->with("success", "PC guardado correctamente.");
     }
 
