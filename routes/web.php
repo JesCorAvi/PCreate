@@ -54,6 +54,12 @@ Route::post('/email/resend', function (Request $request) {
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
+
+Route::get("sobre-nosotros", function () {
+    return Inertia::render('Info', [
+        'categorias' => Categoria::all(),
+    ]);
+})->name('Info');
 // Rutas relacionadas con el domicilio
 Route::post('/perfil/store', [DomicilioController::class, 'store'])->name('domicilio.store');
 Route::put('/perfil/update', [DomicilioController::class, 'update'])->name('domicilio.update');

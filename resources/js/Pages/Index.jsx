@@ -7,11 +7,11 @@ import ArticulosSlider from '@/Components/ArticulosSlider';
 export default function Index({ auth, categorias, articulos }) {
     return (
         <>
-        <LayoutLogueado
-            user={auth.user}
-            categorias={categorias}
-        >
-                    </LayoutLogueado>
+            <LayoutLogueado
+                user={auth.user}
+                categorias={categorias}
+            >
+            </LayoutLogueado>
 
             <Head title="Inicio" />
 
@@ -30,7 +30,7 @@ export default function Index({ auth, categorias, articulos }) {
                     </h2>
                     <div className=" grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 xl:gap-8 w-full max-w-5xl mx-auto pt-5">
                         {categorias.slice(1).map((categoria, index) => (
-                            <Link key={index} href={'/tienda?categoria='+categoria.id} className="border-2 hover:border-purple-800 flex flex-col items-center rounded-lg shadow-lg h-auto p-2 lg:p-4 xl:p-6 w-full">
+                            <Link key={index} href={'/tienda?categoria=' + categoria.id} className="border-2 hover:border-purple-800 flex flex-col items-center rounded-lg shadow-lg h-auto p-2 lg:p-4 xl:p-6 w-full">
                                 <img src={"http://127.0.0.1:8000/assets/default" + (categoria.id - 1) + ".png"} alt={categoria.nombre} className="w-28 h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36" />
                                 <p className="text-center text-lg font-semibold">{categoria.nombre}</p>
                             </Link>
@@ -45,6 +45,6 @@ export default function Index({ auth, categorias, articulos }) {
                 </div>
             </div>
             <Footer />
-            </>
+        </>
     );
 }
