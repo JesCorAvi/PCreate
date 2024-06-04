@@ -768,7 +768,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                         )}
                         {user && user.id == originalUser && (
                             areEssentialComponentsSelected() && !errorNombre ? (
-                                <Boton texto="Guardar Configuración" onClick={abrirModalComentarios} ></Boton>
+                                <Boton texto="Guardar Configuración" onClick={initialPc ? abrirModalComentarios : guardarConfiguracion} ></Boton>
                             ) : (
                                 <p className='text-xl py-5'>Configure los elementos obligatorios para poder guardar su configuración.</p>
                             )
