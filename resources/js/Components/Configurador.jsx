@@ -429,6 +429,9 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     function abrirModalComentarios() {
         setOpenModalComentarios(true);
     }
+    function cerrarModal() {
+        setOpenModal(false);
+    }
     function cerrarModalComentarios() {
         setOpenModalComentarios(false);
     }
@@ -502,19 +505,17 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                 </div>
             </Modal>
             <Modal show={openModalComentarios} onClose={cerrarModalComentarios}>
-                <h2 className="text-lg font-medium text-gray-900 font-semibold p-10">
+                <h2 className="text-lg text-gray-900 font-semibold p-10">
                     Alerta de modificación
                 </h2>
                 <p className="mt-1 text-lg px-10 text-gray-600">
-                    Hemos decidido reinicar las valoraciones de su configuración en el caso de realizar modificaciones a esta.
-                    De esta forma,
-                    Todas las valoraciones y comentarios serán eliminados si decide continuar.
+                    Por motivos de seguridad, en el caso de modificar la configuracion las valoraciones seran reiniciadas y los comentarios borrados.
                 </p>
                 <p className="mt-1 text-lg px-10 text-gray-600">
                     ¿Seguro que desea continuar?
                 </p>
                 <div className="mt-6 flex justify-end p-6 gap-3">
-                    <DangerButton className="ms-3 p-1" type='button' onClick={guardarConfiguracion} text="Entiendo los riesgos y quiero añadir al carrito"></DangerButton>
+                    <DangerButton className="ms-3 p-1" type='button' onClick={guardarConfiguracion} text="Entiendo los riesgos y quiero aditar la configuracion"></DangerButton>
                     <SecondaryButton type='button' onClick={cerrarModalComentarios}>Cancelar</SecondaryButton>
                 </div>
             </Modal>
@@ -767,7 +768,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                         )}
                         {user && user.id == originalUser && (
                             areEssentialComponentsSelected() && !errorNombre ? (
-                                <Boton texto="Guardar Configuración" onClick={guardarConfiguracion} ></Boton>
+                                <Boton texto="Guardar Configuración" onClick={abrirModalComentarios} ></Boton>
                             ) : (
                                 <p className='text-xl py-5'>Configure los elementos obligatorios para poder guardar su configuración.</p>
                             )
