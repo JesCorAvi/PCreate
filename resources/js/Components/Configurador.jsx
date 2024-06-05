@@ -539,7 +539,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                 />
 
             {initialPc && (
-            <>
+            <div className='flex pt-2 mx-auto md:mx-0'>
                 {[...Array(5)].map((star, index) => {
                 const starValue = index + 1;
                 return (
@@ -549,7 +549,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                 );
                 })}
                 <p className='text-purple-800 font-semibold'>{valoraciones} valoraciones</p>
-            </>
+            </div>
             )}
             </div>
             <p className='text-red-500 font-semibold w-all text-center'>{errorNombre}</p>

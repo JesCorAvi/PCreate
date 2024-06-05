@@ -92,6 +92,7 @@ export default function Pc({ pc, estrellas, valoraciones, className = "", editab
                             );
                         })}<p className='text-purple-800 font-semibold'>{valoraciones} valoraciones</p>
                     </div>
+                    {!editable && <p className="text-lg">Creado por {pc.user.name}</p>}
                     <p className='font-semibold text-lg'>{pc.nombre}</p>
                     <p>{pc.socket.nombre}</p>
                 </div>

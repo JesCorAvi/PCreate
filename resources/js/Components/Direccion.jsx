@@ -184,7 +184,7 @@ export default function Direccion({ auth, direccion, ciudad, cpostal, provincia_
                                 value={data.provincia_id}
                                 required
                             >
-                                <option disabled>Provincias...</option>
+                                <option key={0} value="">Provincias...</option>
                                 {provincias.map((provincia) => (
                                     <option key={provincia.id} value={provincia.id}>
                                         {provincia.nombre}
