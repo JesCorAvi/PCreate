@@ -140,65 +140,71 @@ class PcController extends Controller
         $validator = Validator::make($request->all(), [
             'placa' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 1);
                 }),
             ],
             'cpu' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 5);
                 }),
             ],
             'disipador' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 6);
                 }),
             ],
             'ram' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 3);
                 }),
             ],
             'fuente' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 4);
                 }),
             ],
             'caja' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 7);
                 }),
             ],
             'almacenamientoPrincipal' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 9);
                 }),
             ],
             'almacenamientoSecundario' => [
+                'nullable',
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 9);
                 }),
             ],
             'grafica' => [
+                'nullable',
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 2);
                 }),
             ],
             'ventilacion' => [
+                'nullable',
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 8);
                 }),
             ],
         ]);
+
+        // Ejecutar la validación avanzada
+        $validator->validate();
 
         $pc = Pc::create([
             'nombre' => $request->nombre,
@@ -303,66 +309,69 @@ class PcController extends Controller
         $validator = Validator::make($request->all(), [
             'placa' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 1);
                 }),
             ],
             'cpu' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 5);
                 }),
             ],
             'disipador' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 6);
                 }),
             ],
             'ram' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 3);
                 }),
             ],
             'fuente' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 4);
                 }),
             ],
             'caja' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 7);
                 }),
             ],
             'almacenamientoPrincipal' => [
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 9);
                 }),
             ],
             'almacenamientoSecundario' => [
+                'nullable',
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 9);
                 }),
             ],
             'grafica' => [
+                'nullable',
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 2);
                 }),
             ],
             'ventilacion' => [
+                'nullable',
                 'numeric',
-                Rule::exists('articulos')->where(function ($query) {
+                Rule::exists('articulos', 'id')->where(function ($query) {
                     $query->where('categoria_id', 8);
                 }),
             ],
         ]);
-
+        $validator->validate();
         $pc->update([
             'nombre' => $request->nombre,
             'socket_id' => $request->socket,

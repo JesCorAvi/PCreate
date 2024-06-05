@@ -50,6 +50,9 @@ export default function FiltroPc({ filtrar, sockets }) {
     const validatePrices = () => {
         if (precioMinimo && precioMaximo && parseFloat(precioMinimo) > parseFloat(precioMaximo)) {
             setError("El precio mínimo debe ser menor o igual al precio máximo.");
+        }
+        else if (isNaN(precioMinimo) || isNaN(precioMaximo) ) {
+            setError("Los precios deben ser valores numéricos.");
         } else {
             setError("");
         }

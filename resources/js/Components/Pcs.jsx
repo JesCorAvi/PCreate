@@ -38,7 +38,7 @@ export default function Pcs({user, pcs }) {
                         <h1 className='font-semibold text-xl'>No hay ordenadores</h1>
                     ) : (
                         <section className='px-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-16'>
-                            {pcs.data.map(pc => {
+                            {pcData.map(pc => {
                             const estrellasValor = calcularNota(pc);
                                 return (
                                 <Pc
