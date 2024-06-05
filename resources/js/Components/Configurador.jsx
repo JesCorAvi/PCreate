@@ -490,7 +490,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     return (
         <div className="min-h-screen flex flex-col gap-7 mb-20">
             <Modal show={openModal} onClose={cerrarModal}>
-                <h2 className="text-lg font-medium text-gray-900 font-semibold p-10">
+                <h2 className="text-lg text-gray-900 font-semibold p-10">
                     Problemas detectados
                 </h2>
                 <p className="mt-1 text-lg px-10 text-gray-600">
