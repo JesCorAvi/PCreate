@@ -16,5 +16,3 @@ PASOS PARA EJECUTAR EL PROYECTO
  
 7.Para poblar la base de datos recordar usar php artisan db:seed
 
-Por ahora hay que mover a mano la imagen default.png de public/assets a public/storage/uploads/avatar y public/storage/uploads/articulos pàra que las imagenes del factory no salgan rotas, aunque no es obligatorio
-
