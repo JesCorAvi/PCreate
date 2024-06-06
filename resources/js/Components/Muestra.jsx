@@ -23,10 +23,10 @@ export default function Muestra({ user, active = false, classNameName = '', chil
     const imagenSec1 = articulo.fotos.find(foto => foto.orden === 2)?.imagen;
     const imagenSec2 = articulo.fotos.find(foto => foto.orden === 3)?.imagen;
 
-    const [imagenGrande, setGrande] = useState(`http://127.0.0.1:8000/storage/uploads/articulos/${imagenpr}`);
-    const [imagenPrincipal] = useState(`http://127.0.0.1:8000/storage/uploads/articulos/${imagenpr}`);
-    const [imagenSecundaria1] = useState(`http://127.0.0.1:8000/storage/uploads/articulos/${imagenSec1}`);
-    const [imagenSecundaria2] = useState(`http://127.0.0.1:8000/storage/uploads/articulos/${imagenSec2}`);
+    const [imagenGrande, setGrande] = useState(`/storage/uploads/articulos/${imagenpr}`);
+    const [imagenPrincipal] = useState(`/storage/uploads/articulos/${imagenpr}`);
+    const [imagenSecundaria1] = useState(`/storage/uploads/articulos/${imagenSec1}`);
+    const [imagenSecundaria2] = useState(`/storage/uploads/articulos/${imagenSec2}`);
     const [nota, setNota] = useState(calcularNota());
     const [valoraciones, setValoraciones] = useState(articulo.comentarios.length);
     const [lightboxVisible, setLightboxVisible] = useState(false);
@@ -155,7 +155,7 @@ export default function Muestra({ user, active = false, classNameName = '', chil
                             <div className='flex flex-col items-center'>
                                 <img
                                     className={`w-32 y-32 m-5 pt-5 ${isAddToCartModalVisible ? 'aparecer' : ''}`}
-                                    src="http://127.0.0.1:8000/assets/exito.svg"
+                                    src="/assets/exito.svg"
 
                                 ></img>
                                 <h2 className="text-lg text-gray-900 font-semibold pt-5">

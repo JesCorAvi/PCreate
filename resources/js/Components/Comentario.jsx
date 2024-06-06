@@ -43,7 +43,7 @@ export default function Comentario({ id, usuario, user, nota, fecha, comentario,
                 <p className='font-semibold px-6'>{formatearFecha(fecha)}</p>
             </div>
             <div className="flex items-start">
-                <img src={"http://127.0.0.1:8000/storage/uploads/avatar/" + avatar} className='hidden lg:block w-20 h-20 rounded-full p-2'></img>
+                <img src={"/storage/uploads/avatar/" + avatar} className='hidden lg:block w-20 h-20 rounded-full p-2'></img>
                 <p className='p-2 pr-6'>{comentario}</p>
             </div>
 

@@ -43,7 +43,7 @@ export default function Pieza({ user, active = false, className = '', handleAddT
         <div  className={"bg-white border-2 border-solid border-white shadow-2xl  hover:border-purple-800  rounded-xl w-72 h-comp flex flex-col justify-between items-center "+ className}>
             <Link href={props.ruta}
                 className={"flex flex-col justify-center items-center" }>
-                <img className='pb- mt-5' width="200px" height="200px" src={"http://127.0.0.1:8000/storage/uploads/articulos/" + props.imagen}></img>
+                <img className='pb- mt-5' width="200px" height="200px" src={"/storage/uploads/articulos/" + props.imagen}></img>
                 <div className='flex'>
                     {[...Array(5)].map((star, index) => {
                         const starValue = index + 1;

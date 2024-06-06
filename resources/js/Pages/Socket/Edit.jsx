@@ -18,7 +18,7 @@ export default function FormularioSocket({ user, categorias, socketInicial }) {
 
     const [imagenPrincipal, setImagenPrincipal] = useState(null);
     useEffect(() => {
-        setImagenPrincipal("http://127.0.0.1:8000/storage/uploads/sockets/"+socketInicial.imagen)
+        setImagenPrincipal("/storage/uploads/sockets/"+socketInicial.imagen)
     }, []);
     const handleImagenPrincipalChange = (event) => {
         const file = event.target.files[0];
