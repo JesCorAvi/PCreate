@@ -9,7 +9,6 @@ import { Head } from '@inertiajs/react';
 
 export default function Index({ auth, categorias, marcas, articulos, cantidad }) {
     const { messages } = usePage().props;
-    console.log(messages.borrarLocalStorage);
     useEffect(() => {
         if (messages.borrarLocalStorage) {
           localStorage.removeItem("carrito");

@@ -1,10 +1,17 @@
 import LayoutLogueado from '@/Layouts/LayoutLogueado';
 import Footer from '@/Layouts/Footer';
 import { Head, Link } from '@inertiajs/react';
-import Pieza from '@/Components/Pieza';
 import ArticulosSlider from '@/Components/ArticulosSlider';
+import { usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
 
 export default function Index({ auth, categorias, articulos }) {
+    const { messages } = usePage().props;
+    useEffect(() => {
+        if (messages.borrarLocalStorage) {
+          localStorage.removeItem("carrito");
+        }
+      }, [messages.borrarLocalStorage]);
     return (
         <>
             <LayoutLogueado

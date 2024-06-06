@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class SocketController extends Controller
@@ -102,6 +103,7 @@ class SocketController extends Controller
         ]);
         $socket = Socket::find($request->id);
         if ($request->imagenpr) {
+            Storage::delete("public/uploads/sockets/" . $socket->imagen);
             $image = $request->imagenpr;
             $name = hash('sha256', time() . $image->getClientOriginalName()) . ".png";
             $image->storeAs('uploads/sockets', $name, 'public');

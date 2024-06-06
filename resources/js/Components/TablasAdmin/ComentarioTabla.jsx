@@ -96,19 +96,19 @@ export default function ComentarioTabla() {
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center">
                             Nombre de usuario
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center">
                             Producto
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center">
                             Contenido
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center">
                             Estrellas
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center">
                             Acciones
                         </th>
                     </tr>
@@ -116,19 +116,19 @@ export default function ComentarioTabla() {
                 <tbody>
                     {comentarios.map((comentario) => (
                         <tr key={comentario.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white  text-center">
                                 {comentario.user.name}
                             </td>
-                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
                                 {comentario.comentable.nombre}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-6 py-4 text-center">
                                 {comentario.contenido}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-6 py-4 text-center">
                                 {comentario.estrellas}/5
                             </td>
-                            <td className="px-6 py-4 flex gap-2">
+                            <td className="px-6 py-4 flex gap-2 justify-center items-center">
                                 <DangerButton text="Borrar" onClick={() => delComentarios(comentario.id)}></DangerButton>
                             </td>
                         </tr>
