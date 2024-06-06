@@ -46,7 +46,7 @@ export default function Pedido({ factura }) {
                 <div className='flex flex-col gap-4'>
                     {factura.articulos.map((articulo, index) => (
                         <div key={index} className="flex items-center">
-                            <img className='w-20 h-20 rounded-md' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + articulo.fotos[0].imagen}></img>
+                            <img className='w-20 h-20 rounded-md' src={"/storage/uploads/articulos/" + articulo.fotos[0].imagen}></img>
                             <div className='flex-1 ml-2'>
                                     <Link href={route("articulos.show", { id: articulo.id })} className="text-md underline">{articulo.nombre}</Link>
                                 <div className='flex justify-between'>

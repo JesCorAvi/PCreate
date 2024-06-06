@@ -62,7 +62,7 @@ export default function Linea({ auth, nombre, precio, imagen, cantidad: initialC
     return (
         <div className="border-2 border-solid border-blue-800 rounded-md my-5 w-4/6">
             <div className='flex flex-col xl:flex-row  p-4 gap-4'>
-                <img className='w-40 h-40 rounded-md self-center' src={"http://127.0.0.1:8000/storage/uploads/articulos/" + imagen} />
+                <img className='w-40 h-40 rounded-md self-center' src={"/storage/uploads/articulos/" + imagen} />
                 <div className='w-full'>
                     <div className='min-h-32'>
                     <Link href={ruta} className=' min-h-24 font-semibold underline text-2xl'>{nombre}</Link>

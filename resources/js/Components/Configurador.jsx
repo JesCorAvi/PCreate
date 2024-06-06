@@ -339,7 +339,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                 {data.imagen &&
                     <img
                         className='w-20 h-20'
-                        src={"http://127.0.0.1:8000/storage/uploads/articulos/" + data.imagen}
+                        src={"/storage/uploads/articulos/" + data.imagen}
                         alt={data.label} />}
                 <div className='ml-2'>{data.label}</div>
             </div>
@@ -355,7 +355,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
             {data.imagen &&
                 <img
                     className='w-20 h-20'
-                    src={"http://127.0.0.1:8000/storage/uploads/articulos/" + data.imagen}
+                    src={"/storage/uploads/articulos/" + data.imagen}
                     alt={data.label}
                 />}
             <span className='ml-2 font-semibold text-lg'>{data.label}</span>

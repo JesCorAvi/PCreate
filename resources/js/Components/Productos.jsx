@@ -81,7 +81,7 @@ export default function Productos({ user, articulos, categorias, marcas, cantida
                     <div className='flex flex-col items-center'>
                         <img
                             className={`w-32 y-32 m-5 pt-5 ${isAddToCartModalVisible ? 'aparecer' : ''}`}
-                            src="http://127.0.0.1:8000/assets/exito.svg"
+                            src="/assets/exito.svg"
                         ></img>
                         <h2 className="text-lg text-gray-900 font-semibold pt-5">
                             Producto añadido al carrito

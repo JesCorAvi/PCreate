@@ -9,7 +9,7 @@ function UploadAvatar(avatar, className = '') {
     })
     const [info, setInfo] = useState(<p className=" py-2 min-h-10"></p>)
 
-    const [avatarUrl, setAvatarUrl] = useState(`http://127.0.0.1:8000/storage/uploads/avatar/${avatar.avatar}`);
+    const [avatarUrl, setAvatarUrl] = useState(`/storage/uploads/avatar/${avatar.avatar}`);
 
     function handleFileChange(e) {
         const file = e.target.files[0];

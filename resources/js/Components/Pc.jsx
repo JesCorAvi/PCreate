@@ -64,7 +64,7 @@ export default function Pc({ pc, estrellas, valoraciones, className = "", editab
             }
             <Link href={route("pc.edit", { id: pc.id })}
                 className={"flex flex-col justify-center items-center"}>
-                <img className='pb- mt-5' width="200px" height="200px" src={"http://127.0.0.1:8000/storage/uploads/articulos/" + imagenCaja()}></img>
+                <img className='pb- mt-5' width="200px" height="200px" src={"/storage/uploads/articulos/" + imagenCaja()}></img>
                 <div className="mt-4 relative flex items-center">
                     <p className="font-semibold text-lg pt-5 pb-3">Potencial PCreate™</p>
                     <Tooltip title="Potencial PCreate™ indica cómo de cerca está su dispositivo de alcanzar el máximo posible de especificaciones establecido por nuestra empresa.">

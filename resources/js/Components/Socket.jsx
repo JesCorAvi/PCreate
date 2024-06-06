@@ -7,7 +7,7 @@ function Socket({ id, nombre, imagen, onClick, isSelected }) {
             onClick={() => onClick(id)}
         >
             {isSelected && <DoneIcon style={{ color: 'blue', position: 'absolute', top: 0, right: 0 }} />}
-            <img className="w-all p-3" src={"http://127.0.0.1:8000/storage/uploads/sockets/" + imagen} alt="imagen" />
+            <img className="w-all p-3" src={"/storage/uploads/sockets/" + imagen} alt="imagen" />
             <h1 className="font-semibold text-center p-3"> {nombre}</h1>
         </div>
     );
