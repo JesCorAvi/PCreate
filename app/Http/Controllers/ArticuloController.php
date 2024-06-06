@@ -341,7 +341,7 @@ class ArticuloController extends Controller
         $miniatura = Foto::create([
             "articulo_id" => $articulo->id,
             "orden" => 0,
-            "imagen" => subirImagen($request->file('imagenpr'), 'uploads/articulos')
+            "imagen" => subirImagen($request->file('imagenpr'), 'uploads/articulos', 400)
         ]);
         $imagenpr = Foto::create([
             "articulo_id" => $articulo->id,
@@ -588,14 +588,14 @@ class ArticuloController extends Controller
 
         if ($request->imagenpr != $imagenpr->imagen) {
             Storage::delete("public/uploads/articulos/" . $miniatura->imagen);
-            $miniatura->delete();
+            $miniatura->forceDelete();
             Storage::delete("public/uploads/articulos/" . $imagenpr->imagen);
-            $imagenpr->delete();
+            $imagenpr->forceDelete();
 
             Foto::create([
                 "articulo_id" => $articulo->id,
                 "orden" => 0,
-                "imagen" => subirImagen($request->file("imagenpr"), 'uploads/articulos', 500)
+                "imagen" => subirImagen($request->file("imagenpr"), 'uploads/articulos', 400)
             ]);
 
             Foto::create([
@@ -606,7 +606,7 @@ class ArticuloController extends Controller
         }
         if ($request->imagensec1 != $imagensec1->imagen) {
             Storage::delete("public/uploads/articulos/" . $imagensec1->imagen);
-            $imagensec1->delete();
+            $imagensec1->forceDelete();
 
             Foto::create([
                 "articulo_id" => $articulo->id,
@@ -616,7 +616,7 @@ class ArticuloController extends Controller
         }
         if ($request->imagensec2 != $imagensec2->imagen) {
             Storage::delete("public/uploads/articulos/" . $imagensec2->imagen);
-            $imagensec2->delete();
+            $imagensec2->forceDelete();
 
             Foto::create([
                 "articulo_id" => $articulo->id,
