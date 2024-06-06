@@ -68,7 +68,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/tienda');
+        return redirect(route("index"));
     }
 
 }
