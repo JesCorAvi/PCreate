@@ -190,28 +190,28 @@ export default function FacturaTabla() {
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3  text-center">
                             <p className="text-center">Usuario</p>
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3  text-center">
                             <p className="text-center">Direccion</p>
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3  text-center">
                             <p className="text-center">Provincia</p>
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3  text-center">
                             <p className="text-center">Fecha de Factura</p>
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center">
                             <p className="text-center">Fecha de Entrega Aproximada</p>
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center">
                             <p className="text-center">Articulos</p>
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center">
                             <p className="text-center">Coste total</p>
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center">
                             <p className="text-center">Acciones</p>
                         </th>
                     </tr>
@@ -219,27 +219,27 @@ export default function FacturaTabla() {
                 <tbody>
                     {facturas.map((factura) => (
                         <tr key={factura.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                <p className="text-center">{factura.user.name}</p>
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white  text-center">
+                              {factura.user.name}
                             </td>
-                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                <p className="text-center">{factura.domicilio.direccion}</p>
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
+                               {factura.domicilio.direccion}
                             </td>
-                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                <p className="text-center">{factura.domicilio.provincia.nombre}</p>
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
+                              {factura.domicilio.provincia.nombre}
                             </td>
-                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                <p className="text-center">{factura.fecha_creacion}</p>
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
+                                {factura.fecha_creacion}
                             </td>
-                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                <p className="text-center">{factura.entrega_aproximada}</p>
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
+                               {factura.entrega_aproximada}
                             </td>
-                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
                             {factura.articulos.map((art) => (
-                                <p key={art.id}>(x{art.pivot.cantidad}) {art.nombre}</p>
+                                <Link className='underline' href={"/tienda/" + art.id} key={art.id}>(x{art.pivot.cantidad}) {art.nombre}</Link>
                             ))}
                             </td>
-                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
                                 <p className="text-center">{costeTotal()}€</p>
                             </td>
                             <td className="px-6 py-4 flex gap-2 justify-center items-center">
