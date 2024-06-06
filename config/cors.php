@@ -29,7 +29,7 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false, // Cambia a true si necesitas enviar cookies o autenticaciones HTTP
+    'supports_credentials' => true, // Cambia a true si necesitas enviar cookies o autenticaciones HTTP
 
 ];
 
