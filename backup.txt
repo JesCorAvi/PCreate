@@ -1,0 +1,2 @@
+pg_restore -U virtual_user -h localhost -d temp_db -v backup_file.dump
+
