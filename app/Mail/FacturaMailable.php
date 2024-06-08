@@ -35,8 +35,8 @@ class FacturaMailable extends Mailable
         $pdf = Pdf::loadView('factura.pdf', ['factura' => $this->factura]);
 
         return $this->view('emails.factura')
-                    ->subject('Factura de tu pedido')
-                    ->attachData($pdf->output(), 'factura-'.$this->factura->id.'.pdf', [
+                    ->subject('Tu pedido ha sido realizado!')
+                    ->attachData($pdf->output(), 'albaran-'.$this->factura->id.'.pdf', [
                         'mime' => 'application/pdf',
                     ]);
     }
