@@ -9,9 +9,9 @@ PCreate es una web tienda de componentes para PC que permite a los usuarios crea
 - Comprar componentes por separado.
 - Crear configuraciones personalizadas con asistencia según la finalidad del PC.
 - Actualizar PCs existentes con recomendaciones de mejoras.
-- Ranking de configuraciones con puntuaciones y precios.
+- Listado de configuraciones con puntuaciones y precios.
 - Valoraciones y comentarios en componentes y configuraciones de otros usuarios.
-- Pago mediante Paypal y Stripe.
+- Pago mediante Paypal.
 
 ### Requisitos
 | Requisito | Prioridad | Tipo | Complejidad | Entrega |
