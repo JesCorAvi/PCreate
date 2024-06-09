@@ -15,6 +15,8 @@ import DangerButton from './DangerButton';
 import ComentariosPc from './ComentariosPc';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
+import { Link } from '@inertiajs/react';
+
 
 export default function Configurador({ user, sockets, articulos, pc: initialPc }) {
     // Estado para mostrar advertencias
@@ -66,7 +68,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     });
     // Función para calcular el porcentaje de la puntuación total
     function porcentaje() {
-        return ((puntuacionTotal / 2400) * 100).toFixed(2);
+        return ((puntuacionTotal / 2450) * 100).toFixed(2);
     }
     //Gestiona los errores del input nombre
     const [errorNombre, setErrorNombre] = useState('');
@@ -142,7 +144,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                 total += (componente === 'ventilacion') ? puntuacion * ventiladorCount : puntuacion;
             }
         });
-        return total;
+        return total.toFixed(2);
     };
 
     // Actualización del precio y puntuación total al cambiar los datos o la cantidad de ventiladores
@@ -812,7 +814,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                         <div>
                             <h3 className="font-semibold text-xl">Placa base</h3>
                             <div className="flex justify-between px-5">
-                                <p>{getArticuloInfo(articulos, data.placa, "nombre")}</p>
+                                <Link className='underline' href={route("articulos.show", { id: data.placa })}>{getArticuloInfo(articulos, data.placa, "nombre")}</Link>
                                 <p className='font-semibold'>{getArticuloInfo(articulos, data.placa, "precio")}€</p>
                             </div>
                         </div>
@@ -820,7 +822,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                             <div>
                                 <h3 className="font-semibold text-xl">CPU</h3>
                                 <div className="flex justify-between px-5">
-                                    <p>{getArticuloInfo(articulos, data.cpu, "nombre")}</p>
+                                    <Link className='underline' href={route("articulos.show", { id: data.cpu })}>{getArticuloInfo(articulos, data.cpu, "nombre")}</Link>
                                     <p className='font-semibold'>{getArticuloInfo(articulos, data.cpu, "precio")}€</p>
                                 </div>
                             </div>
@@ -829,7 +831,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                             <div>
                                 <h3 className="font-semibold text-xl">Disipador CPU</h3>
                                 <div className="flex justify-between px-5">
-                                    <p>{getArticuloInfo(articulos, data.disipador, "nombre")}</p>
+                                    <Link className='underline' href={route("articulos.show", { id: data.disipador })}>{getArticuloInfo(articulos, data.disipador, "nombre")}</Link>
                                     <p className='font-semibold'>{getArticuloInfo(articulos, data.disipador, "precio")}€</p>
                                 </div>
                                 {showCoolingWarning &&
@@ -844,7 +846,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                             <div>
                                 <h3 className="font-semibold text-xl">Modulos de RAM</h3>
                                 <div className="flex justify-between px-5">
-                                    <p>{getArticuloInfo(articulos, data.ram, "nombre")}</p>
+                                    <Link className='underline' href={route("articulos.show", { id: data.ram })}>{getArticuloInfo(articulos, data.ram, "nombre")}</Link>
                                     <p className='font-semibold'>{getArticuloInfo(articulos, data.ram, "precio")}€</p>
                                 </div>
                                 {filteredArticulos.ram.find(ram => ram.id === data.ram)?.datos.ddr < filteredArticulos.placas.find(placa => placa.id === data.placa)?.datos.ddrmax && (
@@ -859,7 +861,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                             <div>
                                 <h3 className="font-semibold text-xl">Almacenamiento Principal</h3>
                                 <div className="flex justify-between px-5">
-                                    <p>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "nombre")}</p>
+                                    <Link className='underline' href={route("articulos.show", { id: data.almacenamientoPrincipal })}>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "nombre")}</Link>
                                     <p className='font-semibold'>{getArticuloInfo(articulos, data.almacenamientoPrincipal, "precio")}€</p>
                                 </div>
                                 {showAlmacenamientoPrincipalWarning &&
@@ -874,7 +876,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                             <div>
                                 <h3 className="font-semibold text-xl">Almacenamiento Secundario</h3>
                                 <div className="flex justify-between px-5">
-                                    <p>{getArticuloInfo(articulos, data.almacenamientoSecundario, "nombre")}</p>
+                                    <Link className='underline' href={route("articulos.show", { id: data.almacenamientoSecundario })}>{getArticuloInfo(articulos, data.almacenamientoSecundario, "nombre")}</Link>
                                     <p className='font-semibold'>{getArticuloInfo(articulos, data.almacenamientoSecundario, "precio")}€</p>
                                 </div>
                             </div>
@@ -883,7 +885,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                             <div>
                                 <h3 className="font-semibold text-xl">Tarjeta Gráfica</h3>
                                 <div className="flex justify-between px-5">
-                                    <p>{getArticuloInfo(articulos, data.grafica, "nombre")}</p>
+                                    <Link className='underline' href={route("articulos.show", { id: data.grafica })}>{getArticuloInfo(articulos, data.grafica, "nombre")}</Link>
                                     <p className='font-semibold'>{getArticuloInfo(articulos, data.grafica, "precio")}€</p>
                                 </div>
                             </div>
@@ -892,7 +894,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                             <div>
                                 <h3 className="font-semibold text-xl">Fuente de alimentación*</h3>
                                 <div className="flex justify-between px-5">
-                                    <p>{getArticuloInfo(articulos, data.fuente, "nombre")}</p>
+                                    <Link className='underline' href={route("articulos.show", { id: data.fuente })}>{getArticuloInfo(articulos, data.fuente, "nombre")}</Link>
                                     <p className='font-semibold'>{getArticuloInfo(articulos, data.fuente, "precio")}€</p>
                                 </div>
                                 {showFuenteWarning &&
@@ -907,7 +909,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                             <div>
                                 <h3 className="font-semibold text-xl">Caja</h3>
                                 <div className="flex justify-between px-5">
-                                    <p>{getArticuloInfo(articulos, data.caja, "nombre")}</p>
+                                    <Link className='underline' href={route("articulos.show", { id: data.caja })}>{getArticuloInfo(articulos, data.caja, "nombre")}</Link>
                                     <p className='font-semibold'>{getArticuloInfo(articulos, data.caja, "precio")}€</p>
                                 </div>
                             </div>
@@ -916,7 +918,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                             <div>
                                 <h3 className="font-semibold text-xl">Ventilacion</h3>
                                 <div className="flex justify-between px-5">
-                                    <p>{getArticuloInfo(articulos, data.ventilacion, "nombre")} <strong>x{ventiladorCount}</strong></p>
+                                    <Link className='underline' href={route("articulos.show", { id: data.ventilacion })}>{getArticuloInfo(articulos, data.ventilacion, "nombre")} <strong>x{ventiladorCount}</strong></Link>
                                     <p className='font-semibold'>{getArticuloInfo(articulos, data.ventilacion, "precio")}€</p>
                                 </div>
                             </div>
