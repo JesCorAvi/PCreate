@@ -3,12 +3,12 @@
 ## Propuesta de Proyecto Integrado por Jesús Cordero Ávila - 2ºDAW
 
 ### Descripción General del Proyecto
-PCreate es una web tienda de componentes para PC que permite a los usuarios crear configuraciones personalizadas y recibir el ordenador montado. También ofrece la opción de actualizar PCs existentes y compartir configuraciones con otros usuarios. Las principales tecnologías a utilizar son Inertia.js para la comunicación entre Laravel y React, y Tailwind CSS como biblioteca CSS.
+PCreate es una web tienda de componentes para PC que permite a los usuarios crear configuraciones personalizadas o comprar componentes sueltos, ademas de ofrecer la opción de compartir configuraciones con otros usuarios. Las principales tecnologías a utilizar son Inertia.js para la comunicación entre Laravel y React, y Tailwind CSS como biblioteca CSS.
+Tambien hago uso de Zustand para facilitar la comunicacion entre componentes.
 
 ### Objetivos Generales
 - Comprar componentes por separado.
-- Crear configuraciones personalizadas con asistencia según la finalidad del PC.
-- Actualizar PCs existentes con recomendaciones de mejoras.
+- Crear configuraciones personalizadas con asistencia avisando de podibles fallos.
 - Listado de configuraciones con puntuaciones y precios.
 - Valoraciones y comentarios en componentes y configuraciones de otros usuarios.
 - Pago mediante Paypal.
