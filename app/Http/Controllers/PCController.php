@@ -73,8 +73,9 @@ class PcController extends Controller
         $pcs = $query->paginate(12);
 
         $pcs->getCollection()->transform(function($pc) {
-            $pc->puntuacion = $pc->articulos->sum('puntuacion');
-            $pc->calidad_precio = $pc->puntuacion / $pc->total_precio;
+            $pc->puntuacion = $pc->articulos->sum(function($articulo) {
+                return $articulo->pivot->cantidad * $articulo->puntuacion;
+            });            $pc->calidad_precio = $pc->puntuacion / $pc->total_precio;
             return $pc;
         });
 

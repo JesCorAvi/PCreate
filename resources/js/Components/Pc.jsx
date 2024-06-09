@@ -29,7 +29,7 @@ export default function Pc({ pc, estrellas, valoraciones, className = "", editab
         });
     }
     function porcentaje() {
-        return ((pc.puntuacion / 2400) * 100).toFixed(2);
+        return ((pc.puntuacion / 2450) * 100).toFixed(2);
     }
     function borrarPc() {
         axios.post(route("pc.destroy", { id: pc.id })).then(response => {

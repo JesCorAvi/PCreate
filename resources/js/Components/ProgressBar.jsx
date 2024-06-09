@@ -1,6 +1,6 @@
 
 export default function ProgressBar({ puntuacionTotal }){
-    const maxScore = 2400;
+    const maxScore = 2450;
     const percentage = (puntuacionTotal / maxScore) * 100;
 
     let progressBarClass = '';
