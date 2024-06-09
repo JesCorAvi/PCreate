@@ -8,7 +8,11 @@ export default function Configuraciones({ cantidad, pcs, sockets }) {
     const [pcsFiltrados, setPcs] = useState(pcs);
     const isSmallScreen = useMediaQuery({ query: '(max-width: 760px)' });
     const [visibleLinks, setVisibleLinks] = useState(pcsFiltrados.links);
-
+    const recogerFiltradoUrl = () => {
+        const parametros = new URLSearchParams(window.location.search);
+        parametros.delete('page');
+        return parametros.toString();
+    };
     useEffect(() => {
         if (isSmallScreen) {
             const activeLink = pcsFiltrados.links.find(link => link.active);
@@ -74,7 +78,8 @@ export default function Configuraciones({ cantidad, pcs, sockets }) {
                 </div>
             </div>
             <nav className="flex items-center justify-center py-4">
-                {visibleLinks.map((link, index) => (
+                {visibleLinks.length > 3 &&
+                (visibleLinks.map((link, index) => (
                     <Link
                         key={index}
                         className={`
@@ -83,11 +88,12 @@ export default function Configuraciones({ cantidad, pcs, sockets }) {
                             ${index === 0 ? 'rounded-l' : ''}
                             ${index === visibleLinks.length - 1 ? 'rounded-r' : ''}
                         `}
-                        href={link.url}
+                        href={`${link.url}&${recogerFiltradoUrl()}`}
                     >
                         {link.label}
                     </Link>
-                ))}
+                )))
+            }
             </nav>
         </>
     );

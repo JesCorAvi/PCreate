@@ -68,7 +68,11 @@ export default function Productos({ user, articulos, categorias, marcas, cantida
     const handleCloseModal = () => {
         setIsAddToCartModalVisible(false);
     };
-
+    const recogerFiltradoUrl = () => {
+        const parametros = new URLSearchParams(window.location.search);
+        parametros.delete('page');
+        return parametros.toString();
+    };
     return (
         <>
             <div className="flex min-h-screen">
@@ -116,7 +120,8 @@ export default function Productos({ user, articulos, categorias, marcas, cantida
                 </div>
             </div>
             <nav className="flex items-center justify-center py-4">
-                {visibleLinks.map((link, index) => (
+                {visibleLinks.length > 3 &&
+                (visibleLinks.map((link, index) => (
                     <Link
                         key={index}
                         className={`
@@ -125,11 +130,12 @@ export default function Productos({ user, articulos, categorias, marcas, cantida
                             ${index === 0 ? 'rounded-l' : ''}
                             ${index === visibleLinks.length - 1 ? 'rounded-r' : ''}
                         `}
-                        href={link.url}
+                        href={`${link.url}&${recogerFiltradoUrl()}`}
                     >
                         {link.label}
                     </Link>
-                ))}
+                )))
+            }
             </nav>
         </>
     );

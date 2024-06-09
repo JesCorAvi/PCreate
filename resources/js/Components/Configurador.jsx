@@ -17,7 +17,6 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 
 export default function Configurador({ user, sockets, articulos, pc: initialPc }) {
-    console.log(initialPc);
     // Estado para mostrar advertencias
     const [showCoolingWarning, setShowCoolingWarning] = useState(false);
     const [showAlmacenamientoPrincipalWarning, setShowAlmacenamientoPrincipalWarning] = useState(false);
@@ -261,7 +260,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                         [...(articulos.cajas.atx || []), ...(articulos.cajas.micro_atx || [])] :
                         articulos.cajas.atx) || [],
                 }));
-                if (isInitialLoad) {
+                if (!pc) {
                     setData(prevData => ({
                         ...prevData,
                         cpu: null,
@@ -270,6 +269,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                         almacenamientoPrincipal: null,
                         almacenamientoSecundario: null,
                         grafica: null,
+                        fiuente: null,
                         caja: null,
                         ventilacion: null,
                     }));
@@ -374,6 +374,11 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     // Actualización del máximo de ventiladores según la caja seleccionada
     useEffect(() => {
         if (data.caja) {
+            if (getArticuloInfo(articulos.cajas, data.caja, "datos").ventiladores < ventiladorCount) {
+                setVentiladorCount(getArticuloInfo(articulos.cajas, data.caja, "datos").ventiladores);
+                setMaxVentiladores(getArticuloInfo(articulos.cajas, data.caja, "datos").ventiladores);
+
+            }
             const cajaSeleccionada = articulos.cajas.atx.find(
                 caja => caja.id === data.caja) || articulos.cajas.micro_atx.find(caja => caja.id === data.caja
                 );
@@ -385,7 +390,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
 
     // Incremento y decremento de la cantidad de ventiladores
     const handleIncrement = () => {
-        if (ventiladorCount < maxVentiladores) setVentiladorCount(prevCount => prevCount + 1);
+        if (ventiladorCount < maxVentiladores) setVentiladorCount(prevCount => parseInt(prevCount) + 1);
     };
 
     const handleDecrement = () => {
