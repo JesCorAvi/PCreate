@@ -157,7 +157,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
             const disipadorSeleccionado = filteredArticulos.disipador.find(disipador => disipador.id === data.disipador);
             if (cpuSeleccionado &&
                 disipadorSeleccionado &&
-                parseInt(cpuSeleccionado.datos.consumo) >= 140 &&
+                parseInt(cpuSeleccionado.datos.consumo) >= 100 &&
                 disipadorSeleccionado.datos.liquida === false) {
                 setShowCoolingWarning(true);
             } else {
