@@ -77,7 +77,6 @@ PCreate es una web tienda de componentes para PC que permite a los usuarios crea
 | R17. Poder elegir distintas finalidades para el ordenador | Opcional | Funcional | Media | v2 |
 | R18. Obtener recomendaciones en el configurador en tiempo real dependiendo del uso que tendrá el ordenador | Importante | Funcional | Media | v3 |
 | R19. Mostrar un puntaje de 0 a 100 dependiendo de lo bueno que es el ordenador para la finalidad buscada | Opcional | Funcional | Media | v3 |
-| R20. Asistente de actualización donde el usuario añade sus componentes y se le aconseja actualizaciones | Importante | Funcional | Media | v3 |
-| R21. Ranking de configuraciones pudiendo ordenar por calidad-precio, máximo desempeño y últimos añadidos | Importante | Funcional | Media | v3 |
+| R21. Listado de configuraciones pudiendo ordenar por calidad-precio, máximo desempeño y últimos añadidos | Importante | Funcional | Media | v3 |
 | R22. Comentarios a configuraciones de otros usuarios | Importante | Funcional | Media | v3 |
 | R23. Permitir que un comentario pueda responder a otro comentario en las configuraciones | Opcional | Funcional | Difícil | v3 |
