@@ -16,7 +16,7 @@ export default function Info({ auth, categorias }) {
                 <section className="mb-8">
                     <h2 id="sobreNosotros" className='text-center font-semibold text-3xl mb-4'>¿Quiénes somos?</h2>
                     <div className="flex flex-wrap items-center mb-4">
-                        <img src="https://source.unsplash.com/600x400/?computer,motherboard" alt="Motherboard" className="w-1/2 lg:w-1/3 rounded-lg shadow-lg mb-4 lg:mb-0" />
+                        <img src="/assets/info1.jpg" alt="Motherboard" className="w-1/2 lg:w-1/3 rounded-lg shadow-lg mb-4 lg:mb-0" />
                         <div className="w-full lg:w-2/3 px-4">
                             <p className="text-lg leading-relaxed">PCreate se fundó en 2022 con la misión de proporcionar a los entusiastas de la tecnología las herramientas necesarias para construir y optimizar sus propios PCs. Desde nuestro inicio, hemos ayudado a miles de clientes a diseñar configuraciones personalizadas que se ajustan a sus necesidades y presupuestos.</p>
                         </div>
@@ -25,10 +25,10 @@ export default function Info({ auth, categorias }) {
                         <div className="w-full lg:w-2/3 px-4">
                             <p className="text-lg leading-relaxed">En 2023, lanzamos nuestra innovadora herramienta de tasación que evalúa la calidad-precio de las configuraciones y el Potencial PCreate™. Este potencial indica cuán cerca está su dispositivo de alcanzar el máximo rendimiento según nuestros estándares.</p>
                         </div>
-                        <img src="https://source.unsplash.com/600x400/?computer,cpu" alt="CPU" className="w-1/2 lg:w-1/3 rounded-lg shadow-lg mb-4 lg:mb-0" />
+                        <img src="/assets/info2.jpg" alt="CPU" className="w-1/2 lg:w-1/3 rounded-lg shadow-lg mb-4 lg:mb-0" />
                     </div>
                     <div className="flex flex-wrap items-center mb-4">
-                        <img src="https://source.unsplash.com/600x400/?computer,ram" alt="RAM" className="w-1/2 lg:w-1/3 rounded-lg shadow-lg mb-4 lg:mb-0" />
+                        <img src="/assets/info3.jpg" alt="RAM" className="w-1/2 lg:w-1/3 rounded-lg shadow-lg mb-4 lg:mb-0" />
                         <div className="w-full lg:w-2/3 px-4">
                             <p className="text-lg leading-relaxed">En 2024, nos expandimos para ofrecer servicios de configuración compartida, permitiendo a los usuarios compartir sus configuraciones únicas con la comunidad global, inspirando y asistiendo a otros en sus proyectos.</p>
                         </div>
