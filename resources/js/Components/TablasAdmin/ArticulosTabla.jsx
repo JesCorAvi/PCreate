@@ -33,7 +33,6 @@ export default function ArticulosTabla({categorias}) {
     function getMarcas() {
         axios.get(route('marca.getAllMarcas'))
             .then((response) => {
-                console.log(response.data);
                 setMarcas(response.data);
             })
             .catch((error) => {

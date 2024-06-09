@@ -6,7 +6,6 @@ import StarIcon from '@mui/icons-material/Star';
 
 
 export default function Pieza({ user, active = false, className = '', handleAddToCartClick, children, ...props }) {
-    console.log(props.estrellas, props.valoraciones)
     const { actualizarCantidadArticulos } = useCarritoStore((state) => state);
     const { actualizarCantidadArticulosCookies } = useCarritoStore((state) => state);
 

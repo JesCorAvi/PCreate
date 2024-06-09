@@ -27,7 +27,6 @@ export default function FormularioSocket({ user, categorias, socketInicial }) {
       };
     const submit = (e) => {
         e.preventDefault();
-        console.log(data.imagenpr);
         post(route('socket.update', data))
     };
     function validar(target) {

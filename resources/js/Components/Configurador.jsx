@@ -93,9 +93,9 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
         var calidad = puntuacionTotal / precioTotal;
         if (calidad >= 0 && calidad < 0.7) {
             return <p className="text-red-700 font-semibold">Calidad/Precio Reducida</p>;
-        } else if (calidad >= 0.7 && calidad < 1.5) {
+        } else if (calidad >= 0.7 && calidad < 1.2) {
             return <p className="text-yellow-400 font-semibold">Calidad/Precio Media</p>;
-        } else if (calidad >= 1.5 && calidad < 2.5) {
+        } else if (calidad >= 1.2 && calidad < 2.5) {
             return <p className="text-green-500 font-semibold">Calidad/Precio Alta</p>;
         }
     }
@@ -112,6 +112,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
     const componentes = [
         'placa',
         'cpu',
+        'fuente',
         'disipador',
         'ram',
         'almacenamientoPrincipal',
@@ -129,7 +130,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                 total += (componente === 'ventilacion') ? precio * ventiladorCount : precio;
             }
         });
-        return total.toFixed(2);
+        return total;
     };
 
     // Función para calcular la puntuación total de los componentes seleccionados
@@ -294,7 +295,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                     ventilacion: pc.ventilacion,
                 }));
                 setTimeout(() => setPc(undefined), 0);
-                setVentiladorCount(pc.ventiladorCount);
+                setVentiladorCount(pc.ventiladorCount || 1);
             }
         }
     }, [data.placa]);
@@ -390,14 +391,13 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
 
     // Incremento y decremento de la cantidad de ventiladores
     const handleIncrement = () => {
-        if (ventiladorCount < maxVentiladores) setVentiladorCount(prevCount => parseInt(prevCount) + 1);
+        if (ventiladorCount < maxVentiladores) setVentiladorCount(ventiladorCount + 1);
     };
 
     const handleDecrement = () => {
         if (ventiladorCount > 1) {
-            setVentiladorCount(prevCount => prevCount - 1);
+            setVentiladorCount(ventiladorCount - 1);
         } else {
-            setVentiladorCount(0);
             setData('ventilacion', null);
             setVentiladorCount(1);
         }
@@ -799,7 +799,7 @@ export default function Configurador({ user, sockets, articulos, pc: initialPc }
                             <ProgressBar puntuacionTotal={areEssentialComponentsSelected() ? puntuacionTotal : 0} />
 
                             {areEssentialComponentsSelected() ? (
-                                <p className='text-xl py-5'>{calidadPrecioTotal()}</p>
+                                <div className='text-xl py-5'>{calidadPrecioTotal()}</div>
                             ) : (
                                 <p className='text-xl py-5'>Configure los elementos obligatorios para ver su Potencial.</p>
                             )}
