@@ -48,8 +48,11 @@ class PcController extends Controller
                           ->orderBy('articulos_sum_precio', 'asc');
                     break;
                 case 'calidadPrecio':
-                    $query->withAvg('articulos', 'puntuacionPrecio')
-                          ->orderBy('articulos_avg_puntuacion_precio', 'desc');
+                    $query->join('articulo_pc', 'articulo_pc.pc_id', '=', 'pcs.id')
+                    ->join('articulos', 'articulo_pc.articulo_id', '=', 'articulos.id')
+                    ->selectRaw('pcs.*, (SUM(articulos.puntuacion * articulo_pc.cantidad) / SUM(articulos.precio * articulo_pc.cantidad)) as articulos_div_puntuacion_precio')
+                    ->groupBy('pcs.id')
+                    ->orderBy('articulos_div_puntuacion_precio', 'desc');
                     break;
                 case 'potencia':
                     $query->withSum('articulos', 'puntuacion')

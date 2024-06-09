@@ -42,9 +42,9 @@ export default function Pc({ pc, estrellas, valoraciones, className = "", editab
         var calidad = pc.calidad_precio;
         if (calidad >= 0 && calidad < 0.7) {
             return <p className="text-red-700 font-semibold">Calidad/Precio Reducida</p>;
-        } else if (calidad >= 0.7 && calidad < 1.5) {
+        } else if (calidad >= 0.7 && calidad < 1.2) {
             return <p className="text-yellow-400 font-semibold">Calidad/Precio Media</p>;
-        } else if (calidad >= 1.5 && calidad < 2.5) {
+        } else if (calidad >= 1.2 && calidad < 2.5) {
             return <p className="text-green-500 font-semibold">Calidad/Precio Alta</p>;
         }
     }
