@@ -7,7 +7,7 @@ Tambien hago uso de Zustand para facilitar la comunicacion entre componentes.
 
 ### Objetivos Generales
 - Comprar componentes por separado.
-- Crear configuraciones personalizadas con asistencia avisando de podibles fallos.
+- Crear configuraciones personalizadas con asistencia avisando de posibles fallos.
 - Listado de configuraciones con puntuaciones y precios.
 - Valoraciones y comentarios en componentes y configuraciones de otros usuarios.
 - Pago mediante Paypal.
